@@ -66,6 +66,7 @@ const eslintConfig = [
       'quote-props': ['warn', 'as-needed'],
 
       // TypeScript rules
+      '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/array-type': ['warn', { default: 'array' }],
       '@typescript-eslint/consistent-type-assertions': [
         'warn',

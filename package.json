@@ -13,17 +13,24 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.81.2",
     "@typescript-eslint/eslint-plugin": "^8.35.0",
     "@typescript-eslint/parser": "^8.35.0",
+    "@wagmi/connectors": "^5.8.5",
+    "blo": "^2.0.0",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.5.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.2",
+    "motion": "^12.19.1",
     "next": "15.3.4",
     "prettier": "^3.6.0",
     "prettier-plugin-tailwindcss": "^0.6.13",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "viem": "^2.31.4",
+    "wagmi": "^2.15.6",
+    "zustand": "^5.0.6"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
