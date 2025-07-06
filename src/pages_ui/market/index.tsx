@@ -1,1 +1,3 @@
-export const MarketPage = () => <main>{/* другие UI-компоненты */}</main>;
+import { Market } from '@/widgets/Market';
+
+export const MarketPage = () => <Market></Market>;

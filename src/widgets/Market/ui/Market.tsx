@@ -1,6 +1,7 @@
+'use client';
 import { Propose } from '@/features';
 
-import { FilterPanel } from '@/features/market';
+import { FilterPanel } from '@/features/filter-panel';
 import { MarketCounter } from '@/shared';
 import { useFilters } from '@/shared/store/useFilters';
 import { useMarketSelectedCards } from '@/shared/store/useMarketSelectedCards';
@@ -58,7 +59,7 @@ export const Market = () => {
       className={`flex size-full flex-row ${opened === 'market' && 'pr-[385px]'}`}
     >
       <div className="relative flex max-w-full grow flex-col px-5">
-        <FilterPanel close={close} opened={opened} open={open} />
+        <FilterPanel panel="market" close={close} opened={opened} open={open} />
         <MarketNfts
           selectedIds={selectedIds}
           toggleSelect={toggleSelect}

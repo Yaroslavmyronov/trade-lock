@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { Connector, useDisconnect } from 'wagmi';
 
+import { apiFetch } from '@/shared/api/fetchInstance';
 import { LogOutIcon } from './icons/LogOutIcon';
 
 interface UserMenuProps {
@@ -73,7 +74,7 @@ export const UserMenu = ({
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 z-20 flex max-h-full max-w-screen min-w-[110px]">
+        <div className="absolute right-0 z-50 flex max-h-full max-w-screen min-w-[110px]">
           <div className="mt-4 h-full max-h-[800px] w-48 max-w-[300px] min-w-[200px] rounded-xs bg-[rgb(42,44,46)] shadow-lg ring-1 ring-black/5">
             <div className="py-2">
               <div>
@@ -81,9 +82,10 @@ export const UserMenu = ({
                   onClick={() => {
                     try {
                       disconnect();
+                      apiFetch('/auth/logout', {
+                        method: 'POST',
+                      });
                       // cookieStorage.removeItem('wagmi.store');
-
-                      console.log('success');
                     } catch (error) {
                       console.log('disconnect error', error);
                     }

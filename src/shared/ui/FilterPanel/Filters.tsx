@@ -8,7 +8,7 @@ interface FilterDrawProps {
 export const Filters = ({ opened, onClose }: FilterDrawProps) => {
   return (
     <div
-      className={`fixed bottom-0 ${opened === 'market' && 'right-[20px]'} ${opened === 'user' && 'left-[20px]'} z-50 flex h-[calc(100%-65px-16px-0.1px-0.1px-0.1px)] min-w-[365px] flex-col rounded-[2px] bg-[#2a2c2e]`}
+      className={`fixed bottom-0 ${opened === 'market' && 'right-[20px]'} ${opened === 'user' && 'left-[20px]'} z-20 flex h-[calc(100%-65px-16px-0.1px-0.1px-0.1px)] min-w-[365px] flex-col rounded-[2px] bg-[#2a2c2e]`}
     >
       <div className="relative mb-4 flex min-h-[48px] items-center justify-center border-b-[2px] border-[#35373a] px-6">
         <span>Filters</span>

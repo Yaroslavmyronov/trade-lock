@@ -3,19 +3,25 @@ import { Filter, Filters, Refresh, Search, Sort } from '@/shared';
 import { useRef } from 'react';
 
 interface FilterPanelProps {
+  panel: 'market' | 'user';
   opened: 'market' | 'user' | null;
   open: (panel: 'market' | 'user') => void;
   close: (panel: 'market' | 'user') => void;
 }
 
-export const FilterPanel = ({ opened, open, close }: FilterPanelProps) => {
+export const FilterPanel = ({
+  panel,
+  opened,
+  open,
+  close,
+}: FilterPanelProps) => {
   const portalContainerRef = useRef<HTMLDivElement | null>(null);
 
   const handleClick = () => {
-    if (opened === 'market') {
-      close('market');
+    if (opened === panel) {
+      close(panel);
     } else {
-      open('market');
+      open(panel);
     }
   };
 
@@ -23,12 +29,10 @@ export const FilterPanel = ({ opened, open, close }: FilterPanelProps) => {
     <div>
       <div ref={portalContainerRef} className="relative">
         <div className="my-4 flex overflow-hidden">
-          <Filter active={opened === 'market'} onClick={handleClick} />
+          <Filter active={opened === panel} onClick={handleClick} />
           <Search />
-          {opened === 'market' && (
-            <div>
-              <Filters opened={opened} onClose={() => close('market')} />
-            </div>
+          {opened === panel && (
+            <Filters opened={opened} onClose={() => close(panel)} />
           )}
           <Refresh />
           <Sort portalContainer={portalContainerRef} />

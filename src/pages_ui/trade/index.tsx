@@ -1,13 +1,25 @@
-'use client';
-
+import { apiFetch } from '@/shared/api/fetchInstance';
+import { Inventory } from '@/widgets/Inventory';
 import { Market } from '@/widgets/Market';
-import { UserSide } from './ui/UserSide';
+import type { GetServerSideProps } from 'next';
 
-export const TradePage = () => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const cookieHeader = context.req.headers.cookie || '';
+  const nftsData = await apiFetch('/market/get-user-tokens', {
+    serverCookie: cookieHeader,
+  });
+
+  return { props: { nftsData } };
+};
+
+export const TradePage = ({ nftsData }) => {
+  console.log('nftsData', nftsData);
   return (
     <div className="relative flex h-full shrink grow flex-col bg-[#1d1f20]">
       <div className="flex shrink grow border-t-2 border-[#2a2c2e]">
-        <UserSide />
+        <div className="flex h-full w-full max-w-[437px] min-w-[437px] flex-col bg-[#17191a]">
+          <Inventory filter="trade" />
+        </div>
         <Market />
       </div>
     </div>

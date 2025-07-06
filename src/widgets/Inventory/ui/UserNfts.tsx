@@ -1,7 +1,6 @@
-'use client';
 import { Card } from '@/shared';
 import { handleCardClick } from '@/shared/lib/handleCardClick';
-import { CardData } from './UserSide';
+import { CardData } from './Inventory';
 
 interface UserNftsProps {
   cardsData: CardData[];
@@ -16,7 +15,6 @@ export const UserNfts = ({
   toggleSelect,
   removeItem,
 }: UserNftsProps) => {
-  console.log('UserNfts', selectedIds);
   return (
     <div className="relative flex shrink grow basis-auto flex-col overflow-auto">
       <div className="absolute flex h-full max-h-full w-full flex-wrap">

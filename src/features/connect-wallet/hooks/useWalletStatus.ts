@@ -22,7 +22,6 @@ export function useWalletStatusPolling() {
         if (cancelledRef.current || disconnectedOnceRef.current) return;
 
         if (accounts.length === 0) {
-          console.log('Polling success');
           disconnect();
           disconnectedOnceRef.current = true;
         }
