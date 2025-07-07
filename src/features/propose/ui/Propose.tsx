@@ -1,9 +1,9 @@
+import { NftResponse } from '@/entities/nfts/types';
 import { Card } from '@/shared';
-import { CardData } from '@/widgets/Market/ui/Market';
 import { handleCardClick } from '../../../shared/lib/handleCardClick';
 
 interface UserProposeProps {
-  cardsData: CardData[];
+  nftsData: NftResponse;
   selectedIds: number[];
   toggleSelect: (id: number) => void;
   removeItem: (id: number) => void;
@@ -11,14 +11,18 @@ interface UserProposeProps {
 }
 
 export const Propose = ({
-  cardsData,
+  nftsData,
   selectedIds,
   toggleSelect,
   removeItem,
   isOpen,
 }: UserProposeProps) => {
-  const userProposeNfts = cardsData.filter((card) =>
-    selectedIds.includes(card.id),
+  if (!nftsData) {
+    return <div>Loading...</div>;
+  }
+
+  const userProposeNfts = nftsData.filter((card) =>
+    selectedIds.includes(Number(card.tokenId)),
   );
 
   return (
@@ -30,20 +34,24 @@ export const Propose = ({
               <div className="overflow-x-visible overflow-y-auto">
                 <div className="grid grid-cols-[repeat(auto-fill,_minmax(70px,_1fr))] grid-rows-[repeat(auto-fill,_120px)] gap-1">
                   {userProposeNfts.map((card) => {
-                    const isSelected = selectedIds.includes(card.id);
+                    const isSelected = selectedIds.includes(
+                      Number(card.tokenId),
+                    );
                     return (
                       <Card
+                        price={card.lastPrice}
+                        image={card.imageOriginal}
                         onClick={() =>
                           handleCardClick(
-                            card.id,
+                            Number(card.tokenId),
                             isSelected,
                             toggleSelect,
                             removeItem,
                           )
                         }
                         selected={true}
-                        title={card.title}
-                        key={card.id}
+                        title={card.name}
+                        key={Number(card.tokenId)}
                         isSelected={isSelected}
                       ></Card>
                     );

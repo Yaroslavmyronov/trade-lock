@@ -1,4 +1,5 @@
 'use client';
+import { Preloader } from '@/shared';
 import { Modal } from '@/shared/ui/Modal';
 import type { StreamProvider } from '@metamask/providers';
 import Image from 'next/image';
@@ -242,10 +243,9 @@ export const ConnectModal = ({ isOpen, onClose }: ConnectModalProps) => {
                       </div>
 
                       <div className="order-3 flex max-w-[40%] flex-none flex-col justify-center self-stretch overflow-visible text-right">
+                        {/* isCurrentlyConnecting */}
                         {isCurrentlyConnecting ? (
-                          <div className="text-xs text-yellow-500">
-                            Connecting...
-                          </div>
+                          <Preloader />
                         ) : wallet.detected ? (
                           <div className="flex w-fit items-center gap-1 rounded bg-green-600/20 px-1.5 py-0.5 text-green-400">
                             <span className="text-xs leading-normal font-normal">

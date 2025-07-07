@@ -45,6 +45,7 @@ const WalletStatusWrapper = ({ children }: { children: ReactNode }) => {
         setAuthStatus(data.address ? 'authenticated' : 'unauthenticated');
       } catch (_error) {
         console.error(_error);
+
         setAuthStatus('unauthenticated');
       } finally {
         fetchingStatusRef.current = false;

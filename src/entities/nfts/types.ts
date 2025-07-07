@@ -1,7 +1,11 @@
 export type Nft = {
-  id: number;
+  contract: string;
+  description: string;
+  imageOriginal: string;
+  kind: string;
+  lastPrice: number;
   name: string;
-  imageUrl: string;
+  tokenId: string;
 };
 
 export type NftResponse = Nft[];

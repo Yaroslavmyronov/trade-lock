@@ -52,7 +52,7 @@ export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
           exit={{ opacity: 0 }}
         >
           <motion.div
-            className="bg-[rgb(38 39 45)] relative w-[420px] max-w-[calc(100vw-32px)] rounded-xl border border-[rgb(42,44,46)] py-2"
+            className="relative w-[420px] max-w-[calc(100vw-32px)] rounded-xl border border-[rgb(42,44,46)] bg-[rgb(16,16,17)] py-2"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}

@@ -1,7 +1,14 @@
-export const Preloader = () => {
+export const Preloader = ({
+  width = 16,
+  height = 16,
+}: {
+  width?: number;
+  height?: number;
+}) => {
   return (
-    <div className="flex h-full w-full items-center justify-center bg-gray-100">
-      <div className="h-12 w-12 animate-spin rounded-full border-t-4 border-solid border-blue-500"></div>
-    </div>
+    <span
+      style={{ width: `${width}px`, height: `${height}px` }}
+      className="inline-block animate-spin rounded-full border-2 border-current !border-b-transparent"
+    ></span>
   );
 };

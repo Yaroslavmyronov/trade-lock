@@ -1,10 +1,10 @@
-import Image from 'next/image';
-
 interface CardProps {
   title: string;
   selected?: boolean;
   onClick?: () => void;
   isSelected: boolean;
+  image: string;
+  price: number;
 }
 
 export const Card = ({
@@ -12,6 +12,8 @@ export const Card = ({
   selected = false,
   isSelected,
   onClick,
+  image,
+  price,
 }: CardProps) => {
   return (
     <div
@@ -28,13 +30,12 @@ export const Card = ({
           <div className="relative mx-auto my-0 size-full">
             <div className="h-full">
               <div className="relative size-full">
-                <Image
-                  className="absolute size-full overflow-hidden transition-transform duration-300 select-none group-hover:scale-110"
-                  fill
-                  objectFit="cover"
+                <img
+                  className="absolute inset-0 size-full overflow-hidden object-cover transition-transform duration-300 select-none group-hover:scale-110"
                   alt=""
-                  src="/images/Nft.jpg"
-                ></Image>
+                  loading="lazy"
+                  src={image ? image : '/images/default.png'}
+                ></img>
               </div>
             </div>
           </div>
@@ -52,7 +53,7 @@ export const Card = ({
         <div
           className={`flex ${selected ? 'h-2 text-[8px]' : 'h-5'} items-center justify-between gap-x-1`}
         >
-          1.9K
+          {`${price} MON`}
         </div>
         <div
           className={`flex ${selected ? 'h-2 text-[8px]' : 'h-5'} items-center`}
