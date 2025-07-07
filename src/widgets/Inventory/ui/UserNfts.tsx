@@ -4,9 +4,9 @@ import { handleCardClick } from '@/shared/lib/handleCardClick';
 
 interface UserNftsProps {
   nftsData: NftResponse;
-  selectedIds: number[];
-  toggleSelect: (id: number) => void;
-  removeItem: (id: number) => void;
+  selectedIds: string[];
+  toggleSelect: (id: string) => void;
+  removeItem: (id: string) => void;
 }
 
 export const UserNfts = ({
@@ -22,22 +22,18 @@ export const UserNfts = ({
         <div className="flex h-full w-full shrink grow basis-full flex-col overflow-x-hidden overflow-y-auto">
           <div className="relative h-full overflow-x-visible overflow-y-auto">
             <div className="absolute top-0 left-0 grid max-h-screen w-full max-w-screen [grid-template-columns:repeat(auto-fill,_minmax(120px,_1fr))] [grid-template-rows:repeat(auto-fill,208px)] gap-1">
-              {nftsData.map((card, i) => {
-                const isSelected = selectedIds.includes(Number(card.tokenId));
+              {nftsData.map((card) => {
+                const id = `${card.contract}-${card.tokenId}`;
+                const isSelected = selectedIds.includes(id);
                 return (
                   <Card
                     price={Number(card.lastPrice)}
                     image={card.imageOriginal}
                     isSelected={isSelected}
                     title={card.name}
-                    key={`empty-${i}`}
+                    key={id}
                     onClick={() =>
-                      handleCardClick(
-                        Number(card.tokenId),
-                        isSelected,
-                        toggleSelect,
-                        removeItem,
-                      )
+                      handleCardClick(id, isSelected, toggleSelect, removeItem)
                     }
                   ></Card>
                 );

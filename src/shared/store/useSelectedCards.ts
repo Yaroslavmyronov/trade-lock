@@ -1,9 +1,9 @@
 import { create } from 'zustand';
 
 interface SelectedCardsState {
-  selectedIds: number[];
-  toggleSelect: (id: number) => void;
-  removeItem: (id: number) => void;
+  selectedIds: string[];
+  toggleSelect: (id: string) => void;
+  removeItem: (id: string) => void;
   clearAll: () => void;
 }
 

@@ -3,15 +3,13 @@ import { Balance } from '@/entities/balance/ui/Balance';
 
 import { UserMenu } from '@/features';
 import { ConnectButton } from '@/features/connect-wallet/ui/CustomConnectButton';
-import { useGlobalState } from '@/shared/store/useGlobalState';
 import { getAddress, isAddress } from 'viem';
 import { normalize } from 'viem/ens';
 import { useAccount, useEnsAvatar, useEnsName } from 'wagmi';
 import { MonadIcon } from './icons/MondIcon';
 
 export const Address = () => {
-  const { address, connector, isConnected, status } = useAccount();
-  const { authStatus } = useGlobalState();
+  const { address, connector, isConnected } = useAccount();
   const checkSumAddress = address ? getAddress(address) : undefined;
 
   const { data: ensName } = useEnsName({
@@ -42,7 +40,7 @@ export const Address = () => {
   return (
     <div className="flex items-center gap-1">
       <div className="inline-flex h-10 items-center justify-center gap-2 bg-[rgb(42,44,46)] px-4 text-sm font-medium whitespace-nowrap disabled:pointer-events-none">
-        {authStatus === 'loading' ? (
+        {isConnected && !address ? (
           <div className="flex animate-pulse space-x-4">
             <div className="flex items-center space-y-6">
               <div className="h-4 w-28 rounded-sm bg-slate-300"></div>
@@ -70,7 +68,7 @@ export const Address = () => {
           </>
         )}
       </div>
-      {authStatus === 'loading' ? (
+      {isConnected && !address ? (
         <div className="flex h-10 animate-pulse space-x-4 bg-[rgb(42,44,46)] px-4">
           <div className="flex items-center space-y-6">
             <div className="mr-2 mb-0 size-[24px] rounded-full bg-slate-300"></div>

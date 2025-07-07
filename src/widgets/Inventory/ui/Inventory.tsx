@@ -8,12 +8,8 @@ import { useFilters } from '@/shared/store/useFilters';
 import { usePropose } from '@/shared/store/usePropose';
 import { useSelectedCards } from '@/shared/store/useSelectedCards';
 import { ProfilePrice } from './ProfilePrice';
+import { SellButton } from './SellButton';
 import { UserNfts } from './UserNfts';
-
-export type CardData = {
-  id: number;
-  title: string;
-};
 
 export const Inventory = ({
   filter,
@@ -53,6 +49,11 @@ export const Inventory = ({
           selectedIds={selectedIds}
           nftsData={nftsData}
         />
+        {filter === 'sell' && (
+          <div className="flex pb-4">
+            <SellButton nftsData={nftsData} selectedIds={selectedIds} />
+          </div>
+        )}
       </div>
     </div>
   );

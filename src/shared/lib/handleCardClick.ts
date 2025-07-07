@@ -1,8 +1,8 @@
 export const handleCardClick = (
-  id: number,
+  id: string,
   isSelected: boolean,
-  toggleSelect: (id: number) => void,
-  removeItem: (id: number) => void,
+  toggleSelect: (id: string) => void,
+  removeItem: (id: string) => void,
 ) => {
   if (!isSelected) {
     toggleSelect(id);

@@ -1,12 +1,12 @@
 import { NftResponse } from '@/entities/nfts/types';
 import { Card } from '@/shared';
-import { handleCardClick } from '../../../shared/lib/handleCardClick';
+import { handleCardClick } from '@/shared/lib/handleCardClick';
 
 interface UserProposeProps {
   nftsData: NftResponse;
-  selectedIds: number[];
-  toggleSelect: (id: number) => void;
-  removeItem: (id: number) => void;
+  selectedIds: string[];
+  toggleSelect: (id: string) => void;
+  removeItem: (id: string) => void;
   isOpen: boolean;
 }
 
@@ -22,7 +22,7 @@ export const Propose = ({
   }
 
   const userProposeNfts = nftsData.filter((card) =>
-    selectedIds.includes(Number(card.tokenId)),
+    selectedIds.includes(`${card.contract}-${card.tokenId}`),
   );
 
   return (
@@ -34,16 +34,15 @@ export const Propose = ({
               <div className="overflow-x-visible overflow-y-auto">
                 <div className="grid grid-cols-[repeat(auto-fill,_minmax(70px,_1fr))] grid-rows-[repeat(auto-fill,_120px)] gap-1">
                   {userProposeNfts.map((card) => {
-                    const isSelected = selectedIds.includes(
-                      Number(card.tokenId),
-                    );
+                    const id = `${card.contract}-${card.tokenId}`;
+                    const isSelected = selectedIds.includes(id);
                     return (
                       <Card
                         price={card.lastPrice}
                         image={card.imageOriginal}
                         onClick={() =>
                           handleCardClick(
-                            Number(card.tokenId),
+                            id,
                             isSelected,
                             toggleSelect,
                             removeItem,
@@ -51,7 +50,7 @@ export const Propose = ({
                         }
                         selected={true}
                         title={card.name}
-                        key={Number(card.tokenId)}
+                        key={`${card.contract}-${card.tokenId}`}
                         isSelected={isSelected}
                       ></Card>
                     );

@@ -29,10 +29,7 @@ export const Modal: React.FC<ModalProps> = ({ open, onClose, onConfirm }) => {
                       preload="auto"
                       disableRemotePlayback
                     >
-                      <source
-                        src="https://raw.seadn.io/files/os-logo-glowing.mp4"
-                        type="video/mp4"
-                      />
+                      <source src="" type="video/mp4" />
                     </video>
                   </div>
                 </div>
@@ -54,7 +51,7 @@ export const Modal: React.FC<ModalProps> = ({ open, onClose, onConfirm }) => {
                           I agree to TradeLock&apos;s{' '}
                           <a
                             className="text-blue-500 underline hover:text-blue-400 focus:text-blue-400 active:text-blue-600"
-                            href="https://opensea.io/tos"
+                            href=""
                             target="_blank"
                             rel="nofollow noopener"
                           >
@@ -63,7 +60,7 @@ export const Modal: React.FC<ModalProps> = ({ open, onClose, onConfirm }) => {
                           and{' '}
                           <a
                             className="text-blue-500 underline hover:text-blue-400 focus:text-blue-400 active:text-blue-600"
-                            href="https://opensea.io/privacy"
+                            href=""
                             target="_blank"
                             rel="nofollow noopener"
                           >

@@ -2,7 +2,7 @@
 import { Arrow2Icon, ArrowIcon, CloseIcon } from '@/shared';
 
 interface MarketCounterProps {
-  selectedIds: number[];
+  selectedIds: string[];
   clearAll: () => void;
   toggle: () => void;
   isOpen: boolean;
