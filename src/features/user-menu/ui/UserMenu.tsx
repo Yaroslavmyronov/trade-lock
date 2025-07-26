@@ -3,7 +3,7 @@
 import { ArrowIcon, AvatarComponent } from '@/shared';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
-import { Connector, useDisconnect } from 'wagmi';
+import { Connector, cookieStorage, useDisconnect } from 'wagmi';
 
 import { LogOutIcon } from './icons/LogOutIcon';
 
@@ -81,8 +81,7 @@ export const UserMenu = ({
                   onClick={() => {
                     try {
                       disconnect();
-
-                      // cookieStorage.removeItem('wagmi.store');
+                      cookieStorage.removeItem('wagmi.store');
                     } catch (error) {
                       console.log('disconnect error', error);
                     }

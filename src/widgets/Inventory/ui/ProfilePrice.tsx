@@ -1,6 +1,12 @@
+import { NftResponse } from '@/entities/nfts/types';
 import { Arrow2Icon } from '@/shared';
 
-export const ProfilePrice = () => {
+interface ProfilePriceProps {
+  nftsData: NftResponse;
+}
+
+export const ProfilePrice = ({ nftsData }: ProfilePriceProps) => {
+  const fullPrice = nftsData.reduce((sum, nft) => sum + nft.lastPrice, 0);
   return (
     <div className="mb-4">
       <div className="relative right-0 left-0 min-h-[44px] w-full min-w-auto overflow-hidden rounded-[4px] bg-[#424242]">
@@ -8,8 +14,7 @@ export const ProfilePrice = () => {
           <div className="flex w-full flex-row items-center overflow-hidden pr-2">
             <div className="mr-auto">
               <span className="mr-1.5 leading-5">
-                Profile price for
-                <label>3 items</label>
+                Profile price for <label>{nftsData.length} items</label>
               </span>
               <span>icon</span>
             </div>
@@ -18,7 +23,7 @@ export const ProfilePrice = () => {
                 <div className="mr-1">
                   <Arrow2Icon width={14} height={14} />
                 </div>
-                <span>$0.31</span>
+                <span>{fullPrice.toFixed(4)} MON</span>
               </div>
             </div>
           </div>

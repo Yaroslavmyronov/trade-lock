@@ -1,5 +1,5 @@
 export type Nft = {
-  contract: string;
+  contract: `0x${string}`;
   description: string;
   imageOriginal: string;
   kind: string;

@@ -1,5 +1,5 @@
 'use client';
-import abi from '@/../abi.json';
+import abi from 'Marketplace';
 import { NftResponse } from '@/entities/nfts/types';
 import { MarketIcon } from '@/shared';
 import { parseEther } from 'viem';

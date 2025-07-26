@@ -1,12 +1,14 @@
+import { Nft } from '@/entities/nfts/types';
+
 export const handleCardClick = (
-  id: string,
+  nft: Nft,
   isSelected: boolean,
-  toggleSelect: (id: string) => void,
+  toggleSelect: (nft: Nft) => void,
   removeItem: (id: string) => void,
 ) => {
   if (!isSelected) {
-    toggleSelect(id);
+    toggleSelect(nft);
   } else {
-    removeItem(id);
+    removeItem(`${nft.contract}-${nft.tokenId}`);
   }
 };

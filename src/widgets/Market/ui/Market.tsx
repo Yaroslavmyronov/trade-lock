@@ -79,6 +79,7 @@ export const Market = () => {
           selectedIds={selectedIds}
           cardsData={cardsData}
         />
+        
       </div>
     </div>
   );

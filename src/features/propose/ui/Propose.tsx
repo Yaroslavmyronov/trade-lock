@@ -1,18 +1,18 @@
-import { NftResponse } from '@/entities/nfts/types';
+import { Nft, NftResponse } from '@/entities/nfts/types';
 import { Card } from '@/shared';
 import { handleCardClick } from '@/shared/lib/handleCardClick';
 
 interface UserProposeProps {
   nftsData: NftResponse;
-  selectedIds: string[];
-  toggleSelect: (id: string) => void;
+  selectedNfts: Nft[];
+  toggleSelect: (nft: Nft) => void;
   removeItem: (id: string) => void;
   isOpen: boolean;
 }
 
 export const Propose = ({
   nftsData,
-  selectedIds,
+  selectedNfts,
   toggleSelect,
   removeItem,
   isOpen,
@@ -20,10 +20,6 @@ export const Propose = ({
   if (!nftsData) {
     return <div>Loading...</div>;
   }
-
-  const userProposeNfts = nftsData.filter((card) =>
-    selectedIds.includes(`${card.contract}-${card.tokenId}`),
-  );
 
   return (
     <>
@@ -33,24 +29,26 @@ export const Propose = ({
             <div className="flex size-full flex-col overflow-x-hidden overflow-y-auto">
               <div className="overflow-x-visible overflow-y-auto">
                 <div className="grid grid-cols-[repeat(auto-fill,_minmax(70px,_1fr))] grid-rows-[repeat(auto-fill,_120px)] gap-1">
-                  {userProposeNfts.map((card) => {
-                    const id = `${card.contract}-${card.tokenId}`;
-                    const isSelected = selectedIds.includes(id);
+                  {selectedNfts.map((nft) => {
+                    const id = `${nft.contract}-${nft.tokenId}`;
+                    const isSelected = selectedNfts.some(
+                      (c) => `${c.contract}-${c.tokenId}` === id,
+                    );
                     return (
                       <Card
-                        price={card.lastPrice}
-                        image={card.imageOriginal}
+                        price={nft.lastPrice}
+                        image={nft.imageOriginal}
                         onClick={() =>
                           handleCardClick(
-                            id,
+                            nft,
                             isSelected,
                             toggleSelect,
                             removeItem,
                           )
                         }
                         selected={true}
-                        title={card.name}
-                        key={`${card.contract}-${card.tokenId}`}
+                        title={nft.name}
+                        key={`${nft.contract}-${nft.tokenId}`}
                         isSelected={isSelected}
                       ></Card>
                     );

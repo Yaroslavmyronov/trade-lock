@@ -1,15 +1,16 @@
 'use client';
+import { Nft } from '@/entities/nfts/types';
 import { Arrow2Icon, ArrowIcon, CloseIcon } from '@/shared';
 
 interface MarketCounterProps {
-  selectedIds: string[];
+  selectedNfts: Nft[];
   clearAll: () => void;
   toggle: () => void;
   isOpen: boolean;
 }
 
 export const Counter = ({
-  selectedIds,
+  selectedNfts,
   clearAll,
   toggle,
   isOpen,
@@ -17,7 +18,7 @@ export const Counter = ({
   return (
     <div className="flex items-center py-2.5 text-[#836EF9]">
       <div
-        className={`flex w-full flex-row items-center justify-end ${selectedIds.length === 0 && 'text-[#fff] opacity-50'}`}
+        className={`flex w-full flex-row items-center justify-end ${selectedNfts.length === 0 && 'text-[#fff] opacity-50'}`}
       >
         <div className="relative flex shrink grow basis-auto justify-end">
           <button
@@ -28,7 +29,7 @@ export const Counter = ({
               <ArrowIcon />
             </div>
           </button>
-          {selectedIds.length > 0 && (
+          {selectedNfts.length > 0 && (
             <button
               onClick={() => clearAll()}
               className="group mx-2 flex aspect-square w-[30px] cursor-pointer items-center justify-center bg-[#2a2c2e] text-[#fff] select-none"
@@ -43,12 +44,12 @@ export const Counter = ({
 
         <div className="w-full px-2 text-right text-[#fff]">
           <p className="text-xs">
-            {selectedIds.length === 0
+            {selectedNfts.length === 0
               ? 'Select nfts you want to exchange'
               : 'The price of nfts for exchange is'}
           </p>
         </div>
-        <div className="mx-[5px] flex items-end text-[12px]">{`(${selectedIds.length})`}</div>
+        <div className="mx-[5px] flex items-end text-[12px]">{`(${selectedNfts.length})`}</div>
         <div className="inline-flex items-center text-[24px]">
           <Arrow2Icon width={10} height={10}></Arrow2Icon>
           <div className="flex items-center">

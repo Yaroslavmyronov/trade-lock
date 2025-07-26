@@ -22,7 +22,7 @@ export const Modal: React.FC<ModalProps> = ({ open, onClose, onConfirm }) => {
               <div className="mb-6 flex flex-col items-center justify-center">
                 <div className="flex size-[100px] flex-col items-center justify-center overflow-hidden rounded-full drop-shadow-sm">
                   <div className="size-[calc(100%+1px)]">
-                    <video
+                    {/* <video
                       autoPlay
                       playsInline
                       loop
@@ -30,7 +30,7 @@ export const Modal: React.FC<ModalProps> = ({ open, onClose, onConfirm }) => {
                       disableRemotePlayback
                     >
                       <source src="" type="video/mp4" />
-                    </video>
+                    </video> */}
                   </div>
                 </div>
               </div>

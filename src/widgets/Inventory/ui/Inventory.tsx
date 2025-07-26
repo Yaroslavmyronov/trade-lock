@@ -3,12 +3,13 @@ import { Propose } from '@/features';
 
 import { NftResponse } from '@/entities/nfts/types';
 import { FilterPanel } from '@/features/filter-panel';
+import { SellButton } from '@/features/nft-sell';
 import { Counter } from '@/shared';
 import { useFilters } from '@/shared/store/useFilters';
 import { usePropose } from '@/shared/store/usePropose';
-import { useSelectedCards } from '@/shared/store/useSelectedCards';
+
+import { useSelectedNfts } from '@/shared/store/useSelectedNfts';
 import { ProfilePrice } from './ProfilePrice';
-import { SellButton } from './SellButton';
 import { UserNfts } from './UserNfts';
 
 export const Inventory = ({
@@ -18,8 +19,8 @@ export const Inventory = ({
   filter: 'sell' | 'trade';
   nftsData: NftResponse;
 }) => {
-  const { selectedIds, clearAll, toggleSelect, removeItem } =
-    useSelectedCards();
+  const { selectedNfts, clearAll, toggleSelect, removeItem } =
+    useSelectedNfts();
   const { opened, open, close } = useFilters();
   const { toggle, isOpen } = usePropose();
 
@@ -29,9 +30,9 @@ export const Inventory = ({
     >
       <div className="relative flex min-h-full max-w-full grow flex-col px-5">
         <FilterPanel panel="user" close={close} opened={opened} open={open} />
-        <ProfilePrice />
+        <ProfilePrice nftsData={nftsData} />
         <UserNfts
-          selectedIds={selectedIds}
+          selectedNfts={selectedNfts}
           toggleSelect={toggleSelect}
           removeItem={removeItem}
           nftsData={nftsData}
@@ -39,19 +40,23 @@ export const Inventory = ({
         <Counter
           isOpen={isOpen}
           toggle={toggle}
-          selectedIds={selectedIds}
+          selectedNfts={selectedNfts}
           clearAll={clearAll}
         />
         <Propose
           isOpen={isOpen}
           removeItem={removeItem}
           toggleSelect={toggleSelect}
-          selectedIds={selectedIds}
+          selectedNfts={selectedNfts}
           nftsData={nftsData}
         />
         {filter === 'sell' && (
           <div className="flex pb-4">
-            <SellButton nftsData={nftsData} selectedIds={selectedIds} />
+            <SellButton
+              nftsData={nftsData}
+              selectedNfts={selectedNfts}
+            ></SellButton>
+            {/* <SellButton nftsData={nftsData} selectedIds={selectedIds} /> */}
           </div>
         )}
       </div>
