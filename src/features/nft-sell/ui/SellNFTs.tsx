@@ -2,11 +2,12 @@ import { Nft } from '@/entities/nfts/types';
 import { SellNFT } from './SellNFT';
 import { SellNFTsSummary } from './SellNFTsSummary';
 import { getNftId } from '../model/NFT';
+import { nftPriceChange, nftPrices } from '../types';
 
 interface SellNFTsProps {
   nfts: Nft[];
-  prices: Record<string, string>;
-  handlePriceChange: (id: string, value: string) => void;
+  prices: nftPrices;
+  handlePriceChange: nftPriceChange;
 }
 
 export const SellNFTs = ({

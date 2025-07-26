@@ -1,9 +1,10 @@
 import { Nft } from '@/entities/nfts/types';
 import { getNftId } from '../model/NFT';
+import { nftPrices } from '../types';
 
 interface SellNFTsSummary {
   nfts: Nft[];
-  prices: Record<string, string>;
+  prices: nftPrices;
 }
 
 export const SellNFTsSummary = ({ nfts, prices }: SellNFTsSummary) => {
@@ -13,7 +14,7 @@ export const SellNFTsSummary = ({ nfts, prices }: SellNFTsSummary) => {
   );
 
   return (
-    <div className="flex flex-col gap-3 pt-3">
+    <div className="sticky top-0 flex flex-col gap-3 pt-3 bg-[#35373a]">
       <div className="flex items-center justify-between">
         <div>Summary</div>
         <div className="flex items-center gap-3">

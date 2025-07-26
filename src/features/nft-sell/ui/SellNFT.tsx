@@ -1,17 +1,14 @@
 import { Nft } from '@/entities/nfts/types';
 import { getNftId } from '../model/NFT';
+import { nftPriceChange, nftPrices } from '../types';
 interface SellNFTProps {
   nft: Nft;
-  prices: Record<string, string>;
-  handlePriceChange: (id: string, value: string) => void;
+  prices: nftPrices;
+  handlePriceChange: nftPriceChange;
 }
 
-export const SellNFT = ({
-  nft,
-  prices,
-  handlePriceChange,
-}: SellNFTProps) => {
-  const id = getNftId(nft)
+export const SellNFT = ({ nft, prices, handlePriceChange }: SellNFTProps) => {
+  const id = getNftId(nft);
   return (
     <li key={id}>
       <div className="flex items-center justify-between gap-x-3 py-0.5">

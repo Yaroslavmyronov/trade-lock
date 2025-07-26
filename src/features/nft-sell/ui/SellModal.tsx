@@ -11,6 +11,7 @@ import { SellNFTs } from '@features/nft-sell/ui/SellNFTs';
 import { useWriteContract } from 'wagmi';
 import { waitForTransactionReceipt } from 'wagmi/actions';
 import { getNftId } from '../model/NFT';
+import { ApproveNFTsAccess } from './ApproveNFTsAccess';
 
 interface SellModalProps {
   isOpen: boolean;
@@ -96,6 +97,15 @@ export const SellModal = ({
     return price !== undefined && Number(price) > 0;
   });
 
+  const verifying = true; // Assuming all NFTs are verified
+  const listing = true;
+
+  const getButtonText = () => {
+    if (listing) return 'Listing';
+    if (verifying) return 'Approving';
+    return 'Sell';
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="flex h-screen w-full max-w-[600px] items-center justify-center">
@@ -103,7 +113,7 @@ export const SellModal = ({
           <div className="flex shrink-0 items-center justify-between border-b p-4 px-8 py-6 transition-all duration-300">
             <div className="flex w-full items-center justify-between gap-x-2">
               <div className="flex items-center gap-x-2 transition-opacity duration-300">
-                <span>Sell</span>
+                <span>{getButtonText()}</span>
               </div>
               <button
                 onClick={onClose}
@@ -115,17 +125,21 @@ export const SellModal = ({
           </div>
           <div className="relative flex flex-1 flex-col overflow-hidden !p-0 px-4 pb-4 md:p-4">
             <div className="text relative flex flex-1 flex-col overflow-x-hidden overflow-y-auto">
-              <div className="px-3.5 pb-3.5 md:px-8 md:pb-6">
-                <SellNFTs
-                  nfts={selectedNfts}
-                  prices={inputPrices}
-                  handlePriceChange={handlePriceChange}
-                />
+              <div className="relative px-3.5 pb-3.5 md:px-8 md:pb-6">
+                {!verifying && (
+                  <SellNFTs
+                    nfts={selectedNfts}
+                    prices={inputPrices}
+                    handlePriceChange={handlePriceChange}
+                  />
+                )}
+                {verifying && (
+                  <ApproveNFTsAccess nfts={selectedNfts} prices={inputPrices} />
+                )}
               </div>
             </div>
             <div className="shrink-0 overflow-hidden">
               <div className="flex flex-col gap-y-3 border-t px-3.5 pt-3.5 pb-3.5 md:px-8 md:pt-6 md:pb-6">
-                <div></div>
                 <div className="grid grid-cols-2 gap-x-2">
                   <button
                     onClick={onClose}
