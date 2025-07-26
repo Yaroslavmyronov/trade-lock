@@ -1,4 +1,5 @@
 import { Nft } from '@/entities/nfts/types';
+import { getNftId } from '@/features/nft-sell/model/NFT';
 
 export const handleCardClick = (
   nft: Nft,
@@ -9,6 +10,6 @@ export const handleCardClick = (
   if (!isSelected) {
     toggleSelect(nft);
   } else {
-    removeItem(`${nft.contract}-${nft.tokenId}`);
+    removeItem(getNftId(nft));
   }
 };

@@ -1,4 +1,5 @@
 import { Nft, NftResponse } from '@/entities/nfts/types';
+import { getNftId } from '@/features/nft-sell/model/NFT';
 import { Card } from '@/shared';
 import { handleCardClick } from '@/shared/lib/handleCardClick';
 
@@ -23,7 +24,7 @@ export const UserNfts = ({
           <div className="relative h-full overflow-x-visible overflow-y-auto">
             <div className="absolute top-0 left-0 grid max-h-screen w-full max-w-screen [grid-template-columns:repeat(auto-fill,_minmax(120px,_1fr))] [grid-template-rows:repeat(auto-fill,208px)] gap-1">
               {nftsData.map((nft) => {
-                const id = `${nft.contract}-${nft.tokenId}`;
+                const id = getNftId(nft);
                 const isSelected = selectedNfts.some(
                   (selected) =>
                     selected.contract === nft.contract &&

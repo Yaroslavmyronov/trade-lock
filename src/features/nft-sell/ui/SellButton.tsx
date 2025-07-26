@@ -12,12 +12,16 @@ interface SellButtonProps {
 export const SellButton = ({ nftsData, selectedNfts }: SellButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const sellPrice = selectedNfts.reduce((sum, nft) => sum + nft.lastPrice, 0);
+
+  const noSelectedNfts = selectedNfts.length === 0;
+
   return (
     <>
       <div className="mx-1.5">
         <button
+          className="flex min-h-[48px] min-w-[160px] cursor-pointer items-center justify-center rounded-[2px] bg-[#836EF9] px-3 disabled:cursor-not-allowed disabled:bg-[#A5A5A5]"
+          disabled={noSelectedNfts}
           onClick={() => setIsOpen(true)}
-          className="flex min-h-[48px] min-w-[160px] cursor-pointer items-center justify-center rounded-[2px] bg-[#836EF9] px-3"
         >
           <MarketIcon />
           <span className="ml-2.5 flex flex-col text-left">

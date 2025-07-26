@@ -1,4 +1,5 @@
 import { Nft, NftResponse } from '@/entities/nfts/types';
+import { getNftId } from '@/features/nft-sell/model/NFT';
 import { Card } from '@/shared';
 import { handleCardClick } from '@/shared/lib/handleCardClick';
 
@@ -30,7 +31,7 @@ export const Propose = ({
               <div className="overflow-x-visible overflow-y-auto">
                 <div className="grid grid-cols-[repeat(auto-fill,_minmax(70px,_1fr))] grid-rows-[repeat(auto-fill,_120px)] gap-1">
                   {selectedNfts.map((nft) => {
-                    const id = `${nft.contract}-${nft.tokenId}`;
+                    const id = getNftId(nft);
                     const isSelected = selectedNfts.some(
                       (c) => `${c.contract}-${c.tokenId}` === id,
                     );
@@ -48,7 +49,7 @@ export const Propose = ({
                         }
                         selected={true}
                         title={nft.name}
-                        key={`${nft.contract}-${nft.tokenId}`}
+                        key={getNftId(nft)}
                         isSelected={isSelected}
                       ></Card>
                     );
