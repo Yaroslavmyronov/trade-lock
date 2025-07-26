@@ -9,6 +9,6 @@ export const Logo = () => (
     aria-label="Home"
     className="flex h-[3.75rem] w-40 items-center justify-center border-r-2 border-[rgb(42,44,46)]"
   >
-    <Image alt="" src={LogoImage} className="h-[27px]"></Image>
+    <Image alt="" src={LogoImage}></Image>
   </Link>
 );
