@@ -6,12 +6,13 @@ import { useWrapperWriteContract } from '@/shared/lib/web3/useWrapperWriteContra
 import { Modal } from '@/shared/ui/Modal';
 import { useState } from 'react';
 import { erc721Abi, parseEther } from 'viem';
-import { SellNFTs } from '@features/nft-sell/ui/SellNFTs';
 
 import { useWriteContract } from 'wagmi';
 import { waitForTransactionReceipt } from 'wagmi/actions';
 import { getNftId } from '../model/NFT';
-import { ApproveNFTsAccess } from './ApproveNFTsAccess';
+import { Approve } from './Approve';
+import { List } from './List';
+import { ListingForm } from './ListingForm';
 
 interface SellModalProps {
   isOpen: boolean;
@@ -27,7 +28,6 @@ export const SellModal = ({
   const { writeContractAsync, isMining } =
     useWrapperWriteContract('Marketplace');
   const { writeContractAsync: writeContractApproveAsync } = useWriteContract();
-  const [isApproving, setIsApproving] = useState(false);
 
   const nftContracts = selectedNfts.map((nft) => nft.contract);
   const tokenIdsConsole = selectedNfts.map((nft) => Number(nft.tokenId));
@@ -36,53 +36,93 @@ export const SellModal = ({
   const prices = selectedNfts.map((nft) =>
     parseEther(nft.lastPrice.toString()),
   );
+
+  const [approveStatuses, setApproveStatuses] = useState<
+    Record<string, 'idle' | 'loading' | 'success' | 'error'>
+  >({});
+  const [listingStatuses, setListingStatuses] = useState<
+    Record<string, 'idle' | 'loading' | 'success' | 'error'>
+  >({});
+  const updateApproveStatus = (
+    nftId: string,
+    status: 'idle' | 'loading' | 'success' | 'error',
+  ) => {
+    setApproveStatuses((prev) => ({ ...prev, [nftId]: status }));
+  };
+
+  const updateListingStatus = (
+    nftId: string,
+    status: 'idle' | 'loading' | 'success' | 'error',
+  ) => {
+    setListingStatuses((prev) => ({ ...prev, [nftId]: status }));
+  };
   const config = getConfig();
-
+  const [step, setStep] = useState<'form' | 'approve' | 'listing'>('form');
   const handleSell = async () => {
-    try {
-      setIsApproving(true);
-      // for (const nft of selectedNfts) {
-      const approveTokenHash = await writeContractApproveAsync({
-        address: '0x3019BF1dfB84E5b46Ca9D0eEC37dE08a59A41308',
-        abi: erc721Abi,
-        functionName: 'approve',
-        args: ['0xb1BfCa83f6d16928af5d67623627F157c896E7f7', 209252],
-      });
-
-      if (!approveTokenHash) return;
-
-      console.log('approveTokenHash', approveTokenHash);
-      const receipt = await waitForTransactionReceipt(config, {
-        hash: approveTokenHash,
-      });
-
-      if (!receipt) return;
-      console.log('receipt', receipt);
+    for (const nft of selectedNfts) {
+      const id = getNftId(nft);
 
       try {
+        // APPROVE
+        const initialApproveStatuses: Record<string, 'loading'> = {};
+        selectedNfts.forEach((nft) => {
+          const id = getNftId(nft);
+          initialApproveStatuses[id] = 'loading';
+        });
+        setApproveStatuses(initialApproveStatuses);
+        setStep('approve');
+        updateApproveStatus(id, 'loading');
+
+        const approveHash = await writeContractApproveAsync({
+          address: nft.contract,
+          abi: erc721Abi,
+          functionName: 'approve',
+          args: [
+            '0xb1BfCa83f6d16928af5d67623627F157c896E7f7',
+            Number(nft.tokenId),
+          ],
+        });
+
+        if (!approveHash) throw new Error('No approve hash');
+
+        await waitForTransactionReceipt(config, { hash: approveHash });
+
+        updateApproveStatus(id, 'success');
+
+        // LISTING
+        setStep('listing');
+        const initialListingStatuses: Record<string, 'loading'> = {};
+        selectedNfts.forEach((nft) => {
+          const id = getNftId(nft);
+          initialListingStatuses[id] = 'loading';
+        });
+        setListingStatuses(initialListingStatuses);
+        updateListingStatus(id, 'loading');
+
         await writeContractAsync({
           functionName: 'createListing',
           args: [
-            '0x3019BF1dfB84E5b46Ca9D0eEC37dE08a59A41308',
-            209252,
-            parseEther('5'),
+            nft.contract,
+            Number(nft.tokenId),
+            parseEther(inputPrices[id]),
           ],
         });
-        console.log('createListing');
-      } catch (error) {
-        console.error('Mint failed:', error);
-      }
-      // }
 
-      setIsApproving(false);
-    } catch (error) {
-      console.error('Approve failed:', error);
-      setIsApproving(false);
-      return;
+        updateListingStatus(id, 'success');
+      } catch (e) {
+        console.error(e);
+        updateApproveStatus(id, 'error');
+        updateListingStatus(id, 'error');
+      }
     }
   };
 
   const [inputPrices, setInputPrices] = useState<Record<string, string>>({});
+
+  const totalPrice = selectedNfts.reduce(
+    (sum, nft) => sum + Number(inputPrices[getNftId(nft)]) || 0,
+    0,
+  );
 
   const handlePriceChange = (id: string, value: string) => {
     setInputPrices((prev) => ({
@@ -97,23 +137,42 @@ export const SellModal = ({
     return price !== undefined && Number(price) > 0;
   });
 
-  const verifying = true; // Assuming all NFTs are verified
-  const listing = true;
-
   const getButtonText = () => {
-    if (listing) return 'Listing';
-    if (verifying) return 'Approving';
-    return 'Sell';
+    if (step === 'listing') return 'Listing';
+    if (step === 'approve') return 'Approve Access';
+    return 'List Items';
+  };
+
+  const renderContent = () => {
+    switch (step) {
+      case 'approve':
+        return <Approve nfts={selectedNfts} statuses={approveStatuses} />;
+
+      case 'listing':
+        return <List statuses={listingStatuses} nfts={selectedNfts} />;
+
+      case 'form':
+      default:
+        return (
+          <ListingForm
+            nfts={selectedNfts}
+            prices={inputPrices}
+            handlePriceChange={handlePriceChange}
+          />
+        );
+    }
   };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="flex h-screen w-full max-w-[600px] items-center justify-center">
-        <div className="flex h-[700px] max-h-[calc(100dvh_-_32px)] w-full flex-col border border-[rgb(50,45,62)] bg-[#35373a]">
-          <div className="flex shrink-0 items-center justify-between border-b p-4 px-8 py-6 transition-all duration-300">
+        <div className="flex h-[700px] max-h-[calc(100dvh_-_32px)] w-full flex-col rounded-[4px] border border-[rgb(42,44,46)] bg-[rgb(16,16,17)]">
+          <div className="flex shrink-0 items-center justify-between border-b border-[rgb(42,44,46)] p-4 px-8 py-6 transition-all duration-300">
             <div className="flex w-full items-center justify-between gap-x-2">
               <div className="flex items-center gap-x-2 transition-opacity duration-300">
-                <span>{getButtonText()}</span>
+                <h4 className="text-base leading-6 font-semibold">
+                  {getButtonText()}
+                </h4>
               </div>
               <button
                 onClick={onClose}
@@ -126,20 +185,18 @@ export const SellModal = ({
           <div className="relative flex flex-1 flex-col overflow-hidden !p-0 px-4 pb-4 md:p-4">
             <div className="text relative flex flex-1 flex-col overflow-x-hidden overflow-y-auto">
               <div className="relative px-3.5 pb-3.5 md:px-8 md:pb-6">
-                {!verifying && (
-                  <SellNFTs
-                    nfts={selectedNfts}
-                    prices={inputPrices}
-                    handlePriceChange={handlePriceChange}
-                  />
-                )}
-                {verifying && (
-                  <ApproveNFTsAccess nfts={selectedNfts} prices={inputPrices} />
-                )}
+                {renderContent()}
               </div>
             </div>
             <div className="shrink-0 overflow-hidden">
-              <div className="flex flex-col gap-y-3 border-t px-3.5 pt-3.5 pb-3.5 md:px-8 md:pt-6 md:pb-6">
+              <div className="flex flex-col gap-y-3 border-t border-[rgb(42,44,46)] px-3.5 pt-3.5 pb-3.5 md:px-8 md:pt-6 md:pb-6">
+                <div className="flex h-[22px] w-full items-center justify-between text-base">
+                  <span className="text-[#fff]">You receive</span>
+                  <div className="flex gap-1 text-[#fff]">
+                    <span>{totalPrice}</span>
+                    <span className="text-[rgb(133,127,148)]">MON</span>
+                  </div>
+                </div>
                 <div className="grid grid-cols-2 gap-x-2">
                   <button
                     onClick={onClose}

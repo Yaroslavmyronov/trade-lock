@@ -1,23 +1,21 @@
 import { Nft } from '@/entities/nfts/types';
-import { SellNFT } from './SellNFT';
-import { SellNFTsSummary } from './SellNFTsSummary';
 import { getNftId } from '../model/NFT';
 import { nftPriceChange, nftPrices } from '../types';
+import { SellNFT } from './SellNFT';
 
-interface SellNFTsProps {
+interface ListingFormProps {
   nfts: Nft[];
   prices: nftPrices;
   handlePriceChange: nftPriceChange;
 }
 
-export const SellNFTs = ({
+export const ListingForm = ({
   nfts,
   prices,
   handlePriceChange,
-}: SellNFTsProps) => {
+}: ListingFormProps) => {
   return (
-    <>
-      <SellNFTsSummary nfts={nfts} prices={prices} />
+    <div className="py-4">
       <ul className="flex flex-col gap-y-3.5 pt-3.5 md:gap-y-4 md:pt-6">
         {nfts.map((nft) => {
           const id = getNftId(nft);
@@ -31,6 +29,6 @@ export const SellNFTs = ({
           );
         })}
       </ul>
-    </>
+    </div>
   );
 };
