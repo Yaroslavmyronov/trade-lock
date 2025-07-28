@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useEffect, useMemo, useState } from 'react';
 import { useConnect } from 'wagmi';
 import { ArrowIcon } from './icons/ArrowIcon';
+import LogoImage from '@public/images/logo.png';
 
 interface ConnectModalProps {
   isOpen: boolean;
@@ -198,7 +199,7 @@ export const ConnectModal = ({ isOpen, onClose }: ConnectModalProps) => {
           <div className="[&::-webkit-scrollbar-thumb]:bg-bg-additional-3 [&::-webkit-scrollbar-thumb]:hover:bg-bg-additional-3 [&::-webkit-scrollbar-thumb]:active:bg-bg-additional-3 [&::-webkit-scrollbar-track]:bg-bg-app [&::-webkit-scrollbar]:bg-bg-app flex flex-col overflow-y-auto px-6 pt-12 pb-6 [&::-webkit-scrollbar]:size-2 [&::-webkit-scrollbar-thumb]:rounded">
             <div className="mb-6 flex flex-col items-center justify-center">
               <div className="flex size-[100px] flex-col items-center justify-center overflow-hidden rounded-full drop-shadow-sm">
-                Logo
+                <Image src={LogoImage} alt="Logo" />
               </div>
             </div>
 

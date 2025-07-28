@@ -4,7 +4,11 @@ import { useState } from 'react';
 import { useAccount, useDisconnect, useEnsAvatar, useEnsName } from 'wagmi';
 import { ConnectModal } from './ConnectModal';
 
-export function ConnectButton() {
+export function ConnectButton({
+  loginButtonClassNames,
+}: {
+  loginButtonClassNames?: string;
+}) {
   const { address, connector } = useAccount();
   const { disconnect } = useDisconnect();
   const { data: ensName } = useEnsName({ address });
@@ -38,7 +42,10 @@ export function ConnectButton() {
     <>
       <button
         onClick={() => setModalOpen(true)}
-        className="cursor-pointer self-center bg-[#35373a] px-[15px] py-[11px] text-[14px] leading-3.5 text-white"
+        className={
+          loginButtonClassNames ??
+          'cursor-pointer self-center bg-[#35373a] px-[15px] py-[11px] text-[14px] leading-3.5 text-white'
+        }
       >
         Login
       </button>
