@@ -28,14 +28,14 @@ export const FilterPanel = ({
   return (
     <div>
       <div ref={portalContainerRef} className="relative">
-        <div className="my-4 flex overflow-hidden">
+        <div className="my-4 flex">
           <Filter active={opened === panel} onClick={handleClick} />
           <Search />
           {opened === panel && (
             <Filters opened={opened} onClose={() => close(panel)} />
           )}
           <Refresh />
-          <Sort portalContainer={portalContainerRef} />
+          <Sort />
         </div>
       </div>
     </div>

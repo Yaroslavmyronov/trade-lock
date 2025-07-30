@@ -3,12 +3,18 @@ import { ArrowIcon } from '@/shared';
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
-interface SortProps {
-  portalContainer: React.RefObject<HTMLDivElement | null>;
-}
+const sortOptions = [
+  { label: 'Relevance Ascending', value: 'relevance_asc' },
+  { label: 'Relevance Descending', value: 'relevance_desc' },
+  { label: 'Amount Ascending', value: 'amount_asc' },
+  { label: 'Amount Descending', value: 'amount_desc' },
+  { label: 'Alphabeticaly: A-Z', value: 'alphabetical_a-z' },
+  { label: 'Alphabeticaly: Z-A', value: 'alphabetical_z-a' },
+];
 
-export const Sort = ({ portalContainer }: SortProps) => {
+export const Sort = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedSort, setSelectedSort] = useState(sortOptions[0]);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -27,33 +33,33 @@ export const Sort = ({ portalContainer }: SortProps) => {
       <div>
         {/* menu */}
         {isOpen &&
-          portalContainer.current &&
+          menuRef.current &&
           createPortal(
             <div className="absolute right-0 bottom-[-36px] z-20 flex max-h-full max-w-screen min-w-[110px]">
               <div className="mt-4 h-full max-h-[800px] w-48 max-w-[300px] min-w-[200px] rounded-xs bg-[rgb(42,44,46)] shadow-lg ring-1 ring-black/5">
                 <div className="py-2">
-                  <div>
-                    <button className="flex h-[36px] w-full cursor-pointer items-center px-4 text-[13px] hover:bg-[rgba(0,0,0,.1)]">
-                      <span className="flex items-center">
-                        <div className="mr-4 text-[#836EF9]"></div>
-                        Log out
-                      </span>
+                  {sortOptions.map((option) => (
+                    <button
+                      key={option.label}
+                      className="flex h-[36px] w-full cursor-pointer items-center px-4 text-[13px] hover:bg-[rgba(0,0,0,.1)]"
+                      onClick={() => {
+                        setSelectedSort(option);
+                        setIsOpen(false);
+                      }}
+                    >
+                      <span className="flex items-center">{option.label}</span>
                     </button>
-                  </div>
+                  ))}
                 </div>
               </div>
             </div>,
-            portalContainer.current,
+            menuRef.current,
           )}
 
-        <div className="relative w-[123px]">
+        <div className="relative w-[200px]">
           <div
             onClick={() => {
-              if (isOpen) {
-                setIsOpen(false);
-              } else {
-                setIsOpen(true);
-              }
+              setIsOpen(!isOpen);
             }}
             className="relative flex h-[48px] cursor-pointer items-center rounded-[2px] bg-[#35373a] pr-[25px] pl-2 text-[#fff] hover:inset-shadow-[0_70px_#0000001a]"
           >
@@ -66,7 +72,7 @@ export const Sort = ({ portalContainer }: SortProps) => {
                 <label className="pointer-events-none w-full text-xs text-ellipsis whitespace-nowrap text-[#848484]">
                   Sort by
                 </label>
-                <span>Relevance</span>
+                <span>{selectedSort.label}</span>
               </div>
             </div>
           </div>

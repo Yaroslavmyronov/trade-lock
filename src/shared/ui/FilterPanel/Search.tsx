@@ -50,11 +50,15 @@ export const Search = () => {
           ref={inputRef}
           onFocus={() => setIsActive(true)}
           className="absolute left-0 h-full max-w-full appearance-none border-none pr-[10px] pl-[48px] text-[#fff] outline-0 transition-all duration-300 ease-in-out"
-          type="search"
           placeholder="Search profile"
         />
         <button
-          onClick={() => setIsActive(false)}
+          onClick={() => {
+            setIsActive(false);
+            if (inputRef.current) {
+              inputRef.current.value = '';
+            }
+          }}
           className={`absolute top-1/2 right-0 flex h-full w-[48px] cursor-pointer items-center justify-center text-current opacity-0 transition-all duration-300 ease-in-out ${isActive ? 'translate-y-[-50%] scale-100 opacity-100' : 'translate-y-[-50%] scale-0 opacity-0'}`}
         >
           <CloseIcon width={24} height={24} />
