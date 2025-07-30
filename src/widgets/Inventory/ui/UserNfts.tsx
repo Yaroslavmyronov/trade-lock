@@ -1,13 +1,14 @@
 import { Nft, NftResponse } from '@/entities/nfts/types';
 import { getNftId } from '@/features/nft-sell/model/NFT';
-import { Card } from '@/shared';
+import { Card, Preloader } from '@/shared';
 import { handleCardClick } from '@/shared/lib/handleCardClick';
 
 interface UserNftsProps {
-  nftsData: NftResponse;
+  nftsData: NftResponse | null;
   selectedNfts: Nft[];
   toggleSelect: (nft: Nft) => void;
   removeItem: (id: string) => void;
+  loading: boolean;
 }
 
 export const UserNfts = ({
@@ -15,7 +16,23 @@ export const UserNfts = ({
   selectedNfts,
   toggleSelect,
   removeItem,
+  loading,
 }: UserNftsProps) => {
+  if (loading) {
+    return (
+      <div className="flex size-full shrink grow basis-auto items-center justify-center">
+        <Preloader></Preloader>
+      </div>
+    );
+  }
+
+  if (!nftsData) {
+    return (
+      <div className="flex size-full shrink grow basis-auto items-center justify-center">
+        <span>No NFTs found</span>
+      </div>
+    );
+  }
   return (
     <div className="relative flex shrink grow basis-auto flex-col overflow-auto">
       <div className="absolute flex h-full max-h-full w-full flex-wrap">

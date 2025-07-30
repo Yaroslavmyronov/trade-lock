@@ -8,21 +8,29 @@ import { Counter } from '@/shared';
 import { useFilters } from '@/shared/store/useFilters';
 import { usePropose } from '@/shared/store/usePropose';
 
+import { useFetch } from '@/shared/hooks/useFetch';
 import { useSelectedNfts } from '@/shared/store/useSelectedNfts';
 import { ProfilePrice } from './ProfilePrice';
 import { UserNfts } from './UserNfts';
 
-export const Inventory = ({
-  filter,
-  nftsData,
-}: {
-  filter: 'sell' | 'trade';
-  nftsData: NftResponse;
-}) => {
+export const Inventory = ({ filter }: { filter: 'sell' | 'trade' }) => {
   const { selectedNfts, clearAll, toggleSelect, removeItem } =
     useSelectedNfts();
   const { opened, open, close } = useFilters();
   const { toggle, isOpen } = usePropose();
+  const {
+    data: nftsData,
+    loading,
+    error,
+  } = useFetch<NftResponse>('/market/get-user-tokens');
+
+  if (error) {
+    return (
+      <div className="flex size-full items-center justify-center">
+        <span>Failed to load NFTs. Please try again.</span>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -30,12 +38,13 @@ export const Inventory = ({
     >
       <div className="relative flex min-h-full max-w-full grow flex-col px-5">
         <FilterPanel panel="user" close={close} opened={opened} open={open} />
-        <ProfilePrice nftsData={nftsData} />
+        <ProfilePrice nftsData={nftsData} loading={loading} />
         <UserNfts
           selectedNfts={selectedNfts}
           toggleSelect={toggleSelect}
           removeItem={removeItem}
           nftsData={nftsData}
+          loading={loading}
         />
         <Counter
           isOpen={isOpen}
@@ -47,16 +56,11 @@ export const Inventory = ({
           isOpen={isOpen}
           removeItem={removeItem}
           toggleSelect={toggleSelect}
-          selectedNfts={selectedNfts}
-          nftsData={nftsData}
+          selectedNfts={selectedNfts ?? []}
         />
         {filter === 'sell' && (
           <div className="flex pb-4">
-            <SellButton
-              nftsData={nftsData}
-              selectedNfts={selectedNfts}
-            ></SellButton>
-            {/* <SellButton nftsData={nftsData} selectedIds={selectedIds} /> */}
+            <SellButton selectedNfts={selectedNfts}></SellButton>
           </div>
         )}
       </div>

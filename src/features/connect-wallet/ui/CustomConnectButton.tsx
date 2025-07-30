@@ -5,9 +5,11 @@ import { useAccount, useDisconnect, useEnsAvatar, useEnsName } from 'wagmi';
 import { ConnectModal } from './ConnectModal';
 
 export function ConnectButton({
+  сonnectButtonText,
   loginButtonClassNames,
 }: {
   loginButtonClassNames?: string;
+  сonnectButtonText?: string;
 }) {
   const { address, connector } = useAccount();
   const { disconnect } = useDisconnect();
@@ -47,7 +49,7 @@ export function ConnectButton({
           'cursor-pointer self-center bg-[#35373a] px-[15px] py-[11px] text-[14px] leading-3.5 text-white'
         }
       >
-        Login
+        {сonnectButtonText ?? 'Login'}
       </button>
 
       <ConnectModal

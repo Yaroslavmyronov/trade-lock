@@ -1,15 +1,14 @@
 'use client';
-import { Nft, NftResponse } from '@/entities/nfts/types';
+import { Nft } from '@/entities/nfts/types';
 import { MarketIcon } from '@/shared';
 import { useState } from 'react';
 import { SellModal } from './SellModal';
 
 interface SellButtonProps {
-  nftsData: NftResponse;
   selectedNfts: Nft[];
 }
 
-export const SellButton = ({ nftsData, selectedNfts }: SellButtonProps) => {
+export const SellButton = ({ selectedNfts }: SellButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const sellPrice = selectedNfts.reduce((sum, nft) => sum + nft.lastPrice, 0);
 
@@ -19,7 +18,7 @@ export const SellButton = ({ nftsData, selectedNfts }: SellButtonProps) => {
     <>
       <div className="mx-1.5">
         <button
-          className="flex min-h-[48px] min-w-[160px] cursor-pointer items-center justify-center rounded-[2px] bg-[#836EF9] px-3 disabled:cursor-not-allowed disabled:bg-[#A5A5A5]"
+          className="flex min-h-[48px] min-w-[160px] cursor-pointer items-center justify-center rounded-[2px] bg-[#836EF9] px-3 disabled:cursor-not-allowed disabled:opacity-40"
           disabled={noSelectedNfts}
           onClick={() => setIsOpen(true)}
         >

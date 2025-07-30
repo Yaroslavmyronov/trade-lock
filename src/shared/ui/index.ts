@@ -8,3 +8,4 @@ export { Search } from './FilterPanel/Search';
 export { Sort } from './FilterPanel/Sort';
 export { MarketCounter } from './MarketCounter';
 export { Preloader } from './Preloader';
+export { SuspenseBoundary } from './SuspenseBoundary';

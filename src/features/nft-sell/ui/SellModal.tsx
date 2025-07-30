@@ -1,13 +1,13 @@
 'use client';
 import { Nft } from '@/entities/nfts/types';
-import { CloseIcon } from '@/shared';
+import { CloseIcon, Preloader } from '@/shared';
 import { getConfig } from '@/shared/config/wagmi/wagmiConfig';
 import { useWrapperWriteContract } from '@/shared/lib/web3/useWrapperWriteContract';
 import { Modal } from '@/shared/ui/Modal';
 import { useState } from 'react';
 import { erc721Abi, parseEther } from 'viem';
 
-import { useWriteContract } from 'wagmi';
+import { useReadContract, useWriteContract } from 'wagmi';
 import { waitForTransactionReceipt } from 'wagmi/actions';
 import { getNftId } from '../model/NFT';
 import { Approve } from './Approve';
@@ -43,13 +43,26 @@ export const SellModal = ({
   const [listingStatuses, setListingStatuses] = useState<
     Record<string, 'idle' | 'loading' | 'success' | 'error'>
   >({});
+
+  const isAllListedSuccessfully = () => {
+    return selectedNfts.every((nft) => {
+      const id = getNftId(nft);
+      return listingStatuses[id] === 'success';
+    });
+  };
+  const isAllApproveSuccessfully = () => {
+    return selectedNfts.every((nft) => {
+      const id = getNftId(nft);
+      return approveStatuses[id] !== 'loading';
+    });
+  };
+
   const updateApproveStatus = (
     nftId: string,
     status: 'idle' | 'loading' | 'success' | 'error',
   ) => {
     setApproveStatuses((prev) => ({ ...prev, [nftId]: status }));
   };
-
   const updateListingStatus = (
     nftId: string,
     status: 'idle' | 'loading' | 'success' | 'error',
@@ -58,6 +71,11 @@ export const SellModal = ({
   };
   const config = getConfig();
   const [step, setStep] = useState<'form' | 'approve' | 'listing'>('form');
+
+  const isApproved = (nft: Nft) => {
+    const approved = useReadContract();
+  };
+
   const handleSell = async () => {
     for (const nft of selectedNfts) {
       const id = getNftId(nft);
@@ -188,8 +206,19 @@ export const SellModal = ({
                 {renderContent()}
               </div>
             </div>
+            <></>
+            {isAllListedSuccessfully() && (
+              <button
+                onClick={onClose}
+                className="text-primary disabled:text-disabled inline-flex h-[40px] cursor-pointer items-center justify-center rounded bg-[rgb(62_56_77/_60%)] px-3 py-0 text-sm transition hover:bg-[rgb(62_56_77/_40%)] active:bg-[rgb(71_64_89/_90%)]"
+              >
+                Done
+              </button>
+            )}
             <div className="shrink-0 overflow-hidden">
               <div className="flex flex-col gap-y-3 border-t border-[rgb(42,44,46)] px-3.5 pt-3.5 pb-3.5 md:px-8 md:pt-6 md:pb-6">
+                {}
+                <></>
                 <div className="flex h-[22px] w-full items-center justify-between text-base">
                   <span className="text-[#fff]">You receive</span>
                   <div className="flex gap-1 text-[#fff]">
@@ -206,10 +235,18 @@ export const SellModal = ({
                   </button>
                   <button
                     onClick={handleSell}
-                    disabled={!allPricesFilled || isMining}
-                    className="hover:bg-button-secondary-hover active:bg-button-secondary-active text-primary disabled:text-disabled inline-flex h-[40px] cursor-pointer items-center justify-center rounded bg-[#836EF9] px-3 py-0 text-sm transition disabled:cursor-not-allowed disabled:bg-[rgb(236_19_109/_20%)]"
+                    disabled={
+                      !allPricesFilled ||
+                      isMining ||
+                      !isAllApproveSuccessfully()
+                    }
+                    className="hover:bg-button-secondary-hover active:bg-button-secondary-active text-primary disabled:text-disabled inline-flex h-[40px] cursor-pointer items-center justify-center rounded bg-[#836EF9] px-3 py-0 text-sm transition disabled:cursor-not-allowed disabled:opacity-40"
                   >
-                    <span>Sell {selectedNfts.length} Item</span>
+                    {!isAllApproveSuccessfully() ? (
+                      <Preloader></Preloader>
+                    ) : (
+                      <span>Sell {selectedNfts.length} Item</span>
+                    )}
                   </button>
                 </div>
               </div>
