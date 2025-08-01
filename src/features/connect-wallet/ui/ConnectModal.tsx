@@ -1,29 +1,18 @@
 'use client';
-import { CloseIcon, Preloader } from '@/shared';
+import { CloseIcon } from '@/shared';
 import { Modal } from '@/shared/ui/Modal';
-import type { StreamProvider } from '@metamask/providers';
-import Image from 'next/image';
-import { useEffect, useMemo, useState } from 'react';
-import { useConnect } from 'wagmi';
-import { ArrowIcon } from './icons/ArrowIcon';
 import LogoImage from '@public/images/logo.png';
+import Image from 'next/image';
+import { useMemo, useState } from 'react';
+import { Connector, useConnect } from 'wagmi';
+import { useEIP6963 } from '../hooks/useEIP6963';
+import { detectLegacyWallets } from '../lib/detectLegacyWallets';
+import { ArrowIcon } from './icons/ArrowIcon';
+import { WalletList } from './WalletList';
 
 interface ConnectModalProps {
   isOpen: boolean;
   onClose: () => void;
-}
-
-// EIP-6963 типы
-interface EIP6963ProviderInfo {
-  uuid: string;
-  name: string;
-  icon: string;
-  rdns: string;
-}
-
-interface EIP6963ProviderDetail {
-  info: EIP6963ProviderInfo;
-  provider: StreamProvider;
 }
 
 const INSTALL_URLS: Record<string, string> = {
@@ -35,71 +24,6 @@ const INSTALL_URLS: Record<string, string> = {
   'io.zerion.wallet': 'https://zerion.io/download',
 };
 
-function useEIP6963() {
-  const [providers, setProviders] = useState<
-    Map<string, EIP6963ProviderDetail>
-  >(new Map());
-
-  useEffect(() => {
-    const handleAnnouncement = (event: CustomEvent<EIP6963ProviderDetail>) => {
-      setProviders((prev) => {
-        const updated = new Map(prev);
-        updated.set(event.detail.info.uuid, event.detail);
-        return updated;
-      });
-    };
-
-    window.addEventListener(
-      'eip6963:announceProvider',
-      handleAnnouncement as EventListener,
-    );
-
-    window.dispatchEvent(new CustomEvent('eip6963:requestProvider'));
-
-    return () => {
-      window.removeEventListener(
-        'eip6963:announceProvider',
-        handleAnnouncement as EventListener,
-      );
-    };
-  }, []);
-
-  return Array.from(providers.values());
-}
-
-function detectLegacyWallets() {
-  if (typeof window === 'undefined') return [];
-
-  const legacyWallets = [
-    {
-      name: 'MetaMask',
-      rdns: 'io.metamask',
-      icon: '/images/metamask.svg',
-      detected: !!(window as any).ethereum?.isMetaMask,
-    },
-    {
-      name: 'Coinbase Wallet',
-      rdns: 'com.coinbase.wallet',
-      icon: '/images/coinbase-wallet.svg',
-      detected: !!(window as any).ethereum?.isCoinbaseWallet,
-    },
-    {
-      name: 'Rabby',
-      rdns: 'io.rabby',
-      icon: '/images/rabby-wallet.svg',
-      detected: !!(window as any).ethereum?.isRabby,
-    },
-    {
-      name: 'Phantom',
-      rdns: 'app.phantom',
-      icon: '/images/phantom.png',
-      detected: !!(window as any).phantom?.ethereum,
-    },
-  ];
-
-  return legacyWallets;
-}
-
 export const ConnectModal = ({ isOpen, onClose }: ConnectModalProps) => {
   const [showNotInstalled, setShowNotInstalled] = useState(false);
   const { connect, connectors, status, error, variables } = useConnect();
@@ -109,7 +33,7 @@ export const ConnectModal = ({ isOpen, onClose }: ConnectModalProps) => {
   const legacyWallets = detectLegacyWallets();
 
   const isConnecting = status === 'pending';
-  const currentConnector = variables?.connector;
+  const currentConnector = variables?.connector as Connector | undefined;
 
   const allWallets = useMemo(() => {
     const walletMap = new Map();
@@ -149,6 +73,8 @@ export const ConnectModal = ({ isOpen, onClose }: ConnectModalProps) => {
   const visibleWallets = showNotInstalled
     ? notInstalledWallets
     : installedWallets;
+
+  const onToggleShowNotInstalled = () => setShowNotInstalled(!showNotInstalled);
 
   const handleWalletClick = async (wallet: any) => {
     if (!wallet.detected) {
@@ -215,83 +141,16 @@ export const ConnectModal = ({ isOpen, onClose }: ConnectModalProps) => {
               </div>
             )}
 
-            <div className="flex flex-col text-center">
-              <ul className="divide-y divide-[rgb(42,44,46)] overflow-hidden rounded-xl border border-[rgb(42,44,46)] bg-[rgb(20,20,21)]">
-                {visibleWallets.map((wallet) => {
-                  const isCurrentlyConnecting =
-                    isConnecting &&
-                    currentConnector?.name
-                      .toLowerCase()
-                      .includes(wallet.name.toLowerCase());
-
-                  return (
-                    <div key={wallet.id}>
-                      <button
-                        onClick={() => handleWalletClick(wallet)}
-                        disabled={isCurrentlyConnecting}
-                        className="active:bg-bg-additional-2 flex w-full cursor-pointer items-center gap-3 border-[rgb(42,44,46)] p-4 hover:bg-[rgb(27,29,31)] focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40"
-                      >
-                        {wallet.icon && (
-                          <Image
-                            src={wallet.icon.trim()}
-                            width={24}
-                            height={24}
-                            alt={wallet.name}
-                            className="rounded"
-                          />
-                        )}
-
-                        <div className="order-2 flex flex-auto flex-col items-start justify-center self-stretch overflow-hidden">
-                          <span className="text-text-primary w-full truncate text-start text-sm leading-normal font-medium">
-                            {wallet.name}
-                          </span>
-                          {wallet.type === 'eip6963' && (
-                            <span className="text-xs text-gray-400">
-                              EIP-6963 compatible
-                            </span>
-                          )}
-                        </div>
-
-                        <div className="order-3 flex max-w-[40%] flex-none flex-col justify-center self-stretch overflow-visible text-right">
-                          {/* isCurrentlyConnecting */}
-                          {isCurrentlyConnecting ? (
-                            <Preloader />
-                          ) : wallet.detected ? (
-                            <div className="flex w-fit items-center gap-1 rounded bg-green-600/20 px-1.5 py-0.5 text-green-400">
-                              <span className="text-xs leading-normal font-normal">
-                                Detected
-                              </span>
-                            </div>
-                          ) : (
-                            <div className="flex w-fit items-center gap-1 rounded bg-blue-600/20 px-1.5 py-0.5 text-blue-400">
-                              <span className="text-xs leading-normal font-normal">
-                                Install
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                      </button>
-                    </div>
-                  );
-                })}
-
-                {(installedWallets.length > 0 ||
-                  notInstalledWallets.length > 0) && (
-                  <div>
-                    <button
-                      className="active:bg-bg-additional-2 flex w-full cursor-pointer items-center gap-3 border-[rgb(42,44,46)] p-4 hover:bg-[rgb(27,29,31)] focus-visible:outline-none"
-                      onClick={() => setShowNotInstalled(!showNotInstalled)}
-                    >
-                      <span className="text-text-primary text-sm">
-                        {showNotInstalled
-                          ? `Show detected wallets (${installedWallets.length})`
-                          : `Show more options (${notInstalledWallets.length})`}
-                      </span>
-                    </button>
-                  </div>
-                )}
-              </ul>
-            </div>
+            <WalletList
+              onWalletClick={handleWalletClick}
+              onToggleShowNotInstalled={onToggleShowNotInstalled}
+              currentConnector={currentConnector}
+              isConnecting={isConnecting}
+              notInstalledWallets={notInstalledWallets}
+              installedWallets={installedWallets}
+              visibleWallets={visibleWallets}
+              showNotInstalled={showNotInstalled}
+            ></WalletList>
 
             {showNotInstalled && (
               <button

@@ -7,7 +7,7 @@ import { Modal } from '@/shared/ui/Modal';
 import { useState } from 'react';
 import { erc721Abi, parseEther } from 'viem';
 
-import { useReadContract, useWriteContract } from 'wagmi';
+import { useWriteContract } from 'wagmi';
 import { waitForTransactionReceipt } from 'wagmi/actions';
 import { getNftId } from '../model/NFT';
 import { Approve } from './Approve';
@@ -72,23 +72,23 @@ export const SellModal = ({
   const config = getConfig();
   const [step, setStep] = useState<'form' | 'approve' | 'listing'>('form');
 
-  const isApproved = (nft: Nft) => {
-    const approved = useReadContract();
-  };
+  // const isApproved = (nft: Nft) => {
+  //   const approved = useReadContract();
+  // };
 
   const handleSell = async () => {
-    for (const nft of selectedNfts) {
+    const initialApproveStatuses: Record<string, 'loading'> = {};
+    selectedNfts.forEach((nft) => {
       const id = getNftId(nft);
+      initialApproveStatuses[id] = 'loading';
+    });
+    setApproveStatuses(initialApproveStatuses);
+    setStep('approve');
 
-      try {
-        // APPROVE
-        const initialApproveStatuses: Record<string, 'loading'> = {};
-        selectedNfts.forEach((nft) => {
-          const id = getNftId(nft);
-          initialApproveStatuses[id] = 'loading';
-        });
-        setApproveStatuses(initialApproveStatuses);
-        setStep('approve');
+    try {
+      // 1. Approve all NFTs
+      for (const nft of selectedNfts) {
+        const id = getNftId(nft);
         updateApproveStatus(id, 'loading');
 
         const approveHash = await writeContractApproveAsync({
@@ -96,8 +96,8 @@ export const SellModal = ({
           abi: erc721Abi,
           functionName: 'approve',
           args: [
-            '0xb1BfCa83f6d16928af5d67623627F157c896E7f7',
-            Number(nft.tokenId),
+            '0x570413264Fb80dcEA4b35bd364dA54320f61fDB9',
+            BigInt(nft.tokenId),
           ],
         });
 
@@ -106,32 +106,47 @@ export const SellModal = ({
         await waitForTransactionReceipt(config, { hash: approveHash });
 
         updateApproveStatus(id, 'success');
+      }
 
-        // LISTING
-        setStep('listing');
-        const initialListingStatuses: Record<string, 'loading'> = {};
-        selectedNfts.forEach((nft) => {
-          const id = getNftId(nft);
-          initialListingStatuses[id] = 'loading';
-        });
-        setListingStatuses(initialListingStatuses);
-        updateListingStatus(id, 'loading');
+      // 2. Listing all NFTs in one call
+      setStep('listing');
+      const initialListingStatuses: Record<string, 'loading'> = {};
+      selectedNfts.forEach((nft) => {
+        const id = getNftId(nft);
+        initialListingStatuses[id] = 'loading';
+      });
+      setListingStatuses(initialListingStatuses);
+      selectedNfts.forEach((nft) => {
+        updateListingStatus(getNftId(nft), 'loading');
+      });
+      const listings = selectedNfts.map((nft) => ({
+        contractAddress: nft.contract,
+        tokenId: BigInt(nft.tokenId),
+        price: parseEther(inputPrices[getNftId(nft)]),
+      }));
+      console.log('Prepared listings', listings);
 
-        await writeContractAsync({
-          functionName: 'createListing',
-          args: [
-            nft.contract,
-            Number(nft.tokenId),
-            parseEther(inputPrices[id]),
-          ],
-        });
+      await writeContractAsync({
+        functionName: 'createListing',
+        args: [
+          selectedNfts.map((nft) => ({
+            contractAddress: nft.contract,
+            tokenId: BigInt(nft.tokenId),
+            price: parseEther(inputPrices[getNftId(nft)]),
+          })),
+        ],
+      });
 
-        updateListingStatus(id, 'success');
-      } catch (e) {
-        console.error(e);
+      selectedNfts.forEach((nft) => {
+        updateListingStatus(getNftId(nft), 'success');
+      });
+    } catch (e) {
+      console.error(e);
+      selectedNfts.forEach((nft) => {
+        const id = getNftId(nft);
         updateApproveStatus(id, 'error');
         updateListingStatus(id, 'error');
-      }
+      });
     }
   };
 

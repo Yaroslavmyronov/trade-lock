@@ -1,6 +1,6 @@
 'use client';
 import { CloseIcon } from '@/shared';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 interface ModalProps {
   open: boolean;
@@ -8,7 +8,7 @@ interface ModalProps {
   onConfirm: () => void;
 }
 
-export const Modal: React.FC<ModalProps> = ({ open, onClose, onConfirm }) => {
+export const Modal = ({ open, onClose, onConfirm }: ModalProps) => {
   const [agreed, setAgreed] = useState(false);
   if (!open) return null;
 
