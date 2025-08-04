@@ -10,6 +10,7 @@ import { erc721Abi, parseEther } from 'viem';
 import { useWriteContract } from 'wagmi';
 import { waitForTransactionReceipt } from 'wagmi/actions';
 import { getNftId } from '../model/NFT';
+import { getStatusesHelpers } from '../model/selectors';
 import { Approve } from './Approve';
 import { List } from './List';
 import { ListingForm } from './ListingForm';
@@ -29,14 +30,6 @@ export const SellModal = ({
     useWrapperWriteContract('Marketplace');
   const { writeContractAsync: writeContractApproveAsync } = useWriteContract();
 
-  const nftContracts = selectedNfts.map((nft) => nft.contract);
-  const tokenIdsConsole = selectedNfts.map((nft) => Number(nft.tokenId));
-  console.log('tokenIdsConsole', tokenIdsConsole);
-  const tokenIds: number[] = selectedNfts.map((nft) => Number(nft.tokenId));
-  const prices = selectedNfts.map((nft) =>
-    parseEther(nft.lastPrice.toString()),
-  );
-
   const [approveStatuses, setApproveStatuses] = useState<
     Record<string, 'idle' | 'loading' | 'success' | 'error'>
   >({});
@@ -44,18 +37,12 @@ export const SellModal = ({
     Record<string, 'idle' | 'loading' | 'success' | 'error'>
   >({});
 
-  const isAllListedSuccessfully = () => {
-    return selectedNfts.every((nft) => {
-      const id = getNftId(nft);
-      return listingStatuses[id] === 'success';
-    });
-  };
-  const isAllApproveSuccessfully = () => {
-    return selectedNfts.every((nft) => {
-      const id = getNftId(nft);
-      return approveStatuses[id] !== 'loading';
-    });
-  };
+  const approve = getStatusesHelpers(selectedNfts, approveStatuses);
+  const listing = getStatusesHelpers(selectedNfts, listingStatuses);
+
+  const isApproving = approve.hasAny('loading');
+
+  const isError = listing.hasAny('error') || approve.hasAny('error');
 
   const updateApproveStatus = (
     nftId: string,
@@ -119,12 +106,6 @@ export const SellModal = ({
       selectedNfts.forEach((nft) => {
         updateListingStatus(getNftId(nft), 'loading');
       });
-      const listings = selectedNfts.map((nft) => ({
-        contractAddress: nft.contract,
-        tokenId: BigInt(nft.tokenId),
-        price: parseEther(inputPrices[getNftId(nft)]),
-      }));
-      console.log('Prepared listings', listings);
 
       await writeContractAsync({
         functionName: 'createListing',
@@ -196,6 +177,27 @@ export const SellModal = ({
     }
   };
 
+  const handleRetry = () => {
+    setStep('form');
+    const resetStatuses = selectedNfts.reduce(
+      (acc, nft) => {
+        const id = getNftId(nft);
+        acc[id] = 'idle';
+        return acc;
+      },
+      {} as Record<string, 'idle'>,
+    );
+
+    setApproveStatuses(resetStatuses);
+    setListingStatuses(resetStatuses);
+  };
+
+  const buttonText = isError
+    ? 'Retry Listing'
+    : `Sell ${selectedNfts.length} Item${selectedNfts.length > 1 ? 's' : ''}`;
+
+  const buttonOnClick = isError ? handleRetry : handleSell;
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="flex h-screen w-full max-w-[600px] items-center justify-center">
@@ -222,48 +224,46 @@ export const SellModal = ({
               </div>
             </div>
             <></>
-            {isAllListedSuccessfully() && (
-              <button
-                onClick={onClose}
-                className="text-primary disabled:text-disabled inline-flex h-[40px] cursor-pointer items-center justify-center rounded bg-[rgb(62_56_77/_60%)] px-3 py-0 text-sm transition hover:bg-[rgb(62_56_77/_40%)] active:bg-[rgb(71_64_89/_90%)]"
-              >
-                Done
-              </button>
-            )}
+
             <div className="shrink-0 overflow-hidden">
               <div className="flex flex-col gap-y-3 border-t border-[rgb(42,44,46)] px-3.5 pt-3.5 pb-3.5 md:px-8 md:pt-6 md:pb-6">
-                {}
-                <></>
-                <div className="flex h-[22px] w-full items-center justify-between text-base">
-                  <span className="text-[#fff]">You receive</span>
-                  <div className="flex gap-1 text-[#fff]">
-                    <span>{totalPrice}</span>
-                    <span className="text-[rgb(133,127,148)]">MON</span>
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-x-2">
+                {listing.isAll('success') ? (
                   <button
                     onClick={onClose}
-                    className="text-primary disabled:text-disabled inline-flex h-[40px] cursor-pointer items-center justify-center rounded bg-[rgb(62_56_77/_60%)] px-3 py-0 text-sm transition hover:bg-[rgb(62_56_77/_40%)] active:bg-[rgb(71_64_89/_90%)]"
+                    className="text-primary disabled:text-disabled inline-flex h-[40px] cursor-pointer items-center justify-center rounded bg-[#836EF9] px-3 py-0 text-sm transition disabled:cursor-not-allowed disabled:opacity-40"
                   >
-                    Cancel
+                    Done
                   </button>
-                  <button
-                    onClick={handleSell}
-                    disabled={
-                      !allPricesFilled ||
-                      isMining ||
-                      !isAllApproveSuccessfully()
-                    }
-                    className="hover:bg-button-secondary-hover active:bg-button-secondary-active text-primary disabled:text-disabled inline-flex h-[40px] cursor-pointer items-center justify-center rounded bg-[#836EF9] px-3 py-0 text-sm transition disabled:cursor-not-allowed disabled:opacity-40"
-                  >
-                    {!isAllApproveSuccessfully() ? (
-                      <Preloader></Preloader>
-                    ) : (
-                      <span>Sell {selectedNfts.length} Item</span>
-                    )}
-                  </button>
-                </div>
+                ) : (
+                  <>
+                    <div className="flex h-[22px] w-full items-center justify-between text-base">
+                      <span className="text-[#fff]">You receive</span>
+                      <div className="flex gap-1 text-[#fff]">
+                        <span>{totalPrice}</span>
+                        <span className="text-[rgb(133,127,148)]">MON</span>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-x-2">
+                      <button
+                        onClick={onClose}
+                        className="text-primary disabled:text-disabled inline-flex h-[40px] cursor-pointer items-center justify-center rounded bg-[rgb(62_56_77/_60%)] px-3 py-0 text-sm transition hover:bg-[rgb(62_56_77/_40%)] active:bg-[rgb(71_64_89/_90%)]"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={buttonOnClick}
+                        disabled={!allPricesFilled || isMining || isApproving}
+                        className="text-primary disabled:text-disabled inline-flex h-[40px] cursor-pointer items-center justify-center rounded bg-[#836EF9] px-3 py-0 text-sm transition disabled:cursor-not-allowed disabled:opacity-40"
+                      >
+                        {isApproving ? (
+                          <Preloader></Preloader>
+                        ) : (
+                          <span>{buttonText}</span>
+                        )}
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>

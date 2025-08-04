@@ -47,6 +47,10 @@
   }
 }
 
+html {
+  color-scheme: dark !important;
+}
+
 html,
 body {
   height: 100%;
