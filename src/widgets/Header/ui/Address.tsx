@@ -33,7 +33,9 @@ export const Address = () => {
 
   const shortAddress = checkSumAddress?.slice(2, 8) ?? '';
 
-  if (!checkSumAddress) {
+  const isWalletConnected = Boolean(address && isConnected && connector);
+
+  if (!isWalletConnected) {
     return <ConnectButton></ConnectButton>;
   }
 
@@ -51,16 +53,9 @@ export const Address = () => {
             <MonadIcon />
             <span className="text-sm leading-normal font-normal">
               <div className="flex items-center">
-                <div className="inline-flex items-center gap-1 truncate">
-                  <div className="flex max-w-full items-center truncate break-all">
+                <div className="inline-flex items-center gap-1">
+                  <div className="flex max-w-full items-center break-all">
                     <Balance address={address}></Balance>
-                  </div>
-                </div>
-                <div className="mx-3 h-4 w-px shrink-0 bg-[#fff]"></div>
-                <div className="inline-flex items-center gap-1 truncate bg-[rgb(141,210,148)] opacity-10">
-                  <div className="flex max-w-full items-center truncate break-all">
-                    <span>30</span>
-                    <span>MON</span>
                   </div>
                 </div>
               </div>

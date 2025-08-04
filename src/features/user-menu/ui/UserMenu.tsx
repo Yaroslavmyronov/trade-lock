@@ -3,7 +3,7 @@
 import { ArrowIcon, AvatarComponent } from '@/shared';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
-import { Connector, cookieStorage, useDisconnect } from 'wagmi';
+import { Connector, useDisconnect } from 'wagmi';
 
 import { LogOutIcon } from './icons/LogOutIcon';
 
@@ -57,7 +57,9 @@ export const UserMenu = ({
                     alt={connector.name ?? 'Wallet'}
                     src={connector.icon.trim()}
                   />
-                ) : null}
+                ) : (
+                  <div className="size-3 animate-pulse rounded-full bg-gray-400" />
+                )}
               </div>
             </div>
             <span className="text-sm leading-normal font-normal">
@@ -81,7 +83,7 @@ export const UserMenu = ({
                   onClick={() => {
                     try {
                       disconnect();
-                      cookieStorage.removeItem('wagmi.store');
+                      // cookieStorage.removeItem('wagmi.store');
                     } catch (error) {
                       console.log('disconnect error', error);
                     }

@@ -9,6 +9,7 @@ import { erc721Abi, parseEther } from 'viem';
 
 import { useWriteContract } from 'wagmi';
 import { waitForTransactionReceipt } from 'wagmi/actions';
+import { getNotApprovedNfts } from '../model/checkApprovedNfts';
 import { getNftId } from '../model/NFT';
 import { getStatusesHelpers } from '../model/selectors';
 import { Approve } from './Approve';
@@ -59,54 +60,60 @@ export const SellModal = ({
   const config = getConfig();
   const [step, setStep] = useState<'form' | 'approve' | 'listing'>('form');
 
-  // const isApproved = (nft: Nft) => {
-  //   const approved = useReadContract();
-  // };
-
   const handleSell = async () => {
-    const initialApproveStatuses: Record<string, 'loading'> = {};
-    selectedNfts.forEach((nft) => {
-      const id = getNftId(nft);
-      initialApproveStatuses[id] = 'loading';
-    });
-    setApproveStatuses(initialApproveStatuses);
     setStep('approve');
 
-    try {
-      // 1. Approve all NFTs
-      for (const nft of selectedNfts) {
-        const id = getNftId(nft);
-        updateApproveStatus(id, 'loading');
+    const notApprovedNfts = await getNotApprovedNfts(
+      selectedNfts,
+      updateApproveStatus,
+    );
 
-        const approveHash = await writeContractApproveAsync({
-          address: nft.contract,
-          abi: erc721Abi,
-          functionName: 'approve',
-          args: [
-            '0x570413264Fb80dcEA4b35bd364dA54320f61fDB9',
-            BigInt(nft.tokenId),
-          ],
+    if (notApprovedNfts.length > 0) {
+      const statuses = Object.fromEntries(
+        notApprovedNfts.map((nft) => [getNftId(nft), 'loading' as const]),
+      );
+      setApproveStatuses((prev) => ({ ...prev, ...statuses }));
+
+      try {
+        for (const nft of notApprovedNfts) {
+          const id = getNftId(nft);
+          updateApproveStatus(id, 'loading');
+
+          const approveHash = await writeContractApproveAsync({
+            address: nft.contract,
+            abi: erc721Abi,
+            functionName: 'approve',
+            args: [
+              '0x570413264Fb80dcEA4b35bd364dA54320f61fDB9', // MARKETPLACE_ADDRESS
+              BigInt(nft.tokenId),
+            ],
+          });
+
+          if (!approveHash) throw new Error('No approve hash');
+          await waitForTransactionReceipt(config, { hash: approveHash });
+
+          updateApproveStatus(id, 'success');
+        }
+      } catch (e) {
+        console.error('Approve error:', e);
+        notApprovedNfts.forEach((nft) => {
+          const id = getNftId(nft);
+          updateApproveStatus(id, 'error');
         });
-
-        if (!approveHash) throw new Error('No approve hash');
-
-        await waitForTransactionReceipt(config, { hash: approveHash });
-
-        updateApproveStatus(id, 'success');
+        return;
       }
+    }
 
-      // 2. Listing all NFTs in one call
-      setStep('listing');
-      const initialListingStatuses: Record<string, 'loading'> = {};
-      selectedNfts.forEach((nft) => {
-        const id = getNftId(nft);
-        initialListingStatuses[id] = 'loading';
-      });
-      setListingStatuses(initialListingStatuses);
-      selectedNfts.forEach((nft) => {
-        updateListingStatus(getNftId(nft), 'loading');
-      });
+    // Step 2: Create listings
+    setStep('listing');
+    const initialListingStatuses: Record<string, 'loading'> = {};
+    selectedNfts.forEach((nft) => {
+      const id = getNftId(nft);
+      initialListingStatuses[id] = 'loading';
+    });
+    setListingStatuses(initialListingStatuses);
 
+    try {
       await writeContractAsync({
         functionName: 'createListing',
         args: [
@@ -122,11 +129,9 @@ export const SellModal = ({
         updateListingStatus(getNftId(nft), 'success');
       });
     } catch (e) {
-      console.error(e);
+      console.error('Listing error:', e);
       selectedNfts.forEach((nft) => {
-        const id = getNftId(nft);
-        updateApproveStatus(id, 'error');
-        updateListingStatus(id, 'error');
+        updateListingStatus(getNftId(nft), 'error');
       });
     }
   };
