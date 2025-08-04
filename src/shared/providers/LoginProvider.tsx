@@ -16,6 +16,11 @@ export const LoginProvider = ({ children }: LoginProviderProps) => {
   const { authStatus } = useGlobalState();
 
   const isWalletConnected = Boolean(address && isConnected && connector);
+
+  console.log('address', address);
+  console.log('isConnected', isConnected);
+  console.log('connector', connector);
+
   const isAuthenticated = authStatus === 'authenticated';
   const isLoading = authStatus === 'loading';
 
@@ -26,7 +31,8 @@ export const LoginProvider = ({ children }: LoginProviderProps) => {
       </div>
     );
   }
-
+  console.log('isWalletConnected', isWalletConnected);
+  console.log('isAuthenticated', isAuthenticated);
   // Кошелек подключен и пользователь аутентифицирован — показываем контент
   if (isWalletConnected && isAuthenticated) {
     return <>{children}</>;

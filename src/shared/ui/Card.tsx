@@ -48,7 +48,7 @@ export const Card = ({
         <div
           className={`flex ${selected ? 'h-2 text-[8px]' : 'h-4'} items-center justify-between gap-x-2 group-[.compact]/grid:h-4`}
         >
-          {title}
+          <p className="truncate"> {title}</p>
         </div>
         <div
           className={`flex ${selected ? 'h-2 text-[8px]' : 'h-5'} items-center justify-between gap-x-1`}

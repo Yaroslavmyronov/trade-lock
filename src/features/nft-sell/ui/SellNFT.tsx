@@ -28,10 +28,8 @@ export const SellNFT = ({ nft, prices, handlePriceChange }: SellNFTProps) => {
               </div>
             </div>
           </div>
-          <div className="overflow-hidden text-ellipsis whitespace-nowrap">
-            <div className="overflow-hidden font-semibold text-ellipsis whitespace-nowrap">
-              {nft.name}
-            </div>
+          <div className="overflow-hidden">
+            <p className="truncate font-semibold">{nft.name}</p>
             <div className="text-[12px] leading-4">
               <p className="text-[rgb(133,127,148)]">Unlisted</p>
             </div>
