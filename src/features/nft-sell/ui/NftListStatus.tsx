@@ -34,7 +34,10 @@ export const NftListStatus = ({ nfts, statuses }: NftListStatusProps) => {
                       <div className="h-8 w-8 shrink-0 overflow-hidden rounded">
                         <img
                           className="size-full overflow-hidden object-contain"
-                          src={nft.imageOriginal || '/images/default.png'}
+                          src={
+                            nft.imageOriginal ||
+                            '/images/no-media-available.jpg'
+                          }
                           alt={nft.name}
                         />
                       </div>

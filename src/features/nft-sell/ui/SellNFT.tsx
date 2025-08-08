@@ -21,7 +21,7 @@ export const SellNFT = ({ nft, prices, handlePriceChange }: SellNFTProps) => {
                   src={
                     nft.imageOriginal
                       ? nft.imageOriginal
-                      : '/images/default.png'
+                      : '/images/no-media-available.jpg'
                   }
                   alt={nft.name}
                 />

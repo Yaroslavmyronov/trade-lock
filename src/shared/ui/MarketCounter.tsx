@@ -1,8 +1,9 @@
 'use client';
+import { Nft } from '@/entities/nfts/types';
 import { ArrowIcon, CloseIcon } from '@/shared';
 
 interface MarketCounterProps {
-  selectedIds: number[];
+  selectedNfts: Nft[];
   clearAll: () => void;
   toggle: () => void;
   isOpen: boolean;
@@ -10,31 +11,31 @@ interface MarketCounterProps {
 
 export const MarketCounter = ({
   toggle,
-  selectedIds,
+  selectedNfts,
   clearAll,
   isOpen,
 }: MarketCounterProps) => {
   return (
     <div className="flex items-center py-2.5 text-[#836EF9]">
       <div
-        className={`flex w-full flex-row items-center justify-end ${selectedIds.length === 0 && 'text-[#fff] opacity-50'}`}
+        className={`flex w-full flex-row items-center justify-end ${selectedNfts.length === 0 && 'text-[#fff] opacity-50'}`}
       >
         <div className="inline-flex items-center text-[24px]">
           <div className="flex items-center">
             <span>$0.00</span>
           </div>
         </div>
-        <div className="mx-[5px] flex items-end text-[12px]">{`(${selectedIds.length})`}</div>
+        <div className="mx-[5px] flex items-end text-[12px]">{`(${selectedNfts.length})`}</div>
         <div className="w-full px-2 text-left text-[#fff]">
           <p className="text-xs">
-            {selectedIds.length === 0
+            {selectedNfts.length === 0
               ? 'Select nfts you want to exchange'
               : 'In case of exchange you’ll be asked to pay'}
           </p>
         </div>
 
         <div className="relative flex shrink grow basis-auto justify-end">
-          {selectedIds.length > 0 && (
+          {selectedNfts.length > 0 && (
             <button
               onClick={() => clearAll()}
               className="group mx-2 flex aspect-square w-[30px] cursor-pointer items-center justify-center bg-[#2a2c2e] text-[#fff] select-none"

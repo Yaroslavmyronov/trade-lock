@@ -8,7 +8,7 @@ import { Counter } from '@/shared';
 import { useFilters } from '@/shared/store/useFilters';
 import { usePropose } from '@/shared/store/usePropose';
 
-import { useFetch } from '@/shared/hooks/useFetch';
+import { useFetch } from '@/shared/lib/useFetch';
 import { useSelectedNfts } from '@/shared/store/useSelectedNfts';
 import { ProfilePrice } from './ProfilePrice';
 import { UserNfts } from './UserNfts';

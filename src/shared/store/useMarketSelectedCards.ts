@@ -1,23 +1,35 @@
+import { Nft } from '@/entities/nfts/types';
+import { getNftId } from '@/features/nft-sell/model/NFT';
 import { create } from 'zustand';
 
 interface SelectedCardsState {
-  selectedIds: number[];
-  toggleSelect: (id: number) => void;
-  removeItem: (id: number) => void;
+  selectedNfts: Nft[];
+  toggleSelect: (nft: Nft) => void;
+  removeItem: (id: string) => void;
   clearAll: () => void;
 }
 
 export const useMarketSelectedCards = create<SelectedCardsState>((set) => ({
-  selectedIds: [],
-  toggleSelect: (id) =>
-    set((state) => ({
-      selectedIds: state.selectedIds.includes(id)
-        ? state.selectedIds.filter((sid) => sid !== id)
-        : [...state.selectedIds, id],
-    })),
+  selectedNfts: [],
+  toggleSelect: (nft) =>
+    set((state) => {
+      const id = getNftId(nft);
+      const exists = state.selectedNfts.some(
+        (c) => `${c.contract}-${c.tokenId}` === id,
+      );
+      return {
+        selectedNfts: exists
+          ? state.selectedNfts.filter(
+              (c) => `${c.contract}-${c.tokenId}` !== id,
+            )
+          : [...state.selectedNfts, nft],
+      };
+    }),
   removeItem: (id) =>
     set((state) => ({
-      selectedIds: state.selectedIds.filter((sid) => sid !== id),
+      selectedNfts: state.selectedNfts.filter(
+        (c) => `${c.contract}-${c.tokenId}` !== id,
+      ),
     })),
-  clearAll: () => set({ selectedIds: [] }),
+  clearAll: () => set({ selectedNfts: [] }),
 }));

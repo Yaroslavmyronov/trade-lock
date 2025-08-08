@@ -1,17 +1,18 @@
+import { Nft, NftResponse } from '@/entities/nfts/types';
+import { getNftId } from '@/features/nft-sell/model/NFT';
 import { Card } from '@/shared';
 import { handleCardClick } from '@/shared/lib/handleCardClick';
-import { CardData } from './Market';
 
 interface MarketNftsProps {
-  cardsData: CardData[];
-  selectedIds: number[];
-  toggleSelect: (id: number) => void;
-  removeItem: (id: number) => void;
+  nftsData: NftResponse;
+  selectedNfts: Nft[];
+  toggleSelect: (nft: Nft) => void;
+  removeItem: (id: string) => void;
 }
 
 export const MarketNfts = ({
-  cardsData,
-  selectedIds,
+  nftsData,
+  selectedNfts,
   toggleSelect,
   removeItem,
 }: MarketNftsProps) => {
@@ -22,21 +23,23 @@ export const MarketNfts = ({
         <div className="flex size-full shrink grow basis-full flex-col overflow-x-hidden overflow-y-auto">
           <div className="size-full overflow-x-visible overflow-y-auto">
             <div className="absolute top-0 left-0 grid w-full [grid-template-columns:repeat(auto-fill,_minmax(120px,_1fr))] [grid-template-rows:repeat(auto-fill,208px)] gap-1">
-              {cardsData.map((card) => {
-                const isSelected = selectedIds.includes(card.id);
+              {nftsData.map((nft) => {
+                const id = getNftId(nft);
+                const isSelected = selectedNfts.some(
+                  (selected) =>
+                    selected.contract === nft.contract &&
+                    selected.tokenId === nft.tokenId,
+                );
 
                 return (
                   <Card
-                    key={card.id}
-                    title={card.title}
+                    price={Number(nft.lastPrice)}
+                    image={nft.imageOriginal}
                     isSelected={isSelected}
+                    title={nft.name}
+                    key={id}
                     onClick={() =>
-                      handleCardClick(
-                        card.id,
-                        isSelected,
-                        toggleSelect,
-                        removeItem,
-                      )
+                      handleCardClick(nft, isSelected, toggleSelect, removeItem)
                     }
                   />
                 );

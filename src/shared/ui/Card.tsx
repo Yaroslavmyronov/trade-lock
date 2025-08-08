@@ -34,7 +34,7 @@ export const Card = ({
                   className="absolute inset-0 size-full overflow-hidden object-cover transition-transform duration-300 select-none group-hover:scale-110"
                   alt=""
                   loading="lazy"
-                  src={image ? image : '/images/default.png'}
+                  src={image ? image : '/images/no-media-available.jpg'}
                 ></img>
               </div>
             </div>
