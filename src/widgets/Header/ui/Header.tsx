@@ -1,4 +1,4 @@
-import { Address } from './Address';
+import { CustomConnectButton } from '@/features/connect-wallet/ui/CustomConnectButton';
 import { Logo } from './Logo';
 import { Navigation } from './Navigation';
 
@@ -9,8 +9,8 @@ export const Header = () => {
         <div className="flex items-stretch justify-between pr-[15px] text-[1rem]">
           <Logo></Logo>
           <Navigation></Navigation>
-
-          <Address></Address>
+          <CustomConnectButton></CustomConnectButton>
+          {/* <Address></Address> */}
         </div>
       </div>
     </header>

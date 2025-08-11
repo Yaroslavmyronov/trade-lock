@@ -1,5 +1,5 @@
 'use client';
-import { getConfig } from '@/shared/config/wagmi/wagmiConfig';
+import { wagmiConfig } from '@/shared/config/wagmi/wagmiConfig';
 import toast from 'react-hot-toast';
 import {
   Hash,
@@ -75,8 +75,8 @@ export const useTransactor = (
     try {
       const network = await walletClient.getChainId();
       // Get full transaction from public client
-      const config = getConfig();
-      const publicClient = getPublicClient(config);
+
+      const publicClient = getPublicClient(wagmiConfig);
 
       notificationId = toast.loading(
         <TxnNotification message="Awaiting for user confirmation" />,

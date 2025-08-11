@@ -1,33 +1,49 @@
 'use client';
-import { useWalletStatusPolling } from '@/features/connect-wallet/hooks/useWalletStatus';
+
 import { AuthManager } from '@/features/connect-wallet/ui/AuthManager';
 import { apiFetch } from '@/shared/api/fetchInstance';
-import { getConfig } from '@/shared/config/wagmi/wagmiConfig';
+import { monadTestnet } from '@/shared/config/wagmi/chains';
+import { wagmiConfig } from '@/shared/config/wagmi/wagmiConfig';
 import { useGlobalState } from '@/shared/store/useGlobalState';
+import { darkTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit';
+
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactNode, useEffect, useRef, useState } from 'react';
-import { type State, WagmiProvider } from 'wagmi';
-
+import { cookieToInitialState, WagmiProvider } from 'wagmi';
 interface ProvidersProps {
   children: ReactNode;
-  initialState: State | undefined;
+  cookie: string;
 }
 
-export const Providers = ({ children, initialState }: ProvidersProps) => {
-  const [config] = useState(() => getConfig());
+export const Providers = ({ children, cookie }: ProvidersProps) => {
   const [queryClient] = useState(() => new QueryClient());
+  const initialState = cookieToInitialState(wagmiConfig, cookie);
   return (
-    <WagmiProvider config={config} initialState={initialState}>
+    <WagmiProvider
+      config={wagmiConfig}
+      {...(initialState ? { initialState } : {})}
+    >
       <QueryClientProvider client={queryClient}>
-        <AuthManager></AuthManager>
-        <WalletStatusWrapper>{children}</WalletStatusWrapper>
+        <RainbowKitProvider
+          appInfo={{
+            appName: 'Trade Lock',
+            learnMoreUrl: 'https://example.com/faq',
+          }}
+          initialChain={monadTestnet.id}
+          modalSize="compact"
+          theme={darkTheme({
+            ...darkTheme.accentColors.purple,
+          })}
+        >
+          <AuthManager></AuthManager>
+          <WalletStatusWrapper>{children}</WalletStatusWrapper>
+        </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );
 };
 
 const WalletStatusWrapper = ({ children }: { children: ReactNode }) => {
-  useWalletStatusPolling();
   const fetchingStatusRef = useRef(false);
 
   const { setAuthStatus } = useGlobalState();

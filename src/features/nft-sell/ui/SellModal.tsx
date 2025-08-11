@@ -1,7 +1,7 @@
 'use client';
 import { Nft } from '@/entities/nfts/types';
 import { CloseIcon, Preloader } from '@/shared';
-import { getConfig } from '@/shared/config/wagmi/wagmiConfig';
+import { wagmiConfig } from '@/shared/config/wagmi/wagmiConfig';
 import { useWrapperWriteContract } from '@/shared/lib/web3/useWrapperWriteContract';
 import { Modal } from '@/shared/ui/Modal';
 import { useState } from 'react';
@@ -57,25 +57,31 @@ export const SellModal = ({
   ) => {
     setListingStatuses((prev) => ({ ...prev, [nftId]: status }));
   };
-  const config = getConfig();
+
   const [step, setStep] = useState<'form' | 'approve' | 'listing'>('form');
 
   const handleSell = async () => {
     setStep('approve');
 
-    const notApprovedNfts = await getNotApprovedNfts(
-      selectedNfts,
-      updateApproveStatus,
-    );
+    // const notApprovedNfts = await getNotApprovedNfts(
+    //   selectedNfts,
+    //   updateApproveStatus,
+    // );
 
-    if (notApprovedNfts.length > 0) {
+    const { approved, notApproved } = await getNotApprovedNfts(selectedNfts);
+
+    approved.forEach((nft) => {
+      updateApproveStatus(getNftId(nft), 'success');
+    });
+
+    if (notApproved.length > 0) {
       const statuses = Object.fromEntries(
-        notApprovedNfts.map((nft) => [getNftId(nft), 'loading' as const]),
+        notApproved.map((nft) => [getNftId(nft), 'loading' as const]),
       );
       setApproveStatuses((prev) => ({ ...prev, ...statuses }));
 
       try {
-        for (const nft of notApprovedNfts) {
+        for (const nft of notApproved) {
           const id = getNftId(nft);
           updateApproveStatus(id, 'loading');
 
@@ -84,19 +90,19 @@ export const SellModal = ({
             abi: erc721Abi,
             functionName: 'approve',
             args: [
-              '0x570413264Fb80dcEA4b35bd364dA54320f61fDB9', // MARKETPLACE_ADDRESS
+              '0x7D8b883A19EF765b6dbbf96AF84953885f8753B8', // MARKETPLACE_ADDRESS
               BigInt(nft.tokenId),
             ],
           });
 
           if (!approveHash) throw new Error('No approve hash');
-          await waitForTransactionReceipt(config, { hash: approveHash });
+          await waitForTransactionReceipt(wagmiConfig, { hash: approveHash });
 
           updateApproveStatus(id, 'success');
         }
       } catch (e) {
         console.error('Approve error:', e);
-        notApprovedNfts.forEach((nft) => {
+        notApproved.forEach((nft) => {
           const id = getNftId(nft);
           updateApproveStatus(id, 'error');
         });

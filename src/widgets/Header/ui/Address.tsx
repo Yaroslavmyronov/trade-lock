@@ -2,7 +2,6 @@
 import { Balance } from '@/entities/balance/ui/Balance';
 
 import { UserMenu } from '@/features';
-import { ConnectButton } from '@/features/connect-wallet/ui/CustomConnectButton';
 import { getAddress, isAddress } from 'viem';
 import { normalize } from 'viem/ens';
 import { useAccount, useEnsAvatar, useEnsName } from 'wagmi';
@@ -32,12 +31,6 @@ export const Address = () => {
   const normalizedEnsAvatar = ensAvatar ?? undefined;
 
   const shortAddress = checkSumAddress?.slice(2, 8) ?? '';
-
-  const isWalletConnected = Boolean(address && isConnected && connector);
-
-  if (!isWalletConnected) {
-    return <ConnectButton></ConnectButton>;
-  }
 
   return (
     <div className="flex items-center gap-1">

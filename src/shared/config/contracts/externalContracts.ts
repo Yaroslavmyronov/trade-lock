@@ -4,7 +4,7 @@ import { MarketplaceABI } from 'Marketplace';
 const externalContracts = {
   10143: {
     Marketplace: {
-      address: '0x570413264Fb80dcEA4b35bd364dA54320f61fDB9',
+      address: '0x7D8b883A19EF765b6dbbf96AF84953885f8753B8',
       abi: MarketplaceABI,
     },
   },

@@ -22,7 +22,7 @@ export const Inventory = ({ filter }: { filter: 'sell' | 'trade' }) => {
     data: nftsData,
     loading,
     error,
-  } = useFetch<NftResponse>('/market/get-user-tokens');
+  } = useFetch<NftResponse>('/market/user-tokens');
 
   if (error) {
     return (

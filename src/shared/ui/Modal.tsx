@@ -1,7 +1,7 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 
 interface ModalProps {
@@ -11,11 +11,11 @@ interface ModalProps {
 }
 
 export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
-  // const [mounted, setMounted] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  // useEffect(() => {
-  //   setMounted(true);
-  // }, []);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const backdropRef = useRef<HTMLDivElement>(null);
 
@@ -31,7 +31,7 @@ export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
     };
   }, [isOpen, onClose]);
 
-  // if (!mounted) return null;
+  if (!mounted) return null;
 
   return ReactDOM.createPortal(
     <AnimatePresence>
