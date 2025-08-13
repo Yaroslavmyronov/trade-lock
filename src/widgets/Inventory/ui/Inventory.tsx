@@ -1,14 +1,14 @@
 'use client';
 import { Propose } from '@/features';
 
-import { NftResponse } from '@/entities/nfts/types';
+import { UserNft } from '@/entities/nfts/types';
 import { FilterPanel } from '@/features/filter-panel';
 import { SellButton } from '@/features/nft-sell';
 import { Counter } from '@/shared';
 import { useFilters } from '@/shared/store/useFilters';
 import { usePropose } from '@/shared/store/usePropose';
 
-import { useFetch } from '@/shared/lib/useFetch';
+import { usePaginatedFetch } from '@/shared/lib/usePaginatedFetch';
 import { useSelectedNfts } from '@/shared/store/useSelectedNfts';
 import { ProfilePrice } from './ProfilePrice';
 import { UserNfts } from './UserNfts';
@@ -19,10 +19,13 @@ export const Inventory = ({ filter }: { filter: 'sell' | 'trade' }) => {
   const { opened, open, close } = useFilters();
   const { toggle, isOpen } = usePropose();
   const {
-    data: nftsData,
+    items: nftsData,
     loading,
     error,
-  } = useFetch<NftResponse>('/market/user-tokens');
+    lastElementRef,
+    isFirstLoad,
+    hasMore,
+  } = usePaginatedFetch<UserNft>('/market/user-tokens', 1, 20);
 
   if (error) {
     return (
@@ -45,6 +48,9 @@ export const Inventory = ({ filter }: { filter: 'sell' | 'trade' }) => {
           removeItem={removeItem}
           nftsData={nftsData}
           loading={loading}
+          lastElementRef={lastElementRef}
+          isFirstLoad={isFirstLoad}
+          hasMore={hasMore}
         />
         <Counter
           isOpen={isOpen}

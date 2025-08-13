@@ -1,14 +1,15 @@
 'use client';
-import { CloseIcon } from '@/shared';
+import { CloseIcon, Preloader } from '@/shared';
 import { useState } from 'react';
 
 interface ModalProps {
   open: boolean;
+  isSigning: boolean;
   onClose: () => void;
   onConfirm: () => void;
 }
 
-export const Modal = ({ open, onClose, onConfirm }: ModalProps) => {
+export const Modal = ({ open, onClose, onConfirm, isSigning }: ModalProps) => {
   const [agreed, setAgreed] = useState(false);
   if (!open) return null;
 
@@ -75,9 +76,7 @@ export const Modal = ({ open, onClose, onConfirm }: ModalProps) => {
                         role="checkbox"
                         aria-checked={agreed}
                         onClick={() => setAgreed(!agreed)}
-                        className={`size-5 min-h-4 min-w-4 rounded border border-[rgb(52,53,60)] bg-[rgb(20,20,21)] transition-colors duration-150 hover:cursor-pointer focus:border-gray-400 ${
-                          agreed && 'border-blue-500 bg-blue-500'
-                        }`}
+                        className={`size-5 min-h-4 min-w-4 rounded border border-[rgb(52,53,60)] transition-colors duration-150 hover:cursor-pointer $${agreed ? 'border-[#836EF9] bg-[#836EF9]' : 'bg-[rgb(20,20,21)]'}`}
                         id="agreed-to-terms"
                       >
                         {agreed && (
@@ -104,10 +103,10 @@ export const Modal = ({ open, onClose, onConfirm }: ModalProps) => {
                   <button
                     onClick={onConfirm}
                     type="button"
-                    disabled={!agreed}
-                    className={`text-md inline-flex h-12 items-center justify-center gap-2 rounded-md bg-blue-500 px-6 font-medium text-white transition duration-200 hover:bg-blue-400 focus:bg-blue-400 ${agreed && 'cursor-pointer'} disabled:pointer-events-none disabled:opacity-40`}
+                    disabled={!agreed || isSigning}
+                    className={`text-md inline-flex h-12 items-center justify-center gap-2 rounded-md bg-[#836EF9] px-6 font-medium text-white transition duration-200 hover:bg-[#6f58e0] focus:bg-[#6f58e0] ${agreed && 'cursor-pointer'} disabled:pointer-events-none disabled:opacity-40`}
                   >
-                    Continue
+                    {isSigning ? <Preloader /> : 'Continue'}
                   </button>
                 </div>
               </form>

@@ -1,7 +1,7 @@
 'use client';
 import { apiFetch } from '@/shared/api/fetchInstance';
 import { useGlobalState } from '@/shared/store/useGlobalState';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { createSiweMessage } from 'viem/siwe';
 import { useAccount, useSignMessage } from 'wagmi';
 
@@ -9,11 +9,12 @@ export const useEthereumAuth = () => {
   const { address, chainId } = useAccount();
   const { signMessageAsync } = useSignMessage();
   const { setAuthStatus } = useGlobalState();
+  const [isSigning, setIsSigning] = useState(false);
 
   const signIn = useCallback(async () => {
     try {
       if (!address || !chainId) throw new Error('Wallet not connected');
-
+      setIsSigning(true);
       console.log('signIn');
       const res = await apiFetch('/auth/nonce');
       const nonce = await res.text();
@@ -41,6 +42,8 @@ export const useEthereumAuth = () => {
     } catch (error) {
       console.error('Sign-in error:', error);
       setAuthStatus('unauthenticated');
+    } finally {
+      setIsSigning(false);
     }
   }, [address, chainId, setAuthStatus, signMessageAsync]);
 
@@ -56,5 +59,6 @@ export const useEthereumAuth = () => {
   return {
     signIn,
     signOut,
+    isSigning,
   };
 };

@@ -1,8 +1,8 @@
-import { NftResponse } from '@/entities/nfts/types';
+import { UserNftResponse } from '@/entities/nfts/types';
 import { Arrow2Icon } from '@/shared';
 
 interface ProfilePriceProps {
-  nftsData: NftResponse | null;
+  nftsData: UserNftResponse | null;
   loading: boolean;
 }
 

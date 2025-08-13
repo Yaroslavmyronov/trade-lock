@@ -1,8 +1,8 @@
-import { Nft } from '@/entities/nfts/types';
+import { UserNftResponse } from '@/entities/nfts/types';
 import { getNftId } from './NFT';
 
 export const getStatusesHelpers = (
-  selectedNfts: Nft[],
+  selectedNfts: UserNftResponse,
   statuses: Record<string, string>,
 ) => ({
   isAll: (state: string) =>

@@ -27,7 +27,6 @@ export const Providers = ({ children, cookie }: ProvidersProps) => {
         <RainbowKitProvider
           appInfo={{
             appName: 'Trade Lock',
-            learnMoreUrl: 'https://example.com/faq',
           }}
           initialChain={monadTestnet.id}
           modalSize="compact"

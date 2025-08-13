@@ -1,5 +1,5 @@
-import { Nft } from '@/entities/nfts/types';
+import { MarketNft, UserNft } from '@/entities/nfts/types';
 
-export const getNftId = (nft: Nft): string => {
-  return `${nft.contract}-${nft.tokenId}`;
+export const getNftId = (nft: MarketNft | UserNft): string => {
+  return `${nft.contractAddress}-${nft.tokenId}`;
 };

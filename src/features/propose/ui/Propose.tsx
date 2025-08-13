@@ -1,11 +1,17 @@
-import { Nft } from '@/entities/nfts/types';
+import {
+  MarketNft,
+  MarketNftResponse,
+  UserNft,
+  UserNftResponse,
+} from '@/entities/nfts/types';
 import { getNftId } from '@/features/nft-sell/model/NFT';
 import { Card } from '@/shared';
 import { handleCardClick } from '@/shared/lib/handleCardClick';
+import { isMarketNft } from '../lib/isMarketNft';
 
-interface UserProposeProps {
-  selectedNfts: Nft[];
-  toggleSelect: (nft: Nft) => void;
+interface ProposeProps {
+  selectedNfts: UserNftResponse | MarketNftResponse;
+  toggleSelect: (nft: UserNft | MarketNft) => void;
   removeItem: (id: string) => void;
   isOpen: boolean;
 }
@@ -15,7 +21,7 @@ export const Propose = ({
   toggleSelect,
   removeItem,
   isOpen,
-}: UserProposeProps) => {
+}: ProposeProps) => {
   if (!isOpen) return null;
 
   return (
@@ -27,18 +33,22 @@ export const Propose = ({
               {selectedNfts.map((nft) => {
                 const id = getNftId(nft);
                 const isSelected = selectedNfts.some(
-                  (c) => `${c.contract}-${c.tokenId}` === id,
+                  (c) => `${c.contractAddress}-${c.tokenId}` === id,
                 );
 
                 return (
                   <Card
-                    price={nft.lastPrice}
-                    image={nft.imageOriginal}
+                    price={isMarketNft(nft) ? nft.price : nft.lastPrice}
+                    image={
+                      isMarketNft(nft)
+                        ? nft.metadata.imageOriginal
+                        : nft.imageOriginal
+                    }
                     onClick={() =>
                       handleCardClick(nft, isSelected, toggleSelect, removeItem)
                     }
                     selected
-                    title={nft.name}
+                    title={isMarketNft(nft) ? nft.metadata.name : nft.name}
                     key={id}
                     isSelected={isSelected}
                   />

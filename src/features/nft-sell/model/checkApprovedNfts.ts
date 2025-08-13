@@ -1,7 +1,7 @@
-import { Nft } from '@/entities/nfts/types';
+import { UserNftResponse } from '@/entities/nfts/types';
 import { isApproved } from './isApproved';
 
-export const getNotApprovedNfts = async (nfts: Nft[]) => {
+export const getNotApprovedNfts = async (nfts: UserNftResponse) => {
   const results = await Promise.all(
     nfts.map(async (nft) => {
       const approved = await isApproved(nft);

@@ -1,8 +1,10 @@
+import { getMarketNfts } from '@/shared/api/market-nfts';
 import { LoginProvider } from '@/shared/providers/LoginProvider';
 import { Inventory } from '@/widgets/Inventory';
 import { Market } from '@/widgets/Market';
 
-export const TradePage = () => {
+export const TradePage = async () => {
+  const marketNfts = await getMarketNfts();
   return (
     <LoginProvider>
       <div className="relative flex h-full shrink grow flex-col bg-[#1d1f20]">
@@ -10,7 +12,7 @@ export const TradePage = () => {
           <div className="flex h-full w-full max-w-[650px] min-w-[437px] flex-col bg-[#17191a]">
             <Inventory filter="trade" />
           </div>
-          <Market />
+          <Market initialNfts={marketNfts} />
         </div>
       </div>
     </LoginProvider>

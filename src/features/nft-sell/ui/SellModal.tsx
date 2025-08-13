@@ -1,5 +1,5 @@
 'use client';
-import { Nft } from '@/entities/nfts/types';
+import { UserNftResponse } from '@/entities/nfts/types';
 import { CloseIcon, Preloader } from '@/shared';
 import { wagmiConfig } from '@/shared/config/wagmi/wagmiConfig';
 import { useWrapperWriteContract } from '@/shared/lib/web3/useWrapperWriteContract';
@@ -19,7 +19,7 @@ import { ListingForm } from './ListingForm';
 interface SellModalProps {
   isOpen: boolean;
   onClose: () => void;
-  selectedNfts: Nft[];
+  selectedNfts: UserNftResponse;
 }
 
 export const SellModal = ({

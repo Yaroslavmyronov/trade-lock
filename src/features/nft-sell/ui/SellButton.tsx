@@ -1,11 +1,11 @@
 'use client';
-import { Nft } from '@/entities/nfts/types';
+import { UserNftResponse } from '@/entities/nfts/types';
 import { ActionWithModal } from '@/features/nft-action-with-modal/ui/ActionWithModal ';
 import { MarketIcon } from '@/shared';
 import { SellModal } from './SellModal';
 
 interface SellButtonProps {
-  selectedNfts: Nft[];
+  selectedNfts: UserNftResponse;
 }
 
 export const SellButton = ({ selectedNfts }: SellButtonProps) => {

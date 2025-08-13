@@ -1,64 +1,17 @@
 'use client';
 import { Propose } from '@/features';
 
-import { Nft } from '@/entities/nfts/types';
+import { MarketNftResponse } from '@/entities/nfts/types';
 import { FilterPanel } from '@/features/filter-panel';
 import { TradeButton } from '@/features/nft-trade';
 import { MarketCounter } from '@/shared';
+import { usePaginatedFetch } from '@/shared/lib/usePaginatedFetch';
 import { useFilters } from '@/shared/store/useFilters';
 import { useMarketSelectedCards } from '@/shared/store/useMarketSelectedCards';
 import { usePropose } from '@/shared/store/usePropose';
 import { MarketNfts } from './MarketNfts';
 
-export const Market = () => {
-  const cardsData: Nft[] = [
-    {
-      contract: `0x45cB182daAB81951062E5826d2692c5738039073`,
-      description: 'Zalupa',
-      imageOriginal: '',
-      kind: '',
-      lastPrice: 1,
-      name: 'Zalupa',
-      tokenId: '1',
-    },
-    {
-      contract: `0x45cB182daAB81951062E5826d2692c5738039073`,
-      description: 'Zalupa',
-      imageOriginal: '',
-      kind: '',
-      lastPrice: 2,
-      name: 'Zalupa',
-      tokenId: '2',
-    },
-    {
-      contract: `0x45cB182daAB81951062E5826d2692c5738039073`,
-      description: 'Zalupa',
-      imageOriginal: '',
-      kind: '',
-      lastPrice: 3,
-      name: 'Zalupa',
-      tokenId: '3',
-    },
-    {
-      contract: `0x45cB182daAB81951062E5826d2692c5738039073`,
-      description: 'Zalupa',
-      imageOriginal: '',
-      kind: '',
-      lastPrice: 4,
-      name: 'Zalupa',
-      tokenId: '4',
-    },
-    {
-      contract: `0x45cB182daAB81951062E5826d2692c5738039073`,
-      description: 'Zalupa',
-      imageOriginal: '',
-      kind: '',
-      lastPrice: 5,
-      name: 'Zalupa',
-      tokenId: '5',
-    },
-  ];
-
+export const Market = ({ initialNfts }: { initialNfts: MarketNftResponse }) => {
   const {
     selectedNfts: selectedNftsMarket,
     clearAll,
@@ -67,7 +20,14 @@ export const Market = () => {
   } = useMarketSelectedCards();
   const { opened, open, close } = useFilters();
   const { toggle, isOpen } = usePropose();
-
+  const { items: marketNfts } = usePaginatedFetch(
+    '/api/market-nfts',
+    1,
+    20,
+    undefined,
+    initialNfts,
+  );
+  console.log(marketNfts);
   return (
     <div
       className={`flex size-full flex-row ${opened === 'market' && 'pr-[385px]'}`}
@@ -77,7 +37,7 @@ export const Market = () => {
         <MarketNfts
           selectedNfts={selectedNftsMarket}
           toggleSelect={toggleSelect}
-          nftsData={cardsData}
+          nftsData={marketNfts}
           removeItem={removeItem}
         />
         <MarketCounter

@@ -1,12 +1,12 @@
-import { Nft, NftResponse } from '@/entities/nfts/types';
+import { MarketNft, MarketNftResponse } from '@/entities/nfts/types';
 import { getNftId } from '@/features/nft-sell/model/NFT';
 import { Card } from '@/shared';
 import { handleCardClick } from '@/shared/lib/handleCardClick';
 
 interface MarketNftsProps {
-  nftsData: NftResponse;
-  selectedNfts: Nft[];
-  toggleSelect: (nft: Nft) => void;
+  nftsData: MarketNftResponse;
+  selectedNfts: MarketNftResponse;
+  toggleSelect: (nft: MarketNft) => void;
   removeItem: (id: string) => void;
 }
 
@@ -27,16 +27,16 @@ export const MarketNfts = ({
                 const id = getNftId(nft);
                 const isSelected = selectedNfts.some(
                   (selected) =>
-                    selected.contract === nft.contract &&
+                    selected.contractAddress === nft.contractAddress &&
                     selected.tokenId === nft.tokenId,
                 );
 
                 return (
                   <Card
-                    price={Number(nft.lastPrice)}
-                    image={nft.imageOriginal}
+                    price={Number(nft.price)}
+                    image={nft.metadata.imageOriginal}
                     isSelected={isSelected}
-                    title={nft.name}
+                    title={nft.metadata.name}
                     key={id}
                     onClick={() =>
                       handleCardClick(nft, isSelected, toggleSelect, removeItem)

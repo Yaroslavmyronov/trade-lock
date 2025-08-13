@@ -1,10 +1,10 @@
-import { Nft } from '@/entities/nfts/types';
+import { MarketNft, UserNft } from '@/entities/nfts/types';
 import { getNftId } from '@/features/nft-sell/model/NFT';
 
 export const handleCardClick = (
-  nft: Nft,
+  nft: UserNft | MarketNft,
   isSelected: boolean,
-  toggleSelect: (nft: Nft) => void,
+  toggleSelect: (nft: UserNft | MarketNft) => void,
   removeItem: (id: string) => void,
 ) => {
   if (!isSelected) {

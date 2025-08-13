@@ -1,10 +1,10 @@
-import { Nft } from '@/entities/nfts/types';
+import { UserNftResponse } from '@/entities/nfts/types';
 import { getNftId } from '../model/NFT';
 import { nftPriceChange, nftPrices } from '../types';
 import { SellNFT } from './SellNFT';
 
 interface ListingFormProps {
-  nfts: Nft[];
+  nfts: UserNftResponse;
   prices: nftPrices;
   handlePriceChange: nftPriceChange;
 }

@@ -1,8 +1,8 @@
-import { Nft } from '@/entities/nfts/types';
+import { UserNftResponse } from '@/entities/nfts/types';
 import { NftListStatus } from './NftListStatus';
 
 interface ApproveProps {
-  nfts: Nft[];
+  nfts: UserNftResponse;
   statuses: Record<string, 'idle' | 'loading' | 'success' | 'error'>;
 }
 

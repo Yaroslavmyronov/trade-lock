@@ -1,9 +1,9 @@
-import { Nft } from '@/entities/nfts/types';
+import { UserNftResponse } from '@/entities/nfts/types';
 import { FailIcon, Preloader, SuccessIcon } from '@/shared';
 import { getNftId } from '../model/NFT';
 
 interface NftListStatusProps {
-  nfts: Nft[];
+  nfts: UserNftResponse;
   statuses: Record<string, 'idle' | 'loading' | 'success' | 'error'>;
 }
 

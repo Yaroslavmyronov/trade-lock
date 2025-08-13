@@ -1,8 +1,8 @@
-import { Nft } from '@/entities/nfts/types';
+import { UserNft } from '@/entities/nfts/types';
 import { getNftId } from '../model/NFT';
 import { nftPriceChange, nftPrices } from '../types';
 interface SellNFTProps {
-  nft: Nft;
+  nft: UserNft;
   prices: nftPrices;
   handlePriceChange: nftPriceChange;
 }

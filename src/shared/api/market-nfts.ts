@@ -6,7 +6,7 @@ export const getMarketNfts = async () => {
 
   const cookieHeader = cookieStore.toString();
 
-  const nftsData = await apiFetch('/market/market-listing', {
+  const nftsData = await apiFetch('/market/market-listing?page=1&pageSize=20', {
     headers: { Cookie: cookieHeader },
   });
   return nftsData;

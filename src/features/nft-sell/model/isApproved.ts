@@ -1,9 +1,9 @@
-import { Nft } from '@/entities/nfts/types';
+import { UserNft } from '@/entities/nfts/types';
 import { wagmiConfig } from '@/shared/config/wagmi/wagmiConfig';
 import { erc721Abi } from 'viem';
 import { readContract } from 'wagmi/actions';
 
-export const isApproved = async (nft: Nft) => {
+export const isApproved = async (nft: UserNft) => {
   try {
     const approvedAddress = await readContract(wagmiConfig, {
       address: nft.contract,

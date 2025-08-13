@@ -1,23 +1,25 @@
-export type Nft = {
-  contract: `0x${string}`;
-  description: string;
+import { Address } from 'viem';
+
+export type BaseNft = {
+  description: string | null;
   imageOriginal: string;
   kind: string;
   lastPrice: number;
   name: string;
-  tokenId: string;
 };
 
-export type NftResponse = Nft[];
+export type MarketNft = {
+  contractAddress: Address;
+  listingId: string;
+  metadata: BaseNft;
+  price: number;
+  sellerAddress: Address;
+  tokenId: string;
+};
+export type MarketNftResponse = MarketNft[];
 
-export interface nftStatus {
-  nft: Nft;
-  status: NftStatus;
-}
-
-export enum NftStatus {
-  APPROVED = 'APPROVED',
-  PENDING = 'PENDING',
-  REJECTED = 'REJECTED',
-  UNKNOWN = 'UNKNOWN',
-}
+export type UserNft = BaseNft & {
+  contractAddress: Address;
+  tokenId: string;
+};
+export type UserNftResponse = UserNft[];

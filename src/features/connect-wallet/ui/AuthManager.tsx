@@ -7,10 +7,11 @@ import { Modal } from './Modal';
 export const AuthManager = () => {
   const { isConnected } = useAccount();
   const { disconnect } = useDisconnect();
-  const { signIn } = useEthereumAuth();
+  const { signIn, isSigning } = useEthereumAuth();
   const { authStatus } = useGlobalState();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  console.log('authStatus', authStatus);
 
   useEffect(() => {
     if (isConnected && authStatus === 'unauthenticated') {
@@ -26,6 +27,7 @@ export const AuthManager = () => {
 
   return (
     <Modal
+      isSigning={isSigning}
       open={isModalOpen}
       onClose={() => {
         disconnect();
