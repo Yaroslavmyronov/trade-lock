@@ -86,7 +86,7 @@ export const SellModal = ({
           updateApproveStatus(id, 'loading');
 
           const approveHash = await writeContractApproveAsync({
-            address: nft.contract,
+            address: nft.contractAddress,
             abi: erc721Abi,
             functionName: 'approve',
             args: [
@@ -124,7 +124,7 @@ export const SellModal = ({
         functionName: 'createListing',
         args: [
           selectedNfts.map((nft) => ({
-            contractAddress: nft.contract,
+            contractAddress: nft.contractAddress,
             tokenId: BigInt(nft.tokenId),
             price: parseEther(inputPrices[getNftId(nft)]),
           })),
