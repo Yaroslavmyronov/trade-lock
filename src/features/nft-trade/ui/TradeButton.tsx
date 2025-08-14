@@ -27,7 +27,6 @@ export const TradeButton = ({
       }
       disabled={noSelectedNfts}
       ModalComponent={TradeModal}
-      modalProps={{ selectedNfts: selectedNftsUser }}
     />
   );
 };

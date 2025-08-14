@@ -5,6 +5,7 @@ import { Market } from '@/widgets/Market';
 
 export const TradePage = async () => {
   const marketNfts = await getMarketNfts();
+
   return (
     <LoginProvider>
       <div className="relative flex h-full shrink grow flex-col bg-[#1d1f20]">

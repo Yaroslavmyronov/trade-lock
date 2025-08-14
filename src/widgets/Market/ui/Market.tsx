@@ -9,6 +9,7 @@ import { usePaginatedFetch } from '@/shared/lib/usePaginatedFetch';
 import { useFilters } from '@/shared/store/useFilters';
 import { useMarketSelectedCards } from '@/shared/store/useMarketSelectedCards';
 import { usePropose } from '@/shared/store/usePropose';
+import { useSelectedNfts } from '@/shared/store/useSelectedNfts';
 import { MarketNfts } from './MarketNfts';
 
 export const Market = ({ initialNfts }: { initialNfts: MarketNftResponse }) => {
@@ -18,6 +19,7 @@ export const Market = ({ initialNfts }: { initialNfts: MarketNftResponse }) => {
     toggleSelect,
     removeItem,
   } = useMarketSelectedCards();
+  const { selectedNfts: selectedNftsUser } = useSelectedNfts();
   const { opened, open, close } = useFilters();
   const { toggle, isOpen } = usePropose();
   const { items: marketNfts } = usePaginatedFetch(
@@ -56,7 +58,7 @@ export const Market = ({ initialNfts }: { initialNfts: MarketNftResponse }) => {
         <div className="flex pb-4">
           <TradeButton
             selectedNftsMarket={selectedNftsMarket}
-            selectedNftsUser={selectedNftsMarket}
+            selectedNftsUser={selectedNftsUser}
           ></TradeButton>
         </div>
       </div>

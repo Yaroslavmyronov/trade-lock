@@ -1,15 +1,16 @@
 'use client';
-import { CloseIcon, Preloader } from '@/shared';
+import { useEthereumAuth } from '@/features/auth/services/signMessage';
+import { CloseIcon } from '@/shared';
 import { useState } from 'react';
 
 interface ModalProps {
   open: boolean;
-  isSigning: boolean;
+
   onClose: () => void;
-  onConfirm: () => void;
 }
 
-export const Modal = ({ open, onClose, onConfirm, isSigning }: ModalProps) => {
+export const Modal = ({ open, onClose }: ModalProps) => {
+  const { signIn, status, nonce } = useEthereumAuth();
   const [agreed, setAgreed] = useState(false);
   if (!open) return null;
 
@@ -23,15 +24,7 @@ export const Modal = ({ open, onClose, onConfirm, isSigning }: ModalProps) => {
               <div className="mb-6 flex flex-col items-center justify-center">
                 <div className="flex size-[100px] flex-col items-center justify-center overflow-hidden rounded-full drop-shadow-sm">
                   <div className="size-[calc(100%+1px)]">
-                    {/* <video
-                      autoPlay
-                      playsInline
-                      loop
-                      preload="auto"
-                      disableRemotePlayback
-                    >
-                      <source src="" type="video/mp4" />
-                    </video> */}
+                    {/* <-- Image --> */}
                   </div>
                 </div>
               </div>
@@ -101,12 +94,26 @@ export const Modal = ({ open, onClose, onConfirm, isSigning }: ModalProps) => {
 
                 <div className="flex flex-col gap-4">
                   <button
-                    onClick={onConfirm}
+                    onClick={async () => {
+                      const success = await signIn();
+                      if (success) setAgreed(false);
+                    }}
                     type="button"
-                    disabled={!agreed || isSigning}
+                    disabled={
+                      !agreed ||
+                      status === 'signing' ||
+                      status === 'verifying' ||
+                      !nonce
+                    }
                     className={`text-md inline-flex h-12 items-center justify-center gap-2 rounded-md bg-[#836EF9] px-6 font-medium text-white transition duration-200 hover:bg-[#6f58e0] focus:bg-[#6f58e0] ${agreed && 'cursor-pointer'} disabled:pointer-events-none disabled:opacity-40`}
                   >
-                    {isSigning ? <Preloader /> : 'Continue'}
+                    {!nonce
+                      ? 'Preparing...'
+                      : status === 'signing'
+                        ? 'Waiting for signature...'
+                        : status === 'verifying'
+                          ? 'Verifying...'
+                          : 'Sign Message'}
                   </button>
                 </div>
               </form>

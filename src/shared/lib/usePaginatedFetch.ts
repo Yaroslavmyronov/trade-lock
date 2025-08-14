@@ -1,7 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useFetch } from './useFetch';
 
-export function usePaginatedFetch<T>(
+export type ApiResponse<T, Extra = object> = {
+  response: T[];
+} & Extra;
+
+export function usePaginatedFetch<T, Extra = object>(
   baseUrl: string,
   initialPage = 1,
   limit = 20,
@@ -15,14 +19,18 @@ export function usePaginatedFetch<T>(
   const skipFetch = !!initialData && page === initialPage;
   const url = `${baseUrl}?page=${page}&pageSize=${limit}`;
 
-  const { data, error, loading } = useFetch<T[]>(url, config, skipFetch);
+  const { data, error, loading } = useFetch<ApiResponse<T, Extra>>(
+    url,
+    config,
+    skipFetch,
+  );
 
   const isFirstLoad = page === initialPage && loading && !initialData;
-  console.log('isFirstLoad', isFirstLoad);
+
   useEffect(() => {
-    if (!skipFetch && Array.isArray(data)) {
+    if (!skipFetch && data?.response) {
       setItems((prev) => {
-        const newItems = [...prev, ...data];
+        const newItems = [...prev, ...data.response];
 
         return Array.from(
           new Map(
@@ -30,7 +38,7 @@ export function usePaginatedFetch<T>(
           ).values(),
         );
       });
-      setHasMore(data.length === limit);
+      setHasMore(data.response.length === limit);
     } else {
       console.warn('Data is not an array or is null:', data);
     }
@@ -60,6 +68,7 @@ export function usePaginatedFetch<T>(
   );
 
   return {
+    data,
     items,
     error,
     loading,

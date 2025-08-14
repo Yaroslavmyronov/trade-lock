@@ -25,7 +25,12 @@ export const Inventory = ({ filter }: { filter: 'sell' | 'trade' }) => {
     lastElementRef,
     isFirstLoad,
     hasMore,
-  } = usePaginatedFetch<UserNft>('/market/user-tokens', 1, 20);
+    data,
+  } = usePaginatedFetch<UserNft, { nftAmount: number; totalValue: number }>(
+    '/market/user-tokens',
+    1,
+    20,
+  );
 
   if (error) {
     return (
@@ -41,7 +46,11 @@ export const Inventory = ({ filter }: { filter: 'sell' | 'trade' }) => {
     >
       <div className="relative flex min-h-full max-w-full grow flex-col px-5">
         <FilterPanel panel="user" close={close} opened={opened} open={open} />
-        <ProfilePrice nftsData={nftsData} loading={loading} />
+        <ProfilePrice
+          nftAmount={data?.nftAmount ?? 0}
+          totalValue={data?.totalValue ?? 0}
+          loading={loading}
+        />
         <UserNfts
           selectedNfts={selectedNfts}
           toggleSelect={toggleSelect}

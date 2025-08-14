@@ -3,6 +3,7 @@ import '@rainbow-me/rainbowkit/styles.css';
 import '@shared/styles/globals.css';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
+import { Toaster } from 'react-hot-toast';
 import { Providers } from './providers';
 export const metadata: Metadata = {
   title: 'Trade Lock',
@@ -22,6 +23,7 @@ export default async function Layout({
             <Header></Header>
             <main className="grow overflow-auto">{children}</main>
           </div>
+          <Toaster position="bottom-right" />
         </Providers>
       </body>
     </html>

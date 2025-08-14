@@ -1,23 +1,61 @@
 'use client';
 import { apiFetch } from '@/shared/api/fetchInstance';
 import { useGlobalState } from '@/shared/store/useGlobalState';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import toast from 'react-hot-toast';
+import { UserRejectedRequestError } from 'viem';
 import { createSiweMessage } from 'viem/siwe';
 import { useAccount, useSignMessage } from 'wagmi';
+
+type AuthState = {
+  status: 'idle' | 'signing' | 'verifying';
+  errorMessage?: string;
+  nonce?: string;
+};
 
 export const useEthereumAuth = () => {
   const { address, chainId } = useAccount();
   const { signMessageAsync } = useSignMessage();
   const { setAuthStatus } = useGlobalState();
-  const [isSigning, setIsSigning] = useState(false);
+
+  const [{ status, ...state }, setState] = useState<AuthState>({
+    status: 'idle',
+  });
+
+  //Pre-fetch nonce when hooks initialization
+  const onceRef = useRef(false);
+  const getNonce = useCallback(async () => {
+    try {
+      const res = await apiFetch('/auth/nonce');
+      const nonce = await res.text();
+      setState((x) => ({ ...x, nonce }));
+    } catch {
+      setState((x) => ({
+        ...x,
+        errorMessage: 'Failed to prepare authentication',
+        status: 'idle',
+      }));
+      toast.error('Failed to prepare authentication');
+    }
+  }, []);
+
+  useEffect(() => {
+    if (onceRef.current) return;
+    onceRef.current = true;
+    getNonce();
+  }, [getNonce]);
 
   const signIn = useCallback(async () => {
     try {
-      if (!address || !chainId) throw new Error('Wallet not connected');
-      setIsSigning(true);
-      console.log('signIn');
-      const res = await apiFetch('/auth/nonce');
-      const nonce = await res.text();
+      if (!address || !chainId || !state.nonce) {
+        return;
+      }
+
+      setState((x) => ({
+        ...x,
+        errorMessage: undefined,
+        status: 'signing',
+      }));
 
       const message = createSiweMessage({
         domain: window.location.host,
@@ -26,26 +64,55 @@ export const useEthereumAuth = () => {
         uri: window.location.origin,
         version: '1',
         chainId,
-        nonce,
+        nonce: state.nonce,
       });
 
-      const signature = await signMessageAsync({ message });
+      let signature: string;
 
-      setAuthStatus('loading');
+      try {
+        signature = await signMessageAsync({ message });
+      } catch (error) {
+        // If the user canceled the signature - this is not an error
+        if (error instanceof UserRejectedRequestError) {
+          toast.error('Signature request was rejected by user');
+          return setState((x) => ({
+            ...x,
+            status: 'idle',
+          }));
+        }
+        toast.error('Failed to sign message');
+        return setState((x) => ({
+          ...x,
+          errorMessage: 'Failed to sign message',
+          status: 'idle',
+        }));
+      }
 
-      await apiFetch('/auth/verify', {
-        method: 'POST',
-        body: JSON.stringify({ message, signature }),
+      setState((x) => ({ ...x, status: 'verifying' }));
+
+      try {
+        await apiFetch('/auth/verify', {
+          method: 'POST',
+          body: JSON.stringify({ message, signature }),
+        });
+        setAuthStatus('authenticated');
+        return true;
+      } catch {
+        toast.error('Failed to verify signature');
+        return setState((x) => ({
+          ...x,
+          errorMessage: 'Failed to verify signature',
+          status: 'idle',
+        }));
+      }
+    } catch {
+      toast.error('An unexpected error occurred');
+      setState({
+        errorMessage: 'An unexpected error occurred',
+        status: 'idle',
       });
-
-      setAuthStatus('authenticated');
-    } catch (error) {
-      console.error('Sign-in error:', error);
-      setAuthStatus('unauthenticated');
-    } finally {
-      setIsSigning(false);
     }
-  }, [address, chainId, setAuthStatus, signMessageAsync]);
+  }, [address, chainId, state.nonce, setAuthStatus, signMessageAsync]);
 
   const signOut = useCallback(async () => {
     try {
@@ -54,11 +121,13 @@ export const useEthereumAuth = () => {
       console.error('Logout error:', e);
     }
     setAuthStatus('unauthenticated');
-  }, []);
+  }, [setAuthStatus]);
 
   return {
     signIn,
     signOut,
-    isSigning,
+    status,
+    errorMessage: state.errorMessage,
+    nonce: state.nonce,
   };
 };
