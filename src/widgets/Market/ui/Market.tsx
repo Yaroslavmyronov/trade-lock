@@ -7,7 +7,7 @@ import { TradeButton } from '@/features/nft-trade';
 import { MarketCounter } from '@/shared';
 import { usePaginatedFetch } from '@/shared/lib/usePaginatedFetch';
 import { useFilters } from '@/shared/store/useFilters';
-import { useMarketSelectedCards } from '@/shared/store/useMarketSelectedCards';
+import { useMarketSelectedNfts } from '@/shared/store/useMarketSelectedNfts';
 import { usePropose } from '@/shared/store/usePropose';
 import { useSelectedNfts } from '@/shared/store/useSelectedNfts';
 import { MarketNfts } from './MarketNfts';
@@ -18,7 +18,7 @@ export const Market = ({ initialNfts }: { initialNfts: MarketNftResponse }) => {
     clearAll,
     toggleSelect,
     removeItem,
-  } = useMarketSelectedCards();
+  } = useMarketSelectedNfts();
   const { selectedNfts: selectedNftsUser } = useSelectedNfts();
   const { opened, open, close } = useFilters();
   const { toggle, isOpen } = usePropose();

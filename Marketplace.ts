@@ -216,86 +216,11 @@ export const MarketplaceABI = [
         name: 'nftContractsFrom',
         type: 'address[]',
       },
-      { internalType: 'uint256[]', name: 'tokenIdsTo', type: 'uint256[]' },
-      { internalType: 'address[]', name: 'nftContractsTo', type: 'address[]' },
+      { internalType: 'uint256[]', name: 'listingIdsTo', type: 'uint256[]' },
     ],
     name: 'createTrade',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [{ internalType: 'uint256', name: 'listingId', type: 'uint256' }],
-    name: 'getListing',
-    outputs: [
-      {
-        components: [
-          { internalType: 'uint256', name: 'id', type: 'uint256' },
-          { internalType: 'address', name: 'nftContract', type: 'address' },
-          { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
-          { internalType: 'address payable', name: 'seller', type: 'address' },
-          { internalType: 'uint256', name: 'price', type: 'uint256' },
-          { internalType: 'bool', name: 'isSold', type: 'bool' },
-          { internalType: 'bool', name: 'isActive', type: 'bool' },
-        ],
-        internalType: 'struct Main.Listing',
-        name: '',
-        type: 'tuple',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [{ internalType: 'uint256', name: 'tradeId', type: 'uint256' }],
-    name: 'getTrade',
-    outputs: [
-      {
-        components: [
-          {
-            components: [
-              { internalType: 'address', name: 'user', type: 'address' },
-              {
-                internalType: 'uint256[]',
-                name: 'tokenIds',
-                type: 'uint256[]',
-              },
-              {
-                internalType: 'address[]',
-                name: 'nftContracts',
-                type: 'address[]',
-              },
-            ],
-            internalType: 'struct Main.Peer',
-            name: 'from',
-            type: 'tuple',
-          },
-          {
-            components: [
-              { internalType: 'address', name: 'user', type: 'address' },
-              {
-                internalType: 'uint256[]',
-                name: 'tokenIds',
-                type: 'uint256[]',
-              },
-              {
-                internalType: 'address[]',
-                name: 'nftContracts',
-                type: 'address[]',
-              },
-            ],
-            internalType: 'struct Main.Peer',
-            name: 'to',
-            type: 'tuple',
-          },
-          { internalType: 'bool', name: 'isActive', type: 'bool' },
-        ],
-        internalType: 'struct Main.Trade',
-        name: '',
-        type: 'tuple',
-      },
-    ],
-    stateMutability: 'view',
     type: 'function',
   },
   {
@@ -311,6 +236,18 @@ export const MarketplaceABI = [
       { internalType: 'bool', name: 'isActive', type: 'bool' },
     ],
     stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      { internalType: 'address', name: '', type: 'address' },
+      { internalType: 'address', name: '', type: 'address' },
+      { internalType: 'uint256', name: '', type: 'uint256' },
+      { internalType: 'bytes', name: '', type: 'bytes' },
+    ],
+    name: 'onERC721Received',
+    outputs: [{ internalType: 'bytes4', name: '', type: 'bytes4' }],
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {

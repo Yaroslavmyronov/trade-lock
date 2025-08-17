@@ -14,7 +14,7 @@ export const TradeButton = ({
   selectedNftsMarket,
 }: TradeButtonProps) => {
   const noSelectedNfts =
-    selectedNftsUser.length === 0 || selectedNftsMarket.length === 0;
+    selectedNftsUser.length === 0 && selectedNftsMarket.length === 0;
 
   return (
     <ActionWithModal

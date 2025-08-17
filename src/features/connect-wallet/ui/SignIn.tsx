@@ -9,7 +9,7 @@ interface ModalProps {
   onClose: () => void;
 }
 
-export const Modal = ({ open, onClose }: ModalProps) => {
+export const SignIn = ({ open, onClose }: ModalProps) => {
   const { signIn, status, nonce } = useEthereumAuth();
   const [agreed, setAgreed] = useState(false);
   if (!open) return null;

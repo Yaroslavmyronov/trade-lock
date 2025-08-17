@@ -1,10 +1,10 @@
 import { getNftId } from '@/features/nft-sell/model/NFT';
 import { Card } from '@/shared';
 import { handleCardClick } from '@/shared/lib/handleCardClick';
-import { useMarketSelectedCards } from '@/shared/store/useMarketSelectedCards';
+import { useMarketSelectedNfts } from '@/shared/store/useMarketSelectedNfts';
 
 export const MarketNFTList = () => {
-  const { selectedNfts, toggleSelect, removeItem } = useMarketSelectedCards();
+  const { selectedNfts, toggleSelect, removeItem } = useMarketSelectedNfts();
   return (
     <div className="relative">
       <div className="relative grid size-full min-h-auto grid-cols-[repeat(auto-fill,_minmax(70px,_1fr))] grid-rows-[repeat(auto-fill,_140px)] gap-1">

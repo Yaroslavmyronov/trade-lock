@@ -1,16 +1,23 @@
 import { useGlobalState } from '@/shared/store/useGlobalState';
 import { useEffect, useState } from 'react';
 import { useAccount, useDisconnect } from 'wagmi';
-import { Modal } from './Modal';
+import { SignIn } from './SignIn';
 
 export const AuthManager = () => {
-  const { isConnected } = useAccount();
+  const { isConnected, connector } = useAccount();
   const { disconnect } = useDisconnect();
 
   const { authStatus } = useGlobalState();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   console.log('authStatus', authStatus);
+
+  useEffect(() => {
+    if (connector && !connector.getChainId) {
+      console.warn('Zombie connector detected, disconnecting...');
+      disconnect();
+    }
+  }, [connector, disconnect]);
 
   useEffect(() => {
     if (isConnected && authStatus === 'unauthenticated') {
@@ -25,7 +32,7 @@ export const AuthManager = () => {
   }, [authStatus]);
 
   return (
-    <Modal
+    <SignIn
       open={isModalOpen}
       onClose={() => {
         disconnect();

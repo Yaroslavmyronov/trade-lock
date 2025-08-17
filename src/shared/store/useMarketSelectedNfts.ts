@@ -2,14 +2,14 @@ import { MarketNft, MarketNftResponse } from '@/entities/nfts/types';
 import { getNftId } from '@/features/nft-sell/model/NFT';
 import { create } from 'zustand';
 
-interface SelectedCardsState {
+interface SelectedNftsState {
   selectedNfts: MarketNftResponse;
   toggleSelect: (nft: MarketNft) => void;
   removeItem: (id: string) => void;
   clearAll: () => void;
 }
 
-export const useMarketSelectedCards = create<SelectedCardsState>((set) => ({
+export const useMarketSelectedNfts = create<SelectedNftsState>((set) => ({
   selectedNfts: [],
   toggleSelect: (nft) =>
     set((state) => {

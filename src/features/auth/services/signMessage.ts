@@ -80,6 +80,7 @@ export const useEthereumAuth = () => {
             status: 'idle',
           }));
         }
+
         toast.error('Failed to sign message');
         return setState((x) => ({
           ...x,

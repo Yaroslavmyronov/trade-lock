@@ -90,7 +90,7 @@ export const SellModal = ({
             abi: erc721Abi,
             functionName: 'approve',
             args: [
-              '0x7D8b883A19EF765b6dbbf96AF84953885f8753B8', // MARKETPLACE_ADDRESS
+              '0x2fe3AA6c023608b6F3D94b6Ec91fae1382de61c8', // MARKETPLACE_ADDRESS
               BigInt(nft.tokenId),
             ],
           });
