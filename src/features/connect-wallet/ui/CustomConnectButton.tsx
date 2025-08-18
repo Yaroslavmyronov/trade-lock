@@ -52,64 +52,11 @@ export function CustomConnectButton() {
                 }
 
                 return <Address />;
-                {
-                  /* <button
-                      onClick={openChainModal}
-                      style={{ display: 'flex', alignItems: 'center' }}
-                      type="button"
-                    >
-                      {chain.hasIcon && (
-                        <div
-                          style={{
-                            background: chain.iconBackground,
-                            width: 12,
-                            height: 12,
-                            borderRadius: 999,
-                            overflow: 'hidden',
-                            marginRight: 4,
-                          }}
-                        >
-                          {chain.iconUrl && (
-                            <Image
-                              alt={chain.name ?? 'Chain icon'}
-                              src={chain.iconUrl}
-                              width={12}
-                              height={12}
-                            />
-                          )}
-                        </div>
-                      )}
-                      {chain.name}
-                    </button> */
-                }
-
-                {
-                  /* <button onClick={openAccountModal} type="button">
-                      {account.displayName}
-                      {account.displayBalance
-                        ? ` (${account.displayBalance})`
-                        : ''}
-                    </button> */
-                }
               })()}
             </div>
           );
         }}
       </ConnectButton.Custom>
-      {/* <button
-        onClick={() => setModalOpen(true)}
-        className={
-          loginButtonClassNames ??
-          'cursor-pointer self-center bg-[#35373a] px-[15px] py-[11px] text-[14px] leading-3.5 text-white'
-        }
-      >
-        {сonnectButtonText ?? 'Login'}
-      </button> */}
-
-      {/* <ConnectModal
-        isOpen={isModalOpen}
-        onClose={() => setModalOpen(false)}
-      ></ConnectModal> */}
     </>
   );
 }

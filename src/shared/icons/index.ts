@@ -3,4 +3,5 @@ export { ArrowIcon } from './ArrowIcon';
 export { CloseIcon } from './CloseIcon';
 export { FailIcon } from './FailIcon';
 export { MarketIcon } from './MarketIcon';
+export { NotificationsIcon } from './NotificationsIcon';
 export { SuccessIcon } from './SuccessIcon';

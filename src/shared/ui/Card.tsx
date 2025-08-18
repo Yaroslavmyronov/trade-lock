@@ -15,7 +15,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
       <div
         ref={ref}
         onClick={onClick}
-        className={`${!isSelected && 'group hover:border-[rgba(111,104,125,0.5)]'} relative w-full overflow-hidden rounded-lg border border-[rgb(35,30,47)] bg-[#232627] transition`}
+        className={`${!isSelected && 'group hover:border-[rgba(111,104,125,0.5)]'} relative w-full overflow-hidden rounded-lg border border-[#232627] bg-[#232627] transition`}
       >
         {isSelected && !selected && (
           <div className="absolute top-0 left-0 z-30 flex size-full cursor-not-allowed flex-col items-center justify-center text-center text-[#fff] after:absolute after:top-0 after:left-0 after:z-[-1] after:h-full after:w-full after:bg-[#2a2c2e] after:opacity-90">
