@@ -7,5 +7,6 @@ export { Refresh } from './FilterPanel/Refresh';
 export { Search } from './FilterPanel/Search';
 export { Sort } from './FilterPanel/Sort';
 export { MarketCounter } from './MarketCounter';
+export { Popover } from './Popover';
 export { Preloader } from './Preloader';
 export { SuspenseBoundary } from './SuspenseBoundary';

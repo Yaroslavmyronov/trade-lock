@@ -1,5 +1,5 @@
 import { CustomConnectButton } from '@/features/connect-wallet/ui/CustomConnectButton';
-import { TradesNotification } from '@/features/trades-notifications';
+import { NotificationsDropdown } from '@/features/notifications';
 import { Logo } from './Logo';
 import { Navigation } from './Navigation';
 
@@ -10,7 +10,7 @@ export const Header = () => {
         <div className="flex items-stretch justify-between pr-[15px] text-[1rem]">
           <Logo></Logo>
           <Navigation></Navigation>
-          <TradesNotification></TradesNotification>
+          <NotificationsDropdown></NotificationsDropdown>
           <CustomConnectButton></CustomConnectButton>
         </div>
       </div>
