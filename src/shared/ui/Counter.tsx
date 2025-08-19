@@ -35,7 +35,7 @@ export const Counter = ({
               className="group mx-2 flex aspect-square w-[30px] cursor-pointer items-center justify-center bg-[#2a2c2e] text-[#fff] select-none"
             >
               <CloseIcon width={24} height={24} />
-              <div className="pointer-events-none absolute bottom-[-50px] left-0 z-[2] max-h-[40vh] min-h-[24px] max-w-[250px] min-w-[40px] overflow-hidden rounded-[2px] bg-[#35373a] px-3.5 py-2.5 text-center text-xs break-words whitespace-nowrap text-[#fff] opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+              <div className="pointer-events-none absolute top-[-50px] left-0 z-[200] max-h-[40vh] min-h-[24px] max-w-[250px] min-w-[40px] overflow-hidden rounded-[2px] bg-[#35373a] px-3.5 py-2.5 text-center text-xs break-words whitespace-nowrap text-[#fff] opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                 Remove all
               </div>
             </button>
