@@ -1,4 +1,5 @@
 import { forwardRef } from 'react';
+import { ipfsToHttp } from '../lib/getIpfsUrl';
 
 interface CardProps {
   title: string;
@@ -31,7 +32,11 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
                     className="absolute inset-0 size-full overflow-hidden object-cover transition-transform duration-300 select-none group-hover:scale-110"
                     alt=""
                     loading="lazy"
-                    src={image ? image : '/images/no-media-available.jpg'}
+                    src={
+                      image
+                        ? ipfsToHttp(image)
+                        : '/images/no-media-available.jpg'
+                    }
                   ></img>
                 </div>
               </div>

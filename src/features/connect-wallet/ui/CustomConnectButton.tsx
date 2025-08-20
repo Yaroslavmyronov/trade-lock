@@ -25,7 +25,7 @@ export function CustomConnectButton() {
             );
           }
           return (
-            <div className="flex">
+            <>
               {(() => {
                 if (!mounted || !account || !chain) {
                   return (
@@ -53,7 +53,7 @@ export function CustomConnectButton() {
 
                 return <Address />;
               })()}
-            </div>
+            </>
           );
         }}
       </ConnectButton.Custom>

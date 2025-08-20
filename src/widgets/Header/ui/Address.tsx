@@ -33,7 +33,7 @@ export const Address = () => {
   const shortAddress = checkSumAddress?.slice(2, 8) ?? '';
 
   return (
-    <div className="flex items-center gap-1">
+    <div className="ml-4 flex items-center gap-1">
       <div className="inline-flex h-10 items-center justify-center gap-2 bg-[rgb(42,44,46)] px-4 text-sm font-medium whitespace-nowrap disabled:pointer-events-none">
         {isConnected && !address ? (
           <div className="flex animate-pulse space-x-4">

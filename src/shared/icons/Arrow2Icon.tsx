@@ -1,9 +1,9 @@
 export const Arrow2Icon = ({
-  width,
-  height,
+  width = 24,
+  height = 24,
 }: {
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
 }) => (
   <svg
     width={width}
