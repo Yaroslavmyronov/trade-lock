@@ -5,7 +5,7 @@ import { wagmiConfig } from '@/shared/config/wagmi/wagmiConfig';
 import { useWrapperWriteContract } from '@/shared/lib/web3/useWrapperWriteContract';
 import { Modal } from '@/shared/ui/Modal';
 import { useState } from 'react';
-import { erc721Abi, parseEther } from 'viem';
+import { Address, erc721Abi, parseEther } from 'viem';
 
 import { useWriteContract } from 'wagmi';
 import { waitForTransactionReceipt } from 'wagmi/actions';
@@ -90,7 +90,7 @@ export const SellModal = ({
             abi: erc721Abi,
             functionName: 'approve',
             args: [
-              '0x2fe3AA6c023608b6F3D94b6Ec91fae1382de61c8', // MARKETPLACE_ADDRESS
+              process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS as Address, // MARKETPLACE_ADDRESS
               BigInt(nft.tokenId),
             ],
           });

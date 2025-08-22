@@ -1,6 +1,6 @@
 import { UserNft } from '@/entities/nfts/types';
 import { wagmiConfig } from '@/shared/config/wagmi/wagmiConfig';
-import { erc721Abi } from 'viem';
+import { Address, erc721Abi } from 'viem';
 import { readContract } from 'wagmi/actions';
 
 export const isApproved = async (nft: UserNft) => {
@@ -14,7 +14,7 @@ export const isApproved = async (nft: UserNft) => {
 
     return (
       approvedAddress?.toLowerCase() ===
-      '0x2fe3AA6c023608b6F3D94b6Ec91fae1382de61c8'.toLowerCase()
+      (process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS as Address).toLowerCase()
     );
   } catch (error) {
     console.error('isApproved error:', error);

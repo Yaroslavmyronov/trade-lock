@@ -1,7 +1,7 @@
 import { getMarketNfts } from '@/shared/api/market-nfts';
 import { LoginProvider } from '@/shared/providers/LoginProvider';
-import { Inventory } from '@/widgets/Inventory';
-import { Market } from '@/widgets/Market';
+import { Inventory } from '@/widgets/inventory';
+import { Market } from '@/widgets/market';
 
 export const TradePage = async () => {
   const marketNfts = await getMarketNfts();

@@ -1,4 +1,6 @@
-import { Header } from '@/widgets/Header';
+import { Header } from '@/widgets/header';
+import { MyTrades } from '@/widgets/my-trades';
+import { TradeModal } from '@/widgets/trade-modal';
 import '@rainbow-me/rainbowkit/styles.css';
 import '@shared/styles/globals.css';
 import type { Metadata } from 'next';
@@ -20,10 +22,12 @@ export default async function Layout({
       <body className="antialiased">
         <Providers cookie={(await headers()).get('cookie') ?? ''}>
           <div className="flex h-full min-h-screen grow flex-col">
-            <Header></Header>
+            <Header />
             <main className="grow overflow-auto">{children}</main>
           </div>
           <Toaster position="bottom-right" />
+          <MyTrades />
+          <TradeModal />
         </Providers>
       </body>
     </html>

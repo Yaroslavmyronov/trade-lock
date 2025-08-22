@@ -1,5 +1,5 @@
 import { getMarketNfts } from '@/shared/api/market-nfts';
-import { Market } from '@/widgets/Market';
+import { Market } from '@/widgets/market';
 
 export const MarketPage = async () => {
   const marketNfts = await getMarketNfts();

@@ -28,19 +28,18 @@ export function usePaginatedFetch<T, Extra = object>(
   const isFirstLoad = page === initialPage && loading && !initialData;
 
   useEffect(() => {
-    if (!skipFetch && data?.response) {
+    if (!skipFetch && data) {
+      const newItemsArray: T[] = Array.isArray(data)
+        ? data
+        : (data.response ?? []);
       setItems((prev) => {
-        const newItems = [...prev, ...data.response];
+        const merged = [...prev, ...newItemsArray];
 
         return Array.from(
-          new Map(
-            newItems.map((item) => [JSON.stringify(item), item]),
-          ).values(),
+          new Map(merged.map((item) => [JSON.stringify(item), item])).values(),
         );
       });
-      setHasMore(data.response.length === limit);
-    } else {
-      console.warn('Data is not an array or is null:', data);
+      setHasMore(newItemsArray.length === limit);
     }
   }, [data]);
 
