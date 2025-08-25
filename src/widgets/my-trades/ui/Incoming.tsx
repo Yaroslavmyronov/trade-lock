@@ -5,7 +5,7 @@ import { TradeItem } from './TradeItem';
 
 export const Incoming = () => {
   const { items, loading, error, lastElementRef, isFirstLoad, hasMore, data } =
-    usePaginatedFetch<Trade>('/market/trades', 1, 20);
+    usePaginatedFetch<Trade>('/market/trades?direction=incoming', 1, 20);
   console.log('/market/trades', data);
   console.log('/market/trades items', items);
 
@@ -28,7 +28,11 @@ export const Incoming = () => {
   return (
     <div className="mx-auto max-w-[600px] p-3">
       {items.map((trade) => (
-        <TradeItem trade={trade} key={trade.tradeId}></TradeItem>
+        <TradeItem
+          activeTab="Incoming"
+          trade={trade}
+          key={trade.tradeId}
+        ></TradeItem>
       ))}
     </div>
   );

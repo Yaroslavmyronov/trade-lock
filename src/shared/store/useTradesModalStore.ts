@@ -1,13 +1,23 @@
 import { create } from 'zustand';
 
+type Tab = 'Incoming' | 'Sent' | 'History';
+
 interface TradesModalState {
   isOpen: boolean;
-  open: () => void;
+  activeTab: Tab;
+  open: (tab?: Tab) => void;
   close: () => void;
+  setActiveTab: (tab: Tab) => void;
 }
 
 export const useTradesModalStore = create<TradesModalState>((set) => ({
   isOpen: false,
-  open: () => set({ isOpen: true }),
+  activeTab: 'Incoming',
+  open: (tab) =>
+    set((state) => ({
+      isOpen: true,
+      activeTab: tab ?? state.activeTab,
+    })),
   close: () => set({ isOpen: false }),
+  setActiveTab: (tab) => set({ activeTab: tab }),
 }));

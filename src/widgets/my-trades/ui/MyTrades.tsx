@@ -1,15 +1,12 @@
 'use client';
-import { useTradesModalStore } from '@/shared/store/useTradesModalStore'
-import { Modal } from '@/shared/ui/Modal'
-import { useState } from 'react'
-import { Body } from './Body'
-import { Header } from './Header'
+import { useTradesModalStore } from '@/shared/store/useTradesModalStore';
+import { Modal } from '@/shared/ui/Modal';
+import { Body } from './Body';
+import { Header } from './Header';
 
 export const MyTrades = () => {
-  const { isOpen, close } = useTradesModalStore();
-  const [activeTab, setActiveTab] = useState<'Incoming' | 'Sent' | 'History'>(
-    'Incoming',
-  );
+  const { isOpen, close, setActiveTab, activeTab } = useTradesModalStore();
+
   return (
     <Modal isOpen={isOpen} onClose={close}>
       <div className="flex h-screen w-full max-w-[1200px] items-center justify-center">

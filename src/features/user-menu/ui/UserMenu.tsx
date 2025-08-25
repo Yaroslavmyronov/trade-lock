@@ -81,7 +81,7 @@ export const UserMenu = ({
             <div className="py-2">
               <div>
                 <button
-                  onClick={openTradesModal}
+                  onClick={() => openTradesModal('Incoming')}
                   className="flex h-[36px] w-full cursor-pointer items-center px-4 text-[13px] hover:bg-[rgba(0,0,0,.1)]"
                 >
                   <span className="flex items-center">

@@ -11,13 +11,21 @@ export function usePaginatedFetch<T, Extra = object>(
   limit = 20,
   config?: RequestInit,
   initialData?: T[],
+  extraParams?: Record<string, string | number>,
 ) {
   const [page, setPage] = useState(initialPage);
   const [items, setItems] = useState<T[]>(initialData || []);
   const [hasMore, setHasMore] = useState<boolean | null>(null);
 
   const skipFetch = !!initialData && page === initialPage;
-  const url = `${baseUrl}?page=${page}&pageSize=${limit}`;
+
+  const query = new URLSearchParams({
+    page: String(page),
+    pageSize: String(limit),
+    ...(extraParams || {}),
+  }).toString();
+
+  const url = `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}${query}`;
 
   const { data, error, loading } = useFetch<ApiResponse<T, Extra>>(
     url,

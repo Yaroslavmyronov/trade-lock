@@ -1,8 +1,8 @@
 import { formatDate } from '@/shared/lib/formateDate';
-import Link from 'next/link';
 
 interface NotificationItemProps {
-  href: string;
+  open?: () => void;
+  onRead?: () => void;
   title: string;
   body: string;
   time: string;
@@ -10,16 +10,20 @@ interface NotificationItemProps {
 }
 
 export const NotificationItem = ({
-  href,
+  open,
+  onRead,
   title,
   body,
   time,
   imgSrc,
 }: NotificationItemProps) => {
   return (
-    <Link
-      href={href}
-      className="flex cursor-pointer px-[18px] py-3 hover:bg-[rgba(0,0,0,.1)] hover:text-[#836EF9]"
+    <button
+      onClick={() => {
+        onRead?.();
+        open?.();
+      }}
+      className="cursor-pointer px-[18px] py-3 text-left whitespace-nowrap hover:bg-[rgba(0,0,0,.1)] hover:text-[#836EF9]"
     >
       {imgSrc && <img src={imgSrc} alt="" className="mr-3" />}
       <div>
@@ -33,6 +37,6 @@ export const NotificationItem = ({
           {formatDate(time)}
         </span>
       </div>
-    </Link>
+    </button>
   );
 };

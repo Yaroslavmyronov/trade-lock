@@ -7,12 +7,19 @@ import { TradeReject } from '@/features/trade-reject';
 import { useTradeModalStore } from '@/shared/store/useTradeModalStore';
 import { TradeOfferItem } from './TradeOfferItem';
 
-export const TradeItem = ({ trade }: { trade: Trade }) => {
+interface TradeItemState {
+  trade: Trade;
+  activeTab: 'Incoming' | 'Sent' | 'History';
+}
+
+export const TradeItem = ({ trade, activeTab }: TradeItemState) => {
   const { open } = useTradeModalStore();
   return (
     <div className="mb-6 pt-6">
       <div className="mb-2 text-lg">
-        {`${shortenAddress(trade.fromAddress)} offers you a trade:`}
+        {activeTab === 'Incoming'
+          ? `${shortenAddress(trade.fromAddress)} offers you a trade:`
+          : `You offered ${shortenAddress(trade.toAddress)} a trade:`}
       </div>
       <button
         onClick={() =>
@@ -27,7 +34,11 @@ export const TradeItem = ({ trade }: { trade: Trade }) => {
         className="flex w-full cursor-pointer flex-col rounded-xs bg-[#ffffff0a] p-[9px]"
       >
         <TradeOfferItem
-          title={`${shortenAddress(trade.fromAddress)} offers:`}
+          title={
+            activeTab === 'Incoming'
+              ? `${shortenAddress(trade.fromAddress)} offers:`
+              : `You offered:`
+          }
           metadata={trade.fromMetadata}
         ></TradeOfferItem>
         <div className="relative flex flex-1 justify-center">
@@ -37,7 +48,11 @@ export const TradeItem = ({ trade }: { trade: Trade }) => {
           <div className="absolute top-1/2 z-[1] h-[1px] w-full bg-[#3e4044]"></div>
         </div>
         <TradeOfferItem
-          title="In exchange for:"
+          title={
+            activeTab === 'Incoming'
+              ? 'In exchange for:'
+              : `${shortenAddress(trade.toAddress)} in exchange for:`
+          }
           metadata={trade.toMetadata}
         ></TradeOfferItem>
       </button>

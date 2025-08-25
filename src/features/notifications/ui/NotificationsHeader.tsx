@@ -1,5 +1,3 @@
-import { ArrowRightIcon } from '@/shared';
-
 interface NotificationsHeaderProps {
   unreadCount?: number;
 }
@@ -14,14 +12,6 @@ export const NotificationsHeader = ({
           {unreadCount}
         </span>
         <span className="leading-[22px]">New Notification</span>
-      </div>
-      <div className="flex cursor-pointer items-center text-sm leading-4 font-normal text-white/80 hover:text-[#836EF9]">
-        View more
-        <ArrowRightIcon
-          className="ml-1"
-          width={16}
-          height={16}
-        ></ArrowRightIcon>
       </div>
     </div>
   );
