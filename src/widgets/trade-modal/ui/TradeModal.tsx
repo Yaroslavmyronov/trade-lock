@@ -13,9 +13,7 @@ export const TradeModal = () => {
         <div className="flex h-[600px] max-h-[calc(100dvh_-_32px)] w-full flex-col rounded-[4px] bg-[#2a2c2e]">
           <TradeModalHeader onClose={close} />
           <TradeModalBody />
-          <div className="bg-transparent px-6 py-4">
-            <div className="grid grid-cols-2 gap-x-2">{footer}</div>
-          </div>
+          <div className="bg-transparent px-6 py-4">{footer}</div>
         </div>
       </div>
     </Modal>

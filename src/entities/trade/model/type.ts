@@ -16,3 +16,10 @@ export interface Trade {
   fromMetadata: Metadata[];
   toMetadata: Metadata[];
 }
+
+export interface NewTrade {
+  fromAddress: Address;
+  toAddress: Address;
+  fromMetadata: Metadata[];
+  toMetadata: Metadata[];
+}

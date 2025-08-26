@@ -2,7 +2,7 @@ import { useTradeModalStore } from '@/shared/store/useTradeModalStore';
 
 export const MarketItemPrice = () => {
   const { tradeData } = useTradeModalStore();
-  const allNftPrices = tradeData?.fromMetadata.reduce(
+  const allNftPrices = tradeData?.toMetadata.reduce(
     (sum, nft) => sum + nft.lastPrice,
     0,
   );
@@ -14,7 +14,7 @@ export const MarketItemPrice = () => {
             <span>{allNftPrices}</span>
           </div>
         </div>
-        <div className="flex-end mx-[5px] flex text-[12px]">{`(${tradeData?.fromMetadata.length})`}</div>
+        <div className="flex-end mx-[5px] flex text-[12px]">{`(${tradeData?.toMetadata.length})`}</div>
         <div className="w-full px-2 text-left text-[12px]">
           <span>Market items price</span>
         </div>

@@ -1,11 +1,16 @@
 import { Trade } from '@/entities/trade';
+import { NewTrade } from '@/entities/trade/model/type';
 import { ReactNode } from 'react';
 import { create } from 'zustand';
 
+type TradeData =
+  | Trade
+  | (NewTrade & { tradeId?: string; isIncoming?: boolean });
+
 interface TradeModalState {
   isOpen: boolean;
-  tradeData: Trade | null;
-  open: (trade: Trade, footer?: ReactNode) => void;
+  tradeData: TradeData | null;
+  open: (trade: TradeData, footer?: ReactNode) => void;
   close: () => void;
   footer?: ReactNode;
 }

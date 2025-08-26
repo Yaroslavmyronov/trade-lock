@@ -11,6 +11,7 @@ import {
 } from '@microsoft/signalr';
 import { useEffect, useRef } from 'react';
 import { BellButton } from './BellButton';
+import { ClearUnread } from './ClearUnread';
 import { NotificationsHeader } from './NotificationsHeader';
 
 export const NotificationsDropdown = () => {
@@ -43,6 +44,12 @@ export const NotificationsDropdown = () => {
       connectionRef.current.invoke('markAsRead', id).catch(console.error);
     }
   };
+  const MarkAllAsRead = () => {
+    if (connectionRef.current) {
+      connectionRef.current.invoke('markAllAsRead').catch(console.error);
+    }
+  };
+
   if (notifications === null || unreadCount === null) return null;
 
   return (
@@ -51,16 +58,19 @@ export const NotificationsDropdown = () => {
         <NotificationsHeader unreadCount={unreadCount}></NotificationsHeader>
         <div className="flex max-h-[376px] flex-col overflow-y-auto">
           {notifications.length ? (
-            notifications.map((n) => (
-              <NotificationItem
-                key={n.id}
-                open={() => open()}
-                onRead={() => markAsRead(n.id)}
-                title={n.title}
-                body={n.body}
-                time={n.createdAt}
-              />
-            ))
+            <>
+              {notifications.map((n) => (
+                <NotificationItem
+                  key={n.id}
+                  open={() => open()}
+                  onRead={() => markAsRead(n.id)}
+                  title={n.title}
+                  body={n.body}
+                  time={n.createdAt}
+                />
+              ))}
+              <ClearUnread MarkAllAsRead={MarkAllAsRead} />
+            </>
           ) : (
             <div className="p-2 text-center text-gray-400">
               No notifications

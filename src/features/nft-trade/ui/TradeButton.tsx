@@ -1,8 +1,12 @@
 'use client';
 import { MarketNftResponse, UserNftResponse } from '@/entities/nfts/types';
-import { ActionWithModal } from '@/features/nft-action-with-modal/ui/ActionWithModal ';
+import { TradeCreate } from '@/features/trade-create';
 import { Arrow2Icon } from '@/shared';
-import { TradeModal } from './TradeModal';
+import { useMarketSelectedNfts } from '@/shared/store/useMarketSelectedNfts';
+import { useSelectedNfts } from '@/shared/store/useSelectedNfts';
+import { useTradeModalStore } from '@/shared/store/useTradeModalStore';
+import { useAccount } from 'wagmi';
+import { createTrade } from '../model/createTrade';
 
 interface TradeButtonProps {
   selectedNftsUser: UserNftResponse;
@@ -14,19 +18,40 @@ export const TradeButton = ({
   selectedNftsMarket,
 }: TradeButtonProps) => {
   const noSelectedNfts =
-    selectedNftsUser.length === 0 && selectedNftsMarket.length === 0;
+    selectedNftsUser.length === 0 || selectedNftsMarket.length === 0;
+  const { open } = useTradeModalStore();
+  const { address } = useAccount();
+  const trade = createTrade(selectedNftsUser, selectedNftsMarket, address!);
 
+  const { selectedNfts: selectedUserNfts } = useSelectedNfts();
+  const { selectedNfts: selectedMarketNfts } = useMarketSelectedNfts();
   return (
-    <ActionWithModal
-      icon={<Arrow2Icon width={24} height={24} />}
-      label="Trade"
-      subLabel={
-        noSelectedNfts
-          ? ''
-          : `${selectedNftsUser.length} x ${selectedNftsMarket.length} item`
-      }
-      disabled={noSelectedNfts}
-      ModalComponent={TradeModal}
-    />
+    <div className="mx-1.5">
+      <button
+        className="flex min-h-[48px] min-w-[160px] cursor-pointer items-center justify-start rounded-[2px] bg-[#836EF9] px-3 disabled:cursor-not-allowed disabled:opacity-40"
+        disabled={noSelectedNfts}
+        onClick={() => {
+          if (trade)
+            open(
+              trade,
+              <TradeCreate
+                selectedUserNfts={selectedUserNfts}
+                selectedMarketNfts={selectedMarketNfts}
+              ></TradeCreate>,
+            );
+        }}
+      >
+        <Arrow2Icon width={24} height={24} />
+        <span className="ml-2.5 flex flex-col text-left">
+          <span className="leading-3.5">Trade</span>
+
+          <span className="text-[12px] leading-3 opacity-80">
+            {selectedNftsUser.length > 0 || selectedNftsMarket.length > 0
+              ? `${selectedNftsUser.length} x ${selectedNftsMarket.length} item`
+              : ''}
+          </span>
+        </span>
+      </button>
+    </div>
   );
 };

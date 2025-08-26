@@ -25,10 +25,10 @@ export const TradeItem = ({ trade, activeTab }: TradeItemState) => {
         onClick={() =>
           open(
             trade,
-            <>
+            <div className="grid grid-cols-2 gap-x-2">
               <TradeReject tradeId={trade.tradeId}></TradeReject>
               <TradeAccept tradeId={trade.tradeId}></TradeAccept>
-            </>,
+            </div>,
           )
         }
         className="flex w-full cursor-pointer flex-col rounded-xs bg-[#ffffff0a] p-[9px]"
