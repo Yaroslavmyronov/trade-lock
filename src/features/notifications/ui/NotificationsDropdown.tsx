@@ -69,7 +69,6 @@ export const NotificationsDropdown = () => {
                   time={n.createdAt}
                 />
               ))}
-              <ClearUnread MarkAllAsRead={MarkAllAsRead} />
             </>
           ) : (
             <div className="p-2 text-center text-gray-400">
@@ -77,6 +76,9 @@ export const NotificationsDropdown = () => {
             </div>
           )}
         </div>
+        {notifications.length > 0 && (
+          <ClearUnread MarkAllAsRead={MarkAllAsRead} />
+        )}
       </div>
     </Popover>
   );

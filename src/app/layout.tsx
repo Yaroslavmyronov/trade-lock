@@ -1,3 +1,4 @@
+import { BuyModal } from '@/features/nft-buy';
 import { Header } from '@/widgets/header';
 import { MyTrades } from '@/widgets/my-trades';
 import { TradeModal } from '@/widgets/trade-modal';
@@ -28,6 +29,7 @@ export default async function Layout({
           <Toaster position="bottom-right" />
           <MyTrades />
           <TradeModal />
+          <BuyModal />
         </Providers>
       </body>
     </html>

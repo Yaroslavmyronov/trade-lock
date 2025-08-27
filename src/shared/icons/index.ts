@@ -3,6 +3,8 @@ export { ArrowIcon } from './ArrowIcon';
 export { ArrowRightIcon } from './ArrowRightIcon';
 export { CloseIcon } from './CloseIcon';
 export { FailIcon } from './FailIcon';
+export { InfoCircleIcon } from './InfoCircleIcon';
 export { MarketIcon } from './MarketIcon';
 export { NotificationsIcon } from './NotificationsIcon';
 export { SuccessIcon } from './SuccessIcon';
+export { TickCircleIcon } from './TickCircleIcon';

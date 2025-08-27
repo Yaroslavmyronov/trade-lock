@@ -9,13 +9,13 @@ import { useState } from 'react';
 import { Address } from 'viem';
 
 interface TradeCreateProps {
-  selectedUserNfts: UserNftResponse;
-  selectedMarketNfts: MarketNftResponse;
+  selectedNftsUser: UserNftResponse;
+  selectedNftsMarket: MarketNftResponse;
 }
 
 export const TradeCreate = ({
-  selectedUserNfts,
-  selectedMarketNfts,
+  selectedNftsUser,
+  selectedNftsMarket,
 }: TradeCreateProps) => {
   const { writeContractAsync, isMining } =
     useWrapperWriteContract('Marketplace');
@@ -29,13 +29,13 @@ export const TradeCreate = ({
 
   const [tradeCreated, setTradeCreated] = useState(false);
 
-  const recipientAddress = selectedMarketNfts[0]?.sellerAddress;
-  const tokenIdsFrom = selectedUserNfts.map((nft) => BigInt(nft.tokenId));
-  const nftContractsFrom = selectedUserNfts.map((nft) => nft.contractAddress);
-  const listingIdsTo = selectedMarketNfts.map((nft) => BigInt(nft.listingId));
+  const recipientAddress = selectedNftsMarket[0]?.sellerAddress;
+  const tokenIdsFrom = selectedNftsUser.map((nft) => BigInt(nft.tokenId));
+  const nftContractsFrom = selectedNftsUser.map((nft) => nft.contractAddress);
+  const listingIdsTo = selectedNftsMarket.map((nft) => BigInt(nft.listingId));
 
   const handleTrade = async () => {
-    await approveNfts(selectedUserNfts);
+    await approveNfts(selectedNftsUser);
     try {
       await writeContractAsync({
         functionName: 'createTrade',

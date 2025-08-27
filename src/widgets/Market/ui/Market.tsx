@@ -3,6 +3,7 @@ import { Propose } from '@/features';
 
 import { MarketNftResponse } from '@/entities/nfts/types';
 import { FilterPanel } from '@/features/filter-panel';
+import { BuyButton } from '@/features/nft-buy';
 import { TradeButton } from '@/features/nft-trade';
 import { MarketCounter } from '@/shared';
 import { usePaginatedFetch } from '@/shared/lib/usePaginatedFetch';
@@ -60,6 +61,7 @@ export const Market = ({ initialNfts }: { initialNfts: MarketNftResponse }) => {
             selectedNftsMarket={selectedNftsMarket}
             selectedNftsUser={selectedNftsUser}
           ></TradeButton>
+          <BuyButton selectedNftsMarket={selectedNftsMarket}></BuyButton>
         </div>
       </div>
     </div>

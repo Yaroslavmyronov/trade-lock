@@ -164,8 +164,8 @@ export const SellModal = ({
 
   const getButtonText = () => {
     if (step === 'listing') return 'Listing';
-    if (step === 'approve') return 'Approve Access';
-    return 'List Items';
+    if (step === 'approve') return 'Approve';
+    return 'List';
   };
 
   const renderContent = () => {
@@ -212,11 +212,11 @@ export const SellModal = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="flex h-screen w-full max-w-[600px] items-center justify-center">
-        <div className="flex h-[700px] max-h-[calc(100dvh_-_32px)] w-full flex-col rounded-[4px] border border-[rgb(42,44,46)] bg-[rgb(16,16,17)]">
-          <div className="flex shrink-0 items-center justify-between border-b border-[rgb(42,44,46)] p-4 px-8 py-6 transition-all duration-300">
+        <div className="flex h-[700px] max-h-[calc(100dvh_-_32px)] w-full flex-col rounded-[4px] bg-[#2a2c2e]">
+          <div className="flex min-h-[52px] shrink-0 items-center justify-between border-b border-[#35373a] px-6">
             <div className="flex w-full items-center justify-between gap-x-2">
               <div className="flex items-center gap-x-2 transition-opacity duration-300">
-                <h4 className="text-base leading-6 font-semibold">
+                <h4 className="text-[22px] leading-6 font-normal text-[#836EF9] uppercase">
                   {getButtonText()}
                 </h4>
               </div>
@@ -237,7 +237,7 @@ export const SellModal = ({
             <></>
 
             <div className="shrink-0 overflow-hidden">
-              <div className="flex flex-col gap-y-3 border-t border-[rgb(42,44,46)] px-3.5 pt-3.5 pb-3.5 md:px-8 md:pt-6 md:pb-6">
+              <div className="flex flex-col gap-y-3 bg-[#2d2e30] px-3.5 pt-3.5 pb-3.5 shadow-[0_-2px_10px_rgba(0,0,0,0.1)] md:px-8 md:pt-6 md:pb-6">
                 {listing.isAll('success') ? (
                   <button
                     onClick={onClose}

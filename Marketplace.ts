@@ -183,7 +183,9 @@ export const MarketplaceABI = [
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'uint256', name: 'listingId', type: 'uint256' }],
+    inputs: [
+      { internalType: 'uint256[]', name: 'listingIds', type: 'uint256[]' },
+    ],
     name: 'buyListing',
     outputs: [],
     stateMutability: 'payable',

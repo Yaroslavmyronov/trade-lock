@@ -2,8 +2,6 @@
 import { MarketNftResponse, UserNftResponse } from '@/entities/nfts/types';
 import { TradeCreate } from '@/features/trade-create';
 import { Arrow2Icon } from '@/shared';
-import { useMarketSelectedNfts } from '@/shared/store/useMarketSelectedNfts';
-import { useSelectedNfts } from '@/shared/store/useSelectedNfts';
 import { useTradeModalStore } from '@/shared/store/useTradeModalStore';
 import { useAccount } from 'wagmi';
 import { createTrade } from '../model/createTrade';
@@ -23,8 +21,6 @@ export const TradeButton = ({
   const { address } = useAccount();
   const trade = createTrade(selectedNftsUser, selectedNftsMarket, address!);
 
-  const { selectedNfts: selectedUserNfts } = useSelectedNfts();
-  const { selectedNfts: selectedMarketNfts } = useMarketSelectedNfts();
   return (
     <div className="mx-1.5">
       <button
@@ -35,8 +31,8 @@ export const TradeButton = ({
             open(
               trade,
               <TradeCreate
-                selectedUserNfts={selectedUserNfts}
-                selectedMarketNfts={selectedMarketNfts}
+                selectedNftsUser={selectedNftsUser}
+                selectedNftsMarket={selectedNftsMarket}
               ></TradeCreate>,
             );
         }}
