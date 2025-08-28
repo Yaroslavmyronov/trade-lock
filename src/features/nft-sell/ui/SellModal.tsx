@@ -1,20 +1,20 @@
 'use client';
 import { UserNftResponse } from '@/entities/nfts/types';
 import { CloseIcon, Preloader } from '@/shared';
-import { wagmiConfig } from '@/shared/config/wagmi/wagmiConfig';
 import { useWrapperWriteContract } from '@/shared/lib/web3/useWrapperWriteContract';
 import { Modal } from '@/shared/ui/Modal';
 import { useState } from 'react';
-import { Address, erc721Abi, parseEther } from 'viem';
+import { Address, parseEther } from 'viem';
 
-import { useWriteContract } from 'wagmi';
-import { waitForTransactionReceipt } from 'wagmi/actions';
-import { getNotApprovedNfts } from '../model/checkApprovedNfts';
+import { useNftApproval } from '@/shared/lib/web3/useNftApproval';
 import { getNftId } from '../model/NFT';
 import { getStatusesHelpers } from '../model/selectors';
 import { Approve } from './Approve';
 import { List } from './List';
 import { ListingForm } from './ListingForm';
+
+type ListingStatus = 'idle' | 'loading' | 'success' | 'error';
+type Step = 'form' | 'approve' | 'listing';
 
 interface SellModalProps {
   isOpen: boolean;
@@ -29,86 +29,35 @@ export const SellModal = ({
 }: SellModalProps) => {
   const { writeContractAsync, isMining } =
     useWrapperWriteContract('Marketplace');
-  const { writeContractAsync: writeContractApproveAsync } = useWriteContract();
 
-  const [approveStatuses, setApproveStatuses] = useState<
-    Record<string, 'idle' | 'loading' | 'success' | 'error'>
-  >({});
   const [listingStatuses, setListingStatuses] = useState<
-    Record<string, 'idle' | 'loading' | 'success' | 'error'>
+    Record<string, ListingStatus>
   >({});
 
-  const approve = getStatusesHelpers(selectedNfts, approveStatuses);
-  const listing = getStatusesHelpers(selectedNfts, listingStatuses);
-
-  const isApproving = approve.hasAny('loading');
-
-  const isError = listing.hasAny('error') || approve.hasAny('error');
-
-  const updateApproveStatus = (
-    nftId: string,
-    status: 'idle' | 'loading' | 'success' | 'error',
-  ) => {
-    setApproveStatuses((prev) => ({ ...prev, [nftId]: status }));
-  };
-  const updateListingStatus = (
-    nftId: string,
-    status: 'idle' | 'loading' | 'success' | 'error',
-  ) => {
+  const updateListingStatus = (nftId: string, status: ListingStatus) => {
     setListingStatuses((prev) => ({ ...prev, [nftId]: status }));
   };
 
-  const [step, setStep] = useState<'form' | 'approve' | 'listing'>('form');
+  const [step, setStep] = useState<Step>('form');
+
+  const { approveNfts, approveStatuses, resetApproveStatuses } = useNftApproval(
+    process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS as Address,
+  );
+
+  const listing = getStatusesHelpers(selectedNfts, listingStatuses);
+
+  const isApproving = Object.values(approveStatuses).some(
+    (status) => status === 'loading',
+  );
+
+  const isError =
+    listing.hasAny('error') ||
+    Object.values(approveStatuses).some((status) => status === 'error');
 
   const handleSell = async () => {
     setStep('approve');
 
-    // const notApprovedNfts = await getNotApprovedNfts(
-    //   selectedNfts,
-    //   updateApproveStatus,
-    // );
-
-    const { approved, notApproved } = await getNotApprovedNfts(selectedNfts);
-
-    approved.forEach((nft) => {
-      updateApproveStatus(getNftId(nft), 'success');
-    });
-
-    if (notApproved.length > 0) {
-      const statuses = Object.fromEntries(
-        notApproved.map((nft) => [getNftId(nft), 'loading' as const]),
-      );
-      setApproveStatuses((prev) => ({ ...prev, ...statuses }));
-
-      try {
-        for (const nft of notApproved) {
-          const id = getNftId(nft);
-          updateApproveStatus(id, 'loading');
-
-          const approveHash = await writeContractApproveAsync({
-            address: nft.contractAddress,
-            abi: erc721Abi,
-            functionName: 'approve',
-            args: [
-              process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS as Address, // MARKETPLACE_ADDRESS
-              BigInt(nft.tokenId),
-            ],
-          });
-
-          if (!approveHash) throw new Error('No approve hash');
-          await waitForTransactionReceipt(wagmiConfig, { hash: approveHash });
-
-          updateApproveStatus(id, 'success');
-        }
-      } catch (e) {
-        console.error('Approve error:', e);
-        notApproved.forEach((nft) => {
-          const id = getNftId(nft);
-          updateApproveStatus(id, 'error');
-        });
-        return;
-      }
-    }
+    await approveNfts(selectedNfts);
 
     // Step 2: Create listings
     setStep('listing');
@@ -199,7 +148,7 @@ export const SellModal = ({
       {} as Record<string, 'idle'>,
     );
 
-    setApproveStatuses(resetStatuses);
+    resetApproveStatuses(selectedNfts);
     setListingStatuses(resetStatuses);
   };
 

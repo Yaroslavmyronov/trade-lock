@@ -30,7 +30,6 @@ export const BuyModal = () => {
   const totalPrice = selectedNfts.reduce((sum, nft) => sum + nft.price, 0);
 
   const buyNfts = async () => {
-    console.log('selectedNfts', selectedNfts);
     try {
       await writeContractAsync({
         functionName: 'buyListing',

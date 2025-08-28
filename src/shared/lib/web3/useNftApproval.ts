@@ -58,5 +58,18 @@ export const useNftApproval = (marketplaceAddress: Address) => {
       }
     }
   };
-  return { approveNfts, approveStatuses };
+
+  const resetApproveStatuses = (nfts: UserNft[]) => {
+    const initialStatuses = nfts.reduce(
+      (acc, nft) => {
+        acc[getNftId(nft)] = 'idle';
+        return acc;
+      },
+      {} as Record<string, 'idle'>,
+    );
+
+    setApproveStatuses(initialStatuses);
+  };
+
+  return { approveNfts, approveStatuses, resetApproveStatuses };
 };

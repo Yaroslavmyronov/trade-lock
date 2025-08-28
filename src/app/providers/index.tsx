@@ -56,7 +56,7 @@ const WalletStatusWrapper = ({ children }: { children: ReactNode }) => {
       fetchingStatusRef.current = true;
 
       try {
-        const data = await apiFetch('/auth/me');
+        const { data } = await apiFetch('/auth/me');
         setAuthStatus(data.address ? 'authenticated' : 'unauthenticated');
       } catch (_error) {
         console.error(_error);

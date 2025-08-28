@@ -26,8 +26,7 @@ export const useEthereumAuth = () => {
   const onceRef = useRef(false);
   const getNonce = useCallback(async () => {
     try {
-      const res = await apiFetch('/auth/nonce');
-      const nonce = await res.text();
+      const { data: nonce } = await apiFetch('/auth/nonce');
       setState((x) => ({ ...x, nonce }));
     } catch {
       setState((x) => ({

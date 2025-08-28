@@ -30,7 +30,7 @@ export const Market = ({ initialNfts }: { initialNfts: MarketNftResponse }) => {
     undefined,
     initialNfts,
   );
-  console.log(marketNfts);
+
   return (
     <div
       className={`flex size-full flex-row ${opened === 'market' && 'pr-[385px]'}`}

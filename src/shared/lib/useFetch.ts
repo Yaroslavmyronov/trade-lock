@@ -23,10 +23,10 @@ export function useFetch<T = unknown>(
     setLoading(true);
 
     apiFetch(url)
-      .then((response) => {
+      .then((response: { data: T; error: string | null }) => {
         if (!isCancelled) {
-          setData(response);
-          setError(null);
+          setData(response.data);
+          setError(response.error);
         }
       })
       .catch((error) => {

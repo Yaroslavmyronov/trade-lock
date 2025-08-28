@@ -4,7 +4,15 @@ import { Inventory } from '@/widgets/inventory';
 import { Market } from '@/widgets/market';
 
 export const TradePage = async () => {
-  const marketNfts = await getMarketNfts();
+  const { data: marketNfts, error } = await getMarketNfts();
+
+  if (error) {
+    return (
+      <div className="flex size-full items-center justify-center">
+        Failed to load NFTs. Please try again.
+      </div>
+    );
+  }
 
   return (
     <LoginProvider>
