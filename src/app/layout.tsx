@@ -1,5 +1,6 @@
 import { BuyModal } from '@/features/nft-buy';
 import { Header } from '@/widgets/header';
+import { HistoryModal } from '@/widgets/history';
 import { MyTrades } from '@/widgets/my-trades';
 import { TradeModal } from '@/widgets/trade-modal';
 import '@rainbow-me/rainbowkit/styles.css';
@@ -30,6 +31,7 @@ export default async function Layout({
           <MyTrades />
           <TradeModal />
           <BuyModal />
+          <HistoryModal />
         </Providers>
       </body>
     </html>

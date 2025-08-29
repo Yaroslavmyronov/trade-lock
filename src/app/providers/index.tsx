@@ -10,6 +10,7 @@ import { darkTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactNode, useEffect, useRef, useState } from 'react';
 import { cookieToInitialState, WagmiProvider } from 'wagmi';
+import { WebSocketProvider } from './webSocketProvider';
 interface ProvidersProps {
   children: ReactNode;
   cookie: string;
@@ -24,19 +25,21 @@ export const Providers = ({ children, cookie }: ProvidersProps) => {
       {...(initialState ? { initialState } : {})}
     >
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider
-          appInfo={{
-            appName: 'Trade Lock',
-          }}
-          initialChain={monadTestnet.id}
-          modalSize="compact"
-          theme={darkTheme({
-            ...darkTheme.accentColors.purple,
-          })}
-        >
-          <AuthManager></AuthManager>
-          <WalletStatusWrapper>{children}</WalletStatusWrapper>
-        </RainbowKitProvider>
+        <WebSocketProvider>
+          <RainbowKitProvider
+            appInfo={{
+              appName: 'Trade Lock',
+            }}
+            initialChain={monadTestnet.id}
+            modalSize="compact"
+            theme={darkTheme({
+              ...darkTheme.accentColors.purple,
+            })}
+          >
+            <AuthManager></AuthManager>
+            <WalletStatusWrapper>{children}</WalletStatusWrapper>
+          </RainbowKitProvider>
+        </WebSocketProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );

@@ -6,11 +6,14 @@ import { FilterPanel } from '@/features/filter-panel';
 import { BuyButton } from '@/features/nft-buy';
 import { TradeButton } from '@/features/nft-trade';
 import { MarketCounter } from '@/shared';
-import { usePaginatedFetch } from '@/shared/lib/usePaginatedFetch';
 import { useFilters } from '@/shared/store/useFilters';
+
+import { marketNftsApi } from '@/entities/nfts/api/marketNftsApi';
+import { useIntersection } from '@/shared/lib/useIntersection';
 import { useMarketSelectedNfts } from '@/shared/store/useMarketSelectedNfts';
 import { usePropose } from '@/shared/store/usePropose';
 import { useSelectedNfts } from '@/shared/store/useSelectedNfts';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { MarketNfts } from './MarketNfts';
 
 export const Market = ({ initialNfts }: { initialNfts: MarketNftResponse }) => {
@@ -23,13 +26,34 @@ export const Market = ({ initialNfts }: { initialNfts: MarketNftResponse }) => {
   const { selectedNfts: selectedNftsUser } = useSelectedNfts();
   const { opened, open, close } = useFilters();
   const { toggle, isOpen } = usePropose();
-  const { items: marketNfts } = usePaginatedFetch(
-    '/api/market-nfts',
-    1,
-    20,
-    undefined,
-    initialNfts,
-  );
+
+  const {
+    data: marketNfts,
+    error,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ['market'],
+    queryFn: (meta) => marketNftsApi.getList({ page: meta.pageParam }, meta),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages) => {
+      return lastPage.length ? allPages.length + 1 : undefined;
+    },
+    select: (result) => {
+      console.log('result', result);
+      return result.pages.flatMap((page) => page);
+    },
+    initialData: {
+      pages: [initialNfts],
+      pageParams: [1],
+    },
+  });
+
+  const cursorRef = useIntersection(() => {
+    fetchNextPage();
+  });
 
   return (
     <div
@@ -42,6 +66,10 @@ export const Market = ({ initialNfts }: { initialNfts: MarketNftResponse }) => {
           toggleSelect={toggleSelect}
           nftsData={marketNfts}
           removeItem={removeItem}
+          cursorRef={cursorRef}
+          isFetchingNextPage={isFetchingNextPage}
+          isLoading={isLoading}
+          hasNextPage={hasNextPage}
         />
         <MarketCounter
           isOpen={isOpen}

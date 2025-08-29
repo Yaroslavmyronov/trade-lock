@@ -14,6 +14,23 @@ interface TradeItemState {
 
 export const TradeItem = ({ trade, activeTab }: TradeItemState) => {
   const { open } = useTradeModalStore();
+
+  const handleClick = () => {
+    if (activeTab === 'History') {
+      // Открываем внешний URL на Monad Explorer в новой вкладке
+      const url = `https://testnet.monadexplorer.com/address/${trade.tradeId}`;
+      window.open(url, '_blank');
+    } else {
+      // Открываем модалку для Incoming / Sent
+      open(
+        trade,
+        <div className="grid grid-cols-2 gap-x-2">
+          <TradeReject tradeId={trade.tradeId} />
+          <TradeAccept tradeId={trade.tradeId} />
+        </div>,
+      );
+    }
+  };
   return (
     <div className="mb-6 pt-6">
       <div className="mb-2 text-lg">

@@ -4,7 +4,11 @@ import { Inventory } from '@/widgets/inventory';
 import { Market } from '@/widgets/market';
 
 export const TradePage = async () => {
-  const { data: marketNfts, error } = await getMarketNfts();
+  const { data: marketNfts, error } = await getMarketNfts({
+    page: 1,
+    pageSize: 20,
+    excludeSelf: true,
+  });
 
   if (error) {
     return (

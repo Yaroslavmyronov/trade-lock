@@ -1,10 +1,16 @@
 'use client';
 
-import { Arrow2Icon, ArrowIcon, AvatarComponent } from '@/shared';
+import {
+  Arrow2Icon,
+  ArrowIcon,
+  AvatarComponent,
+  MessageTextIcon,
+} from '@/shared';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { Connector, useDisconnect } from 'wagmi';
 
+import { useHistoryModalStore } from '@/shared/store/useHistoryModalStore';
 import { useTradesModalStore } from '@/shared/store/useTradesModalStore';
 import { LogOutIcon } from './icons/LogOutIcon';
 
@@ -23,6 +29,7 @@ export const UserMenu = ({
 }: UserMenuProps) => {
   const { disconnect } = useDisconnect();
   const { open: openTradesModal } = useTradesModalStore();
+  const { open: openHistoryModal } = useHistoryModalStore();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
@@ -80,6 +87,17 @@ export const UserMenu = ({
           <div className="mt-4 h-full max-h-[800px] w-48 max-w-[300px] min-w-[200px] rounded-xs bg-[rgb(42,44,46)] shadow-lg ring-1 ring-black/5">
             <div className="py-2">
               <div>
+                <button
+                  onClick={openHistoryModal}
+                  className="flex h-[36px] w-full cursor-pointer items-center px-4 text-[13px] hover:bg-[rgba(0,0,0,.1)]"
+                >
+                  <span className="flex items-center">
+                    <div className="mr-4 text-[#836EF9]">
+                      <MessageTextIcon />
+                    </div>
+                    History
+                  </span>
+                </button>
                 <button
                   onClick={() => openTradesModal('Incoming')}
                   className="flex h-[36px] w-full cursor-pointer items-center px-4 text-[13px] hover:bg-[rgba(0,0,0,.1)]"

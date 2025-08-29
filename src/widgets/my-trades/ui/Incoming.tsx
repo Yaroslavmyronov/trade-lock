@@ -6,18 +6,16 @@ import { TradeItem } from './TradeItem';
 export const Incoming = () => {
   const { items, loading, error, lastElementRef, isFirstLoad, hasMore, data } =
     usePaginatedFetch<Trade>('/market/trades?direction=incoming', 1, 20);
-  console.log('/market/trades', data);
-  console.log('/market/trades items', items);
 
   if (isFirstLoad && loading) {
     return (
-      <div className="flex size-full items-center justify-center">
-        <Preloader></Preloader>
+      <div className="flex size-full items-center justify-center text-[#836EF9]">
+        <Preloader width={80} height={80} border={5}></Preloader>
       </div>
     );
   }
 
-  if (!items) {
+  if (items.length === 0) {
     return (
       <div className="flex size-full items-center justify-center">
         <span>No trades found</span>

@@ -13,13 +13,13 @@ export const Sent = () => {
 
   if (isFirstLoad && loading) {
     return (
-      <div className="flex size-full items-center justify-center">
-        <Preloader></Preloader>
+      <div className="flex size-full items-center justify-center text-[#836EF9]">
+        <Preloader width={80} height={80} border={5}></Preloader>
       </div>
     );
   }
 
-  if (!items) {
+  if (items.length === 0) {
     return (
       <div className="flex size-full items-center justify-center">
         <span>No trades found</span>

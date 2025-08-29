@@ -1,53 +1,40 @@
 'use client';
 
+import { useWS } from '@/app/providers/webSocketProvider';
 import { NotificationItem } from '@/entities/notification';
 import { Popover } from '@/shared';
 import { useNotificationsStore } from '@/shared/store/useNotificationStore';
 import { useTradesModalStore } from '@/shared/store/useTradesModalStore';
-import {
-  HubConnection,
-  HubConnectionBuilder,
-  LogLevel,
-} from '@microsoft/signalr';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { BellButton } from './BellButton';
 import { ClearUnread } from './ClearUnread';
 import { NotificationsHeader } from './NotificationsHeader';
 
 export const NotificationsDropdown = () => {
-  const connectionRef = useRef<HubConnection | null>(null);
+  const { connection } = useWS();
+
   const { open } = useTradesModalStore();
   const { setUnreadCount, setNotifications, unreadCount, notifications } =
     useNotificationsStore();
   useEffect(() => {
-    const connection = new HubConnectionBuilder()
-      .withUrl(process.env.NEXT_PUBLIC_WS_URL!)
-      .configureLogging(LogLevel.Information)
-      .withAutomaticReconnect()
-      .build();
-    connection.on('unreadCountUpdated', (data) => {
-      setUnreadCount(data);
-    });
-    connection.on('initNotifications', (data) => {
-      setNotifications(data);
-    });
+    if (!connection) return;
+    const handleUnreadCount = (data: number) => setUnreadCount(data);
+    const handleInitNotifications = (data: any[]) => setNotifications(data);
 
-    connection.start();
-    connectionRef.current = connection;
+    connection.on('unreadCountUpdated', handleUnreadCount);
+    connection.on('initNotifications', handleInitNotifications);
+
     return () => {
-      connection.stop();
+      connection.off('unreadCountUpdated', handleUnreadCount);
+      connection.off('initNotifications', handleInitNotifications);
     };
   }, []);
 
   const markAsRead = (id: string) => {
-    if (connectionRef.current) {
-      connectionRef.current.invoke('markAsRead', id).catch(console.error);
-    }
+    connection?.invoke('markAsRead', id).catch(console.error);
   };
   const MarkAllAsRead = () => {
-    if (connectionRef.current) {
-      connectionRef.current.invoke('markAllAsRead').catch(console.error);
-    }
+    connection?.invoke('markAllAsRead').catch(console.error);
   };
 
   if (notifications === null || unreadCount === null) return null;

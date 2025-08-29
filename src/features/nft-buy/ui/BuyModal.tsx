@@ -10,6 +10,7 @@ import { useWrapperWriteContract } from '@/shared/lib/web3/useWrapperWriteContra
 import { useBuyModalStore } from '@/shared/store/useBuyModalStore';
 import { useMarketSelectedNfts } from '@/shared/store/useMarketSelectedNfts';
 import { Modal } from '@/shared/ui/Modal';
+import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { parseEther } from 'viem';
 
@@ -29,6 +30,8 @@ export const BuyModal = () => {
 
   const totalPrice = selectedNfts.reduce((sum, nft) => sum + nft.price, 0);
 
+  const queryClient = useQueryClient();
+
   const buyNfts = async () => {
     try {
       await writeContractAsync({
@@ -36,6 +39,7 @@ export const BuyModal = () => {
         args: [selectedNfts.map((nft) => BigInt(nft.listingId))],
         value: parseEther(totalPrice.toString()),
       });
+      queryClient.invalidateQueries({ queryKey: ['market'] });
       setState({ status: 'success' });
     } catch (e) {
       setState({ status: 'error', errorMessage: (e as Error).message });

@@ -144,6 +144,12 @@ export const MarketplaceABI = [
       },
       { indexed: true, internalType: 'address', name: 'from', type: 'address' },
       { indexed: true, internalType: 'address', name: 'to', type: 'address' },
+      {
+        indexed: false,
+        internalType: 'uint256[]',
+        name: 'listingIds',
+        type: 'uint256[]',
+      },
     ],
     name: 'TradeCreated',
     type: 'event',
