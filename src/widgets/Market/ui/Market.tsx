@@ -36,13 +36,14 @@ export const Market = ({ initialNfts }: { initialNfts: MarketNftResponse }) => {
     isFetchingNextPage,
   } = useInfiniteQuery({
     queryKey: ['market'],
-    queryFn: (meta) => marketNftsApi.getList({ page: meta.pageParam }, meta),
+    queryFn: ({ pageParam = 1, signal }) => {
+      return marketNftsApi.getList({ page: pageParam }, { signal });
+    },
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {
       return lastPage.length ? allPages.length + 1 : undefined;
     },
     select: (result) => {
-      console.log('result', result);
       return result.pages.flatMap((page) => page);
     },
     initialData: {
