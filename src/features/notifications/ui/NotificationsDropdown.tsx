@@ -21,14 +21,14 @@ export const NotificationsDropdown = () => {
     const handleUnreadCount = (data: number) => setUnreadCount(data);
     const handleInitNotifications = (data: any[]) => setNotifications(data);
 
-    connection.on('unreadCountUpdated', handleUnreadCount);
+    connection.on('unreadcountupdated', handleUnreadCount);
     connection.on('initNotifications', handleInitNotifications);
 
     return () => {
-      connection.off('unreadCountUpdated', handleUnreadCount);
+      connection.off('unreadcountupdated', handleUnreadCount);
       connection.off('initNotifications', handleInitNotifications);
     };
-  }, []);
+  }, [connection]);
 
   const markAsRead = (id: string) => {
     connection?.invoke('markAsRead', id).catch(console.error);
