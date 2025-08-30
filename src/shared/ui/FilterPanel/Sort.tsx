@@ -2,19 +2,15 @@
 import { ArrowIcon } from '@/shared';
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { SortOption, sortOptions } from './SortOptions';
 
-const sortOptions = [
-  { label: 'Relevance Ascending', value: 'relevance_asc' },
-  { label: 'Relevance Descending', value: 'relevance_desc' },
-  { label: 'Amount Ascending', value: 'amount_asc' },
-  { label: 'Amount Descending', value: 'amount_desc' },
-  { label: 'Alphabeticaly: A-Z', value: 'alphabetical_a-z' },
-  { label: 'Alphabeticaly: Z-A', value: 'alphabetical_z-a' },
-];
+interface SortProps {
+  selectedSort: SortOption;
+  setSelectedSort: (option: SortOption) => void;
+}
 
-export const Sort = () => {
+export const Sort = ({ selectedSort, setSelectedSort }: SortProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedSort, setSelectedSort] = useState(sortOptions[0]);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {

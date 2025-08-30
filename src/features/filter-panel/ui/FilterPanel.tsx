@@ -1,5 +1,6 @@
 'use client';
 import { Filter, Filters, Refresh, Search, Sort } from '@/shared';
+import { SortOption } from '@/shared/ui/FilterPanel/SortOptions';
 import { useRef } from 'react';
 
 interface FilterPanelProps {
@@ -9,6 +10,10 @@ interface FilterPanelProps {
   close: (panel: 'market' | 'user') => void;
   refresh: () => void;
   isRefresh: boolean;
+
+  // Sort
+  selectedSort: SortOption;
+  setSelectedSort: (option: SortOption) => void;
 }
 
 export const FilterPanel = ({
@@ -18,6 +23,8 @@ export const FilterPanel = ({
   close,
   isRefresh,
   refresh,
+  selectedSort,
+  setSelectedSort,
 }: FilterPanelProps) => {
   const portalContainerRef = useRef<HTMLDivElement | null>(null);
 
@@ -39,7 +46,7 @@ export const FilterPanel = ({
             <Filters opened={opened} onClose={() => close(panel)} />
           )}
           <Refresh isRefresh={isRefresh} refresh={refresh} />
-          <Sort />
+          <Sort selectedSort={selectedSort} setSelectedSort={setSelectedSort} />
         </div>
       </div>
     </div>

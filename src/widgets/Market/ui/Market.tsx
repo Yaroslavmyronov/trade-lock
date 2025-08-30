@@ -15,6 +15,11 @@ import { usePropose } from '@/shared/store/usePropose';
 import { useSelectedNfts } from '@/shared/store/useSelectedNfts';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { MarketNfts } from './MarketNfts';
+import { useState } from 'react';
+import {
+  defaultSortOption,
+  SortOption,
+} from '@/shared/ui/FilterPanel/SortOptions';
 
 export const Market = ({ initialNfts }: { initialNfts: MarketNftResponse }) => {
   const {
@@ -27,6 +32,10 @@ export const Market = ({ initialNfts }: { initialNfts: MarketNftResponse }) => {
   const { opened, open, close } = useFilters();
   const { toggle, isOpen } = usePropose();
 
+  // Filter options
+  const [sortingOption, setSortingOption] =
+    useState<SortOption>(defaultSortOption);
+
   const {
     data: marketNfts,
     // error,
@@ -37,8 +46,11 @@ export const Market = ({ initialNfts }: { initialNfts: MarketNftResponse }) => {
     refetch,
     isRefetching,
   } = useInfiniteQuery({
-    ...marketNftsApi.getListInfiniteQueryOptions(),
-    initialData: {
+    ...marketNftsApi.getListInfiniteQueryOptions({
+      sort: sortingOption.sort,
+      order: sortingOption.order,
+    }),
+    placeholderData: {
       pages: [initialNfts],
       pageParams: [1],
     },
@@ -47,6 +59,9 @@ export const Market = ({ initialNfts }: { initialNfts: MarketNftResponse }) => {
   const cursorRef = useIntersection(() => {
     fetchNextPage();
   });
+
+  // Sort, Order
+  // Ask for new market nfts on filter change
 
   return (
     <div
@@ -60,11 +75,13 @@ export const Market = ({ initialNfts }: { initialNfts: MarketNftResponse }) => {
           close={close}
           opened={opened}
           open={open}
+          selectedSort={sortingOption}
+          setSelectedSort={setSortingOption}
         />
         <MarketNfts
           selectedNfts={selectedNftsMarket}
           toggleSelect={toggleSelect}
-          nftsData={marketNfts}
+          nftsData={marketNfts ?? []}
           removeItem={removeItem}
           cursorRef={cursorRef}
           isFetchingNextPage={isFetchingNextPage}
