@@ -1,17 +1,14 @@
-import { Trade } from '@/entities/trade';
+import { tradeApi } from '@/entities/trade/api/incomingTradeApi';
 import { Preloader } from '@/shared';
-import { usePaginatedFetch } from '@/shared/lib/usePaginatedFetch';
+import { useQuery } from '@tanstack/react-query';
 import { TradeItem } from './TradeItem';
 
 export const Sent = () => {
-  const { items, loading, error, lastElementRef, isFirstLoad, hasMore, data } =
-    usePaginatedFetch<Trade>('/market/trades', 1, 20, undefined, undefined, {
-      direction: 'outgoing',
-    });
-  console.log('/market/trades', data);
-  console.log('/market/trades items', items);
+  const { data, isLoading, error, isPlaceholderData } = useQuery(
+    tradeApi.getListQueryOptions('outgoing'),
+  );
 
-  if (isFirstLoad && loading) {
+  if (isLoading) {
     return (
       <div className="flex size-full items-center justify-center text-[#836EF9]">
         <Preloader width={80} height={80} border={5}></Preloader>
@@ -19,7 +16,7 @@ export const Sent = () => {
     );
   }
 
-  if (items.length === 0) {
+  if (data.length === 0) {
     return (
       <div className="flex size-full items-center justify-center">
         <span>No trades found</span>
@@ -29,7 +26,7 @@ export const Sent = () => {
 
   return (
     <div className="mx-auto max-w-[600px] p-3">
-      {items.map((trade) => (
+      {data.map((trade) => (
         <TradeItem
           activeTab="Sent"
           trade={trade}

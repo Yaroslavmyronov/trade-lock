@@ -34,6 +34,8 @@ export const Market = ({ initialNfts }: { initialNfts: MarketNftResponse }) => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    refetch,
+    isRefetching,
   } = useInfiniteQuery({
     ...marketNftsApi.getListInfiniteQueryOptions(),
     initialData: {
@@ -51,7 +53,14 @@ export const Market = ({ initialNfts }: { initialNfts: MarketNftResponse }) => {
       className={`flex size-full flex-row ${opened === 'market' && 'pr-[385px]'}`}
     >
       <div className="relative flex max-w-full grow flex-col px-5">
-        <FilterPanel panel="market" close={close} opened={opened} open={open} />
+        <FilterPanel
+          isRefresh={isRefetching}
+          refresh={refetch}
+          panel="market"
+          close={close}
+          opened={opened}
+          open={open}
+        />
         <MarketNfts
           selectedNfts={selectedNftsMarket}
           toggleSelect={toggleSelect}

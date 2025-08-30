@@ -11,7 +11,7 @@ const mapUserNftToMetadata = (nft: UserNft): Metadata => ({
   description: nft.description ?? '',
   imageOriginal: nft.imageOriginal,
   kind: nft.kind,
-  lastPrice: nft.lastPrice,
+  price: nft.price,
   name: nft.name,
 });
 
@@ -19,7 +19,7 @@ const mapMarketNftToMetadata = (nft: MarketNft): Metadata => ({
   description: nft.metadata.description ?? '',
   imageOriginal: nft.metadata.imageOriginal,
   kind: nft.metadata.kind,
-  lastPrice: nft.metadata.lastPrice,
+  price: nft.metadata.price,
   name: nft.metadata.name,
 });
 

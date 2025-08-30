@@ -9,10 +9,10 @@ interface UserNftsProps {
   selectedNfts: UserNftResponse;
   toggleSelect: (nft: UserNft) => void;
   removeItem: (id: string) => void;
-  loading: boolean;
-  lastElementRef: React.RefCallback<HTMLDivElement>;
-  isFirstLoad: boolean;
-  hasMore: boolean | null;
+  cursorRef?: (node: HTMLDivElement | null) => void;
+  isFetchingNextPage: boolean;
+  isLoading: boolean;
+  hasNextPage: boolean;
 }
 
 const UserNftsComponent = ({
@@ -20,13 +20,13 @@ const UserNftsComponent = ({
   selectedNfts,
   toggleSelect,
   removeItem,
-  loading,
-  lastElementRef,
-  isFirstLoad,
-  hasMore,
+  cursorRef,
+  isLoading,
+  isFetchingNextPage,
+  hasNextPage,
 }: UserNftsProps) => {
   console.log('UserNfts render');
-  if (loading && isFirstLoad) {
+  if (isLoading) {
     return (
       <div className="flex size-full shrink grow basis-auto items-center justify-center">
         <Preloader></Preloader>
@@ -58,8 +58,8 @@ const UserNftsComponent = ({
                 const isLastElement = index === nftsData.length - 1;
                 return (
                   <Card
-                    ref={isLastElement ? lastElementRef : null}
-                    price={Number(nft.lastPrice)}
+                    ref={isLastElement && hasNextPage ? cursorRef : null}
+                    price={Number(nft.price)}
                     image={nft.imageOriginal}
                     isSelected={isSelected}
                     title={nft.name}
@@ -74,7 +74,7 @@ const UserNftsComponent = ({
           </div>
         </div>
       </div>
-      {hasMore && loading && (
+      {isFetchingNextPage && (
         <div className="absolute bottom-[12%] left-0 flex h-14 w-full items-center justify-center text-[#836EF9]">
           <div className="flex size-14 items-center justify-center rounded-full bg-[#17191a]">
             <Preloader width={24} height={24} />

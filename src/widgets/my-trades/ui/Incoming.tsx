@@ -1,13 +1,18 @@
-import { Trade } from '@/entities/trade';
+import { tradeApi } from '@/entities/trade/api/incomingTradeApi';
 import { Preloader } from '@/shared';
-import { usePaginatedFetch } from '@/shared/lib/usePaginatedFetch';
+import { useQuery } from '@tanstack/react-query';
 import { TradeItem } from './TradeItem';
 
 export const Incoming = () => {
-  const { items, loading, error, lastElementRef, isFirstLoad, hasMore, data } =
-    usePaginatedFetch<Trade>('/market/trades?direction=incoming', 1, 20);
+  const { data, isLoading, error, isPlaceholderData } = useQuery(
+    tradeApi.getListQueryOptions('incoming'),
+  );
 
-  if (isFirstLoad && loading) {
+  console.log('Incoming', data);
+  // const { items, loading, error, lastElementRef, isFirstLoad, hasMore, data } =
+  //   usePaginatedFetch<Trade>('/market/trades?direction=incoming', 1, 20);
+
+  if (isLoading) {
     return (
       <div className="flex size-full items-center justify-center text-[#836EF9]">
         <Preloader width={80} height={80} border={5}></Preloader>
@@ -15,7 +20,7 @@ export const Incoming = () => {
     );
   }
 
-  if (items.length === 0) {
+  if (data.length === 0) {
     return (
       <div className="flex size-full items-center justify-center">
         <span>No trades found</span>
@@ -25,7 +30,7 @@ export const Incoming = () => {
 
   return (
     <div className="mx-auto max-w-[600px] p-3">
-      {items.map((trade) => (
+      {data.map((trade) => (
         <TradeItem
           activeTab="Incoming"
           trade={trade}

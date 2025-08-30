@@ -4,7 +4,7 @@ export interface Metadata {
   description: string;
   imageOriginal: string;
   kind: string;
-  lastPrice: number;
+  price: number;
   name: string;
 }
 

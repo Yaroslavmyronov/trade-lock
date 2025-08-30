@@ -1,3 +1,4 @@
+import { MarketNftResponse } from '@/entities/nfts/types';
 import { apiFetch } from '@/shared/api/fetchInstance';
 import { cookies } from 'next/headers';
 
@@ -19,7 +20,7 @@ export const getMarketNfts = async (params: GetMarketNftsParams = {}) => {
 
   const query = new URLSearchParams(queryObj).toString();
 
-  return await apiFetch(`/market/market-listing?${query}`, {
+  return await apiFetch<MarketNftResponse>(`/market/market-listing?${query}`, {
     headers: { Cookie: cookieHeader },
   });
 };

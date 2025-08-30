@@ -9,7 +9,7 @@ export const MarketNFTList = () => {
         {tradeData?.toMetadata.map((nft, index) => {
           return (
             <Card
-              price={nft.lastPrice}
+              price={nft.price}
               image={nft.imageOriginal}
               selected
               title={nft.name}

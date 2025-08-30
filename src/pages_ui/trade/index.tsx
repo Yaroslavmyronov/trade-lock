@@ -4,16 +4,18 @@ import { Inventory } from '@/widgets/inventory';
 import { Market } from '@/widgets/market';
 
 export const TradePage = async () => {
-  const { data: marketNfts, error } = await getMarketNfts({
-    page: 1,
-    pageSize: 20,
-    excludeSelf: true,
-  });
-
-  if (error) {
+  let marketNfts;
+  try {
+    marketNfts = await getMarketNfts({
+      page: 1,
+      pageSize: 20,
+      excludeSelf: true,
+    });
+  } catch (error) {
+    console.error('Failed to load NFT', error);
     return (
       <div className="flex size-full items-center justify-center">
-        Failed to load NFTs. Please try again.
+        Failed to load NFT. Try again later.
       </div>
     );
   }

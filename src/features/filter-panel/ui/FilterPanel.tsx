@@ -7,6 +7,8 @@ interface FilterPanelProps {
   opened: 'market' | 'user' | null;
   open: (panel: 'market' | 'user') => void;
   close: (panel: 'market' | 'user') => void;
+  refresh: () => void;
+  isRefresh: boolean;
 }
 
 export const FilterPanel = ({
@@ -14,6 +16,8 @@ export const FilterPanel = ({
   opened,
   open,
   close,
+  isRefresh,
+  refresh,
 }: FilterPanelProps) => {
   const portalContainerRef = useRef<HTMLDivElement | null>(null);
 
@@ -34,7 +38,7 @@ export const FilterPanel = ({
           {opened === panel && (
             <Filters opened={opened} onClose={() => close(panel)} />
           )}
-          <Refresh />
+          <Refresh isRefresh={isRefresh} refresh={refresh} />
           <Sort />
         </div>
       </div>

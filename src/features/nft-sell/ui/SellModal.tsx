@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { Address, parseEther } from 'viem';
 
 import { useNftApproval } from '@/shared/lib/web3/useNftApproval';
+import { useQueryClient } from '@tanstack/react-query';
 import { getNftId } from '../model/NFT';
 import { getStatusesHelpers } from '../model/selectors';
 import { Approve } from './Approve';
@@ -20,16 +21,18 @@ interface SellModalProps {
   isOpen: boolean;
   onClose: () => void;
   selectedNfts: UserNftResponse;
+  clearAll: () => void;
 }
 
 export const SellModal = ({
   isOpen,
   onClose,
   selectedNfts,
+  clearAll,
 }: SellModalProps) => {
   const { writeContractAsync, isMining } =
     useWrapperWriteContract('Marketplace');
-
+  const queryClient = useQueryClient();
   const [listingStatuses, setListingStatuses] = useState<
     Record<string, ListingStatus>
   >({});
@@ -79,7 +82,7 @@ export const SellModal = ({
           })),
         ],
       });
-
+      queryClient.invalidateQueries({ queryKey: ['user'] });
       selectedNfts.forEach((nft) => {
         updateListingStatus(getNftId(nft), 'success');
       });
@@ -137,6 +140,12 @@ export const SellModal = ({
     }
   };
 
+  const handleDone = () => {
+    clearAll();
+    onClose();
+    setStep('form');
+  };
+
   const handleRetry = () => {
     setStep('form');
     const resetStatuses = selectedNfts.reduce(
@@ -189,7 +198,7 @@ export const SellModal = ({
               <div className="flex flex-col gap-y-3 bg-[#2d2e30] px-3.5 pt-3.5 pb-3.5 shadow-[0_-2px_10px_rgba(0,0,0,0.1)] md:px-8 md:pt-6 md:pb-6">
                 {listing.isAll('success') ? (
                   <button
-                    onClick={onClose}
+                    onClick={handleDone}
                     className="text-primary disabled:text-disabled inline-flex h-[40px] cursor-pointer items-center justify-center rounded bg-[#836EF9] px-3 py-0 text-sm transition disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     Done
@@ -215,7 +224,7 @@ export const SellModal = ({
                         disabled={!allPricesFilled || isMining || isApproving}
                         className="text-primary disabled:text-disabled inline-flex h-[40px] cursor-pointer items-center justify-center rounded bg-[#836EF9] px-3 py-0 text-sm transition disabled:cursor-not-allowed disabled:opacity-40"
                       >
-                        {isApproving ? (
+                        {isApproving || isMining ? (
                           <Preloader></Preloader>
                         ) : (
                           <span>{buttonText}</span>

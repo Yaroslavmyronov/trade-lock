@@ -1,15 +1,16 @@
 'use client';
 import { Propose } from '@/features';
 
-import { UserNft } from '@/entities/nfts/types';
 import { FilterPanel } from '@/features/filter-panel';
 import { SellButton } from '@/features/nft-sell';
 import { Counter } from '@/shared';
 import { useFilters } from '@/shared/store/useFilters';
 import { usePropose } from '@/shared/store/usePropose';
 
-import { usePaginatedFetch } from '@/shared/lib/usePaginatedFetch';
+import { userNftsApi } from '@/entities/nfts/api/userNftsApi';
+import { useIntersection } from '@/shared/lib/useIntersection';
 import { useSelectedNfts } from '@/shared/store/useSelectedNfts';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { ProfilePrice } from './ProfilePrice';
 import { UserNfts } from './UserNfts';
 
@@ -18,19 +19,23 @@ export const Inventory = ({ filter }: { filter: 'sell' | 'trade' }) => {
     useSelectedNfts();
   const { opened, open, close } = useFilters();
   const { toggle, isOpen } = usePropose();
+
   const {
-    items: nftsData,
-    loading,
+    data: userNftsResponse,
     error,
-    lastElementRef,
-    isFirstLoad,
-    hasMore,
-    data,
-  } = usePaginatedFetch<UserNft, { nftAmount: number; totalValue: number }>(
-    '/market/user-tokens',
-    1,
-    20,
-  );
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isRefetching,
+    refetch,
+  } = useInfiniteQuery({
+    ...userNftsApi.getListInfiniteQueryOptions(),
+  });
+
+  const cursorRef = useIntersection(() => {
+    fetchNextPage();
+  });
 
   if (error) {
     return (
@@ -45,21 +50,28 @@ export const Inventory = ({ filter }: { filter: 'sell' | 'trade' }) => {
       className={`size-full ${filter === 'sell' && opened === 'user' ? 'pl-[385px]' : ''}`}
     >
       <div className="relative flex min-h-full max-w-full grow flex-col px-5">
-        <FilterPanel panel="user" close={close} opened={opened} open={open} />
+        <FilterPanel
+          refresh={refetch}
+          isRefresh={isRefetching}
+          panel="user"
+          close={close}
+          opened={opened}
+          open={open}
+        />
         <ProfilePrice
-          nftAmount={data?.nftAmount ?? 0}
-          totalValue={data?.totalValue ?? 0}
-          loading={loading}
+          nftAmount={userNftsResponse?.nftAmount ?? 0}
+          totalValue={userNftsResponse?.totalValue ?? 0}
+          loading={isLoading}
         />
         <UserNfts
           selectedNfts={selectedNfts}
           toggleSelect={toggleSelect}
           removeItem={removeItem}
-          nftsData={nftsData}
-          loading={loading}
-          lastElementRef={lastElementRef}
-          isFirstLoad={isFirstLoad}
-          hasMore={hasMore}
+          nftsData={userNftsResponse?.response ?? null}
+          cursorRef={cursorRef}
+          isFetchingNextPage={isFetchingNextPage}
+          isLoading={isLoading}
+          hasNextPage={hasNextPage}
         />
         <Counter
           isOpen={isOpen}
@@ -75,7 +87,10 @@ export const Inventory = ({ filter }: { filter: 'sell' | 'trade' }) => {
         />
         {filter === 'sell' && (
           <div className="flex pb-4">
-            <SellButton selectedNfts={selectedNfts}></SellButton>
+            <SellButton
+              clearAll={clearAll}
+              selectedNfts={selectedNfts}
+            ></SellButton>
           </div>
         )}
       </div>

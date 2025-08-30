@@ -4,7 +4,7 @@ export type BaseNft = {
   description: string | null;
   imageOriginal: string;
   kind: string;
-  lastPrice: number;
+  price: number;
   name: string;
 };
 

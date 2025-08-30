@@ -1,27 +1,22 @@
-import {
-  MarketNft,
-  MarketNftResponse,
-  UserNft,
-  UserNftResponse,
-} from '@/entities/nfts/types';
+import { MarketNft, UserNft } from '@/entities/nfts/types';
 import { getNftId } from '@/features/nft-sell/model/NFT';
 import { Card } from '@/shared';
 import { handleCardClick } from '@/shared/lib/handleCardClick';
 import { isMarketNft } from '../lib/isMarketNft';
 
-interface ProposeProps {
-  selectedNfts: UserNftResponse | MarketNftResponse;
-  toggleSelect: (nft: UserNft | MarketNft) => void;
+interface ProposeProps<T extends MarketNft | UserNft> {
+  selectedNfts: T[];
+  toggleSelect: (nft: T) => void;
   removeItem: (id: string) => void;
   isOpen: boolean;
 }
 
-export const Propose = ({
+export const Propose = <T extends MarketNft | UserNft>({
   selectedNfts = [],
   toggleSelect,
   removeItem,
   isOpen,
-}: ProposeProps) => {
+}: ProposeProps<T>) => {
   if (!isOpen) return null;
 
   return (
@@ -38,7 +33,7 @@ export const Propose = ({
 
                 return (
                   <Card
-                    price={isMarketNft(nft) ? nft.price : nft.lastPrice}
+                    price={isMarketNft(nft) ? nft.price : nft.price}
                     image={
                       isMarketNft(nft)
                         ? nft.metadata.imageOriginal
