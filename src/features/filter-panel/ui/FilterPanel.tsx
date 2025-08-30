@@ -1,6 +1,9 @@
 'use client';
 import { Filter, Filters, Refresh, Search, Sort } from '@/shared';
-import { SortOption } from '@/shared/ui/FilterPanel/SortOptions';
+import {
+  defaultSortOption,
+  SortOption,
+} from '@/shared/ui/FilterPanel/SortOptions';
 import { useRef } from 'react';
 
 interface FilterPanelProps {
@@ -46,7 +49,10 @@ export const FilterPanel = ({
             <Filters opened={opened} onClose={() => close(panel)} />
           )}
           <Refresh isRefresh={isRefresh} refresh={refresh} />
-          <Sort selectedSort={selectedSort} setSelectedSort={setSelectedSort} />
+          <Sort
+            selectedSort={selectedSort ?? defaultSortOption}
+            setSelectedSort={setSelectedSort ?? (() => { })}
+          />
         </div>
       </div>
     </div>
