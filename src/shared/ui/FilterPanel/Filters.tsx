@@ -3,9 +3,10 @@ import { CloseIcon } from '@/shared/icons';
 interface FilterDrawProps {
   opened: 'market' | 'user' | null;
   onClose: React.MouseEventHandler<HTMLButtonElement>;
+  children?: React.ReactNode;
 }
 
-export const Filters = ({ opened, onClose }: FilterDrawProps) => {
+export const Filters = ({ opened, onClose, children }: FilterDrawProps) => {
   return (
     <div
       className={`fixed bottom-0 ${opened === 'market' && 'right-[20px]'} ${opened === 'user' && 'left-[20px]'} z-20 flex h-[calc(100%-65px-16px-0.1px-0.1px-0.1px)] min-w-[365px] flex-col rounded-[2px] bg-[#2a2c2e]`}
@@ -19,7 +20,7 @@ export const Filters = ({ opened, onClose }: FilterDrawProps) => {
           <CloseIcon width={24} height={24} />
         </button>
       </div>
-      <div></div>
+      <div className="flex flex-col">{children}</div>
     </div>
   );
 };

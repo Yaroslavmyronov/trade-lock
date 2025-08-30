@@ -18,6 +18,8 @@ interface FilterPanelProps {
   setSearchText: (text: string) => void;
   selectedSort: SortOption;
   setSelectedSort: (option: SortOption) => void;
+
+  children?: React.ReactNode;
 }
 
 export const FilterPanel = ({
@@ -30,6 +32,7 @@ export const FilterPanel = ({
   setSearchText,
   selectedSort,
   setSelectedSort,
+  children,
 }: FilterPanelProps) => {
   const portalContainerRef = useRef<HTMLDivElement | null>(null);
 
@@ -48,7 +51,9 @@ export const FilterPanel = ({
           <Filter active={opened === panel} onClick={handleClick} />
           <Search setSearchText={setSearchText ?? (() => { })} />
           {opened === panel && (
-            <Filters opened={opened} onClose={() => close(panel)} />
+            <Filters opened={opened} onClose={() => close(panel)}>
+              {children}
+            </Filters>
           )}
           <Refresh isRefresh={isRefresh} refresh={refresh} />
           <Sort

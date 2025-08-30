@@ -8,16 +8,20 @@ export const marketNftsApi = {
     sort = defaultSortOption.sort,
     order = defaultSortOption.order,
     searchText = '',
+    minPrice = '',
+    maxPrice = '',
   }: {
     sort?: string;
     order?: 'asc' | 'desc';
     searchText?: string;
+    minPrice?: number | string;
+    maxPrice?: number | string;
   }) => {
     return infiniteQueryOptions({
-      queryKey: ['market', { sort, order, searchText }], // ✅ unique per sort/order
+      queryKey: ['market', { sort, order, searchText, minPrice, maxPrice }], // ✅ unique per sort/order
       queryFn: async ({ pageParam = 1, signal }) => {
         return apiFetch<MarketNftResponse>(
-          `/market/market-listing?page=${pageParam}&pageSize=10&sortBy=${sort}&orderBy=${order}&search=${searchText}`,
+          `/market/market-listing?page=${pageParam}&pageSize=10&sortBy=${sort}&orderBy=${order}&search=${searchText}&minPrice=${minPrice}&maxPrice=${maxPrice}`,
           { signal },
         );
       },
