@@ -24,6 +24,14 @@ const MarketNftsComponent = ({
   isFetchingNextPage,
   hasNextPage,
 }: MarketNftsProps) => {
+  console.log('isFetchingNextPage', isFetchingNextPage);
+  if (isLoading) {
+    return (
+      <div className="flex size-full shrink grow basis-auto items-center justify-center">
+        <Preloader></Preloader>
+      </div>
+    );
+  }
   return (
     <div className="relative flex shrink grow flex-col overflow-auto">
       <div className="absolute flex size-full min-h-full flex-wrap">

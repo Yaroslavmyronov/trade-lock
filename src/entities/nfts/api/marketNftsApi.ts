@@ -1,25 +1,25 @@
+import { apiFetch } from '@/shared/api/fetchInstance';
+import { infiniteQueryOptions } from '@tanstack/react-query';
 import { MarketNftResponse } from '../types';
 
-export type PaginatedResult<T> = {
-  data: T;
-  first: number;
-  items: number;
-  last: number;
-  next: number | null;
-  pages: number;
-  prev: number | null;
-};
-
 export const marketNftsApi = {
-  getList: (
-    { page }: { page: number },
-    { signal }: { signal: AbortSignal },
-  ) => {
-    return fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/market/market-listing?page=${page}`,
-      {
-        signal,
+  getListInfiniteQueryOptions: () => {
+    return infiniteQueryOptions({
+      queryKey: ['market'],
+      queryFn: async ({ pageParam = 1, signal }) => {
+        return apiFetch<MarketNftResponse>(
+          `/market/market-listing?page=${pageParam}&pageSize=10`,
+          { signal },
+        );
       },
-    ).then((res) => res.json() as Promise<PaginatedResult<MarketNftResponse>>);
+      initialPageParam: 1,
+      getNextPageParam: (lastPage, allPages) => {
+        console.log('lastPage', lastPage);
+        return lastPage.length ? allPages.length + 1 : undefined;
+      },
+      select: (result) => {
+        return result.pages.flatMap((page) => page);
+      },
+    });
   },
 };

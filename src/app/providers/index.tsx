@@ -9,6 +9,7 @@ import { darkTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactNode, useEffect, useRef, useState } from 'react';
+import { Address } from 'viem';
 import { cookieToInitialState, WagmiProvider } from 'wagmi';
 import { WebSocketProvider } from './webSocketProvider';
 interface ProvidersProps {
@@ -59,7 +60,8 @@ const WalletStatusWrapper = ({ children }: { children: ReactNode }) => {
       fetchingStatusRef.current = true;
 
       try {
-        const { data } = await apiFetch('/auth/me');
+        const data = await apiFetch<Record<string, Address>>('/auth/me');
+        console.log('/auth/me', data);
         setAuthStatus(data.address ? 'authenticated' : 'unauthenticated');
       } catch (_error) {
         console.error(_error);

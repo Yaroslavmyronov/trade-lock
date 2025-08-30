@@ -13,7 +13,7 @@ export const getMarketNfts = async (params: GetMarketNftsParams = {}) => {
 
   const queryObj: Record<string, string> = {
     page: String(params.page ?? 1),
-    pageSize: String(params.pageSize ?? 20),
+    pageSize: String(params.pageSize ?? 10),
     excludeSelf: String(params.excludeSelf ?? false),
   };
 
