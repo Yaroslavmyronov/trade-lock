@@ -20,6 +20,7 @@ import {
   defaultSortOption,
   SortOption,
 } from '@/shared/ui/FilterPanel/SortOptions';
+import { useDebounce } from '@/shared/lib/useDebounce';
 
 export const Market = ({ initialNfts }: { initialNfts: MarketNftResponse }) => {
   const {
@@ -33,8 +34,10 @@ export const Market = ({ initialNfts }: { initialNfts: MarketNftResponse }) => {
   const { toggle, isOpen } = usePropose();
 
   // Filter options
+  const [searchText, setSearchText] = useState<string>('');
   const [sortingOption, setSortingOption] =
     useState<SortOption>(defaultSortOption);
+  const debouncedSearchText = useDebounce(searchText, 500);
 
   const {
     data: marketNfts,
@@ -49,6 +52,7 @@ export const Market = ({ initialNfts }: { initialNfts: MarketNftResponse }) => {
     ...marketNftsApi.getListInfiniteQueryOptions({
       sort: sortingOption.sort,
       order: sortingOption.order,
+      searchText: debouncedSearchText,
     }),
     placeholderData: {
       pages: [initialNfts],
@@ -75,6 +79,7 @@ export const Market = ({ initialNfts }: { initialNfts: MarketNftResponse }) => {
           close={close}
           opened={opened}
           open={open}
+          setSearchText={setSearchText}
           selectedSort={sortingOption}
           setSelectedSort={setSortingOption}
         />

@@ -4,7 +4,11 @@ import { useEffect, useRef, useState } from 'react';
 import { CloseIcon } from '@/shared/icons';
 import { SearchIcon } from './icons/SearchIcon';
 
-export const Search = () => {
+interface SearchProps {
+  setSearchText: (text: string) => void;
+}
+
+export const Search = ({ setSearchText }: SearchProps) => {
   const [isActive, setIsActive] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -51,6 +55,7 @@ export const Search = () => {
           onFocus={() => setIsActive(true)}
           className="absolute left-0 h-full max-w-full appearance-none border-none pr-[10px] pl-[48px] text-[#fff] outline-0 transition-all duration-300 ease-in-out"
           placeholder="Search profile"
+          onChange={(e) => setSearchText(e.target.value)}
         />
         <button
           onClick={() => {

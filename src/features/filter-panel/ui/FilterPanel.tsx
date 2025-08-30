@@ -15,6 +15,7 @@ interface FilterPanelProps {
   isRefresh: boolean;
 
   // Sort
+  setSearchText: (text: string) => void;
   selectedSort: SortOption;
   setSelectedSort: (option: SortOption) => void;
 }
@@ -26,6 +27,7 @@ export const FilterPanel = ({
   close,
   isRefresh,
   refresh,
+  setSearchText,
   selectedSort,
   setSelectedSort,
 }: FilterPanelProps) => {
@@ -44,7 +46,7 @@ export const FilterPanel = ({
       <div ref={portalContainerRef} className="relative">
         <div className="my-4 flex">
           <Filter active={opened === panel} onClick={handleClick} />
-          <Search />
+          <Search setSearchText={setSearchText ?? (() => { })} />
           {opened === panel && (
             <Filters opened={opened} onClose={() => close(panel)} />
           )}
