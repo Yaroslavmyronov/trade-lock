@@ -15,6 +15,13 @@ import { usePropose } from '@/shared/store/usePropose';
 import { useSelectedNfts } from '@/shared/store/useSelectedNfts';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { MarketNfts } from './MarketNfts';
+import { useState } from 'react';
+import {
+  defaultSortOption,
+  SortOption,
+} from '@/shared/ui/FilterPanel/SortOptions';
+import { useDebounce } from '@/shared/lib/useDebounce';
+import FilterItem from '@/features/filter-panel/ui/FilterItem';
 
 export const Market = ({ initialNfts }: { initialNfts: MarketNftResponse }) => {
   const {
@@ -27,6 +34,15 @@ export const Market = ({ initialNfts }: { initialNfts: MarketNftResponse }) => {
   const { opened, open, close } = useFilters();
   const { toggle, isOpen } = usePropose();
 
+  // Filter options
+  const [searchText, setSearchText] = useState<string>('');
+  const [sortingOption, setSortingOption] =
+    useState<SortOption>(defaultSortOption);
+  const [minPriceFilter, setMinPriceFilter] = useState<number | ''>('');
+  const [maxPriceFilter, setMaxPriceFilter] = useState<number | ''>('');
+
+  const debouncedSearchText = useDebounce(searchText, 500);
+
   const {
     data: marketNfts,
     // error,
@@ -37,8 +53,14 @@ export const Market = ({ initialNfts }: { initialNfts: MarketNftResponse }) => {
     refetch,
     isRefetching,
   } = useInfiniteQuery({
-    ...marketNftsApi.getListInfiniteQueryOptions(),
-    initialData: {
+    ...marketNftsApi.getListInfiniteQueryOptions({
+      sort: sortingOption.sort,
+      order: sortingOption.order,
+      searchText: debouncedSearchText,
+      minPrice: minPriceFilter,
+      maxPrice: maxPriceFilter,
+    }),
+    placeholderData: {
       pages: [initialNfts],
       pageParams: [1],
     },
@@ -47,6 +69,37 @@ export const Market = ({ initialNfts }: { initialNfts: MarketNftResponse }) => {
   const cursorRef = useIntersection(() => {
     fetchNextPage();
   });
+
+  const updateMinPriceFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    if (Number(value) < 0) {
+      return;
+    }
+
+    if (maxPriceFilter && maxPriceFilter < Number(value)) {
+      return;
+    }
+
+    setMinPriceFilter(value ? Number(value) : '');
+  };
+
+  const updateMaxPriceFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    if (Number(value) < 0) {
+      return;
+    }
+
+    if (minPriceFilter && value !== '' && minPriceFilter > Number(value)) {
+      return;
+    }
+
+    setMaxPriceFilter(value ? Number(value) : '');
+  };
+
+  // Sort, Order
+  // Ask for new market nfts on filter change
 
   return (
     <div
@@ -60,11 +113,35 @@ export const Market = ({ initialNfts }: { initialNfts: MarketNftResponse }) => {
           close={close}
           opened={opened}
           open={open}
-        />
+          setSearchText={setSearchText}
+          selectedSort={sortingOption}
+          setSelectedSort={setSortingOption}
+        >
+          <FilterItem title="Price">
+            <div className="flex w-full justify-between">
+              <input
+                type="number"
+                min={0}
+                placeholder="Min"
+                className="w-35 rounded-md border border-gray-500 p-1"
+                value={minPriceFilter}
+                onChange={updateMinPriceFilter}
+              />
+              <input
+                type="number"
+                min={0}
+                placeholder="Max"
+                className="w-35 rounded-md border border-gray-500 p-1"
+                value={maxPriceFilter}
+                onChange={updateMaxPriceFilter}
+              />
+            </div>
+          </FilterItem>
+        </FilterPanel>
         <MarketNfts
           selectedNfts={selectedNftsMarket}
           toggleSelect={toggleSelect}
-          nftsData={marketNfts}
+          nftsData={marketNfts ?? []}
           removeItem={removeItem}
           cursorRef={cursorRef}
           isFetchingNextPage={isFetchingNextPage}

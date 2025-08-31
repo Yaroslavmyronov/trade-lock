@@ -1,5 +1,9 @@
 'use client';
 import { Filter, Filters, Refresh, Search, Sort } from '@/shared';
+import {
+  defaultSortOption,
+  SortOption,
+} from '@/shared/ui/FilterPanel/SortOptions';
 import { useRef } from 'react';
 
 interface FilterPanelProps {
@@ -9,6 +13,13 @@ interface FilterPanelProps {
   close: (panel: 'market' | 'user') => void;
   refresh: () => void;
   isRefresh: boolean;
+
+  // Sort
+  setSearchText: (text: string) => void;
+  selectedSort: SortOption;
+  setSelectedSort: (option: SortOption) => void;
+
+  children?: React.ReactNode;
 }
 
 export const FilterPanel = ({
@@ -18,6 +29,10 @@ export const FilterPanel = ({
   close,
   isRefresh,
   refresh,
+  setSearchText,
+  selectedSort,
+  setSelectedSort,
+  children,
 }: FilterPanelProps) => {
   const portalContainerRef = useRef<HTMLDivElement | null>(null);
 
@@ -34,12 +49,17 @@ export const FilterPanel = ({
       <div ref={portalContainerRef} className="relative">
         <div className="my-4 flex">
           <Filter active={opened === panel} onClick={handleClick} />
-          <Search />
+          <Search setSearchText={setSearchText ?? (() => {})} />
           {opened === panel && (
-            <Filters opened={opened} onClose={() => close(panel)} />
+            <Filters opened={opened} onClose={() => close(panel)}>
+              {children}
+            </Filters>
           )}
           <Refresh isRefresh={isRefresh} refresh={refresh} />
-          <Sort />
+          <Sort
+            selectedSort={selectedSort ?? defaultSortOption}
+            setSelectedSort={setSelectedSort ?? (() => {})}
+          />
         </div>
       </div>
     </div>

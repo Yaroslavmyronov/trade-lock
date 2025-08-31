@@ -5,6 +5,8 @@ import { cookies } from 'next/headers';
 export type GetMarketNftsParams = {
   page?: number;
   pageSize?: number;
+  sort?: string;
+  order?: 'asc' | 'desc';
   excludeSelf?: boolean;
 };
 
@@ -16,6 +18,8 @@ export const getMarketNfts = async (params: GetMarketNftsParams = {}) => {
     page: String(params.page ?? 1),
     pageSize: String(params.pageSize ?? 10),
     excludeSelf: String(params.excludeSelf ?? false),
+    sort: params.sort ?? '',
+    order: params.order ?? '',
   };
 
   const query = new URLSearchParams(queryObj).toString();
