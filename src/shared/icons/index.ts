@@ -2,6 +2,7 @@ export { Arrow2Icon } from './Arrow2Icon';
 export { ArrowIcon } from './ArrowIcon';
 export { ArrowRightIcon } from './ArrowRightIcon';
 export { CloseIcon } from './CloseIcon';
+export { CopyIcon } from './CopyIcon';
 export { FailIcon } from './FailIcon';
 export { InfoCircleIcon } from './InfoCircleIcon';
 export { MarketIcon } from './MarketIcon';

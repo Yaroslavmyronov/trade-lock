@@ -8,6 +8,7 @@ export { Search } from './FilterPanel/Search';
 export { Sort } from './FilterPanel/Sort';
 export { MarketCounter } from './MarketCounter';
 export { ModalButton } from './ModalButton';
+export { Pagination } from './Pagination';
 export { Popover } from './Popover';
 export { Preloader } from './Preloader';
 export { SuspenseBoundary } from './SuspenseBoundary';

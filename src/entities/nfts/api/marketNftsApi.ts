@@ -8,7 +8,7 @@ export const marketNftsApi = {
       queryKey: ['market'],
       queryFn: async ({ pageParam = 1, signal }) => {
         return apiFetch<MarketNftResponse>(
-          `/market/market-listing?page=${pageParam}&pageSize=10`,
+          `/market/market-listing?page=${pageParam}&pageSize=20`,
           { signal },
         );
       },
