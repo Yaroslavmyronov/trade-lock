@@ -2,8 +2,8 @@ import { CloseIcon } from '@/shared';
 import { HeaderButton } from './HeaderButton';
 
 interface HeaderProps {
-  activeTab: 'Incoming' | 'Sent' | 'History';
-  onTabChange: (tab: 'Incoming' | 'Sent' | 'History') => void;
+  activeTab: 'Incoming' | 'Sent';
+  onTabChange: (tab: 'Incoming' | 'Sent') => void;
   close: () => void;
 }
 
@@ -20,11 +20,6 @@ export const Header = ({ close, activeTab, onTabChange }: HeaderProps) => {
           activeTab={activeTab}
           onTabChange={() => onTabChange('Sent')}
           title="Sent"
-        ></HeaderButton>
-        <HeaderButton
-          activeTab={activeTab}
-          onTabChange={() => onTabChange('History')}
-          title="History"
         ></HeaderButton>
       </div>
       <button

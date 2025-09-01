@@ -1,7 +1,7 @@
 interface HeaderButtonProps {
   title: string;
   onTabChange: () => void;
-  activeTab: 'Incoming' | 'Sent' | 'History';
+  activeTab: 'Incoming' | 'Sent';
 }
 
 export const HeaderButton = ({

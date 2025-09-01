@@ -9,21 +9,27 @@ import { MarketCounter } from '@/shared';
 import { useFilters } from '@/shared/store/useFilters';
 
 import { marketNftsApi } from '@/entities/nfts/api/marketNftsApi';
+import FilterItem from '@/features/filter-panel/ui/FilterItem';
+import { useDebounce } from '@/shared/lib/useDebounce';
 import { useIntersection } from '@/shared/lib/useIntersection';
 import { useMarketSelectedNfts } from '@/shared/store/useMarketSelectedNfts';
 import { usePropose } from '@/shared/store/usePropose';
 import { useSelectedNfts } from '@/shared/store/useSelectedNfts';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { MarketNfts } from './MarketNfts';
-import { useState } from 'react';
 import {
   defaultSortOption,
   SortOption,
 } from '@/shared/ui/FilterPanel/SortOptions';
-import { useDebounce } from '@/shared/lib/useDebounce';
-import FilterItem from '@/features/filter-panel/ui/FilterItem';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import { MarketNfts } from './MarketNfts';
 
-export const Market = ({ initialNfts }: { initialNfts: MarketNftResponse }) => {
+export const Market = ({
+  initialNfts,
+  excludeSelf = false,
+}: {
+  initialNfts: MarketNftResponse;
+  excludeSelf?: boolean;
+}) => {
   const {
     selectedNfts: selectedNftsMarket,
     clearAll,
@@ -59,6 +65,7 @@ export const Market = ({ initialNfts }: { initialNfts: MarketNftResponse }) => {
       searchText: debouncedSearchText,
       minPrice: minPriceFilter,
       maxPrice: maxPriceFilter,
+      excludeSelf,
     }),
     placeholderData: {
       pages: [initialNfts],

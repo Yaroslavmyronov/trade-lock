@@ -7,9 +7,14 @@ import { SortOption, sortOptions } from './SortOptions';
 interface SortProps {
   selectedSort: SortOption;
   setSelectedSort: (option: SortOption) => void;
+  containerRef: React.RefObject<HTMLDivElement | null>;
 }
 
-export const Sort = ({ selectedSort, setSelectedSort }: SortProps) => {
+export const Sort = ({
+  selectedSort,
+  setSelectedSort,
+  containerRef,
+}: SortProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
@@ -25,15 +30,15 @@ export const Sort = ({ selectedSort, setSelectedSort }: SortProps) => {
   }, []);
 
   return (
-    <div ref={menuRef} className="relative select-none">
+    <div className="relative ml-auto select-none">
       <div>
         {/* menu */}
         {isOpen &&
-          menuRef.current &&
+          containerRef.current &&
           createPortal(
             <div className="absolute right-0 bottom-[-36px] z-20 flex max-h-full max-w-screen min-w-[110px]">
               <div className="mt-4 h-full max-h-[800px] w-48 max-w-[300px] min-w-[200px] rounded-xs bg-[rgb(42,44,46)] shadow-lg ring-1 ring-black/5">
-                <div className="py-2">
+                <div ref={menuRef} className="py-2">
                   {sortOptions.map((option) => (
                     <button
                       key={option.label}
@@ -49,10 +54,10 @@ export const Sort = ({ selectedSort, setSelectedSort }: SortProps) => {
                 </div>
               </div>
             </div>,
-            menuRef.current,
+            containerRef.current,
           )}
 
-        <div className="relative w-[200px]">
+        <div className="relative w-[123px]">
           <div
             onClick={() => {
               setIsOpen(!isOpen);
@@ -68,7 +73,7 @@ export const Sort = ({ selectedSort, setSelectedSort }: SortProps) => {
                 <label className="pointer-events-none w-full text-xs text-ellipsis whitespace-nowrap text-[#848484]">
                   Sort by
                 </label>
-                <span>{selectedSort.label}</span>
+                <span className="truncate">{selectedSort.label}</span>
               </div>
             </div>
           </div>

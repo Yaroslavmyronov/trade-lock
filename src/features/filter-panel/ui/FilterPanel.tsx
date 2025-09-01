@@ -34,7 +34,7 @@ export const FilterPanel = ({
   setSelectedSort,
   children,
 }: FilterPanelProps) => {
-  const portalContainerRef = useRef<HTMLDivElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   const handleClick = () => {
     if (opened === panel) {
@@ -46,8 +46,8 @@ export const FilterPanel = ({
 
   return (
     <div>
-      <div ref={portalContainerRef} className="relative">
-        <div className="my-4 flex">
+      <div ref={containerRef} className="relative">
+        <div className="my-4 flex overflow-hidden">
           <Filter active={opened === panel} onClick={handleClick} />
           <Search setSearchText={setSearchText ?? (() => {})} />
           {opened === panel && (
@@ -57,6 +57,7 @@ export const FilterPanel = ({
           )}
           <Refresh isRefresh={isRefresh} refresh={refresh} />
           <Sort
+            containerRef={containerRef}
             selectedSort={selectedSort ?? defaultSortOption}
             setSelectedSort={setSelectedSort ?? (() => {})}
           />

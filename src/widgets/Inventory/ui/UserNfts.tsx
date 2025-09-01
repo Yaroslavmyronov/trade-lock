@@ -25,7 +25,6 @@ const UserNftsComponent = ({
   isFetchingNextPage,
   hasNextPage,
 }: UserNftsProps) => {
-  console.log('UserNfts render');
   if (isLoading) {
     return (
       <div className="flex size-full shrink grow basis-auto items-center justify-center">

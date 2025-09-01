@@ -61,7 +61,6 @@ export const useTransactor = (
   }
 
   const result: TransactionFunc = async (tx, options) => {
-    console.log('walletClient', walletClient);
     if (!walletClient) {
       toast.error('Cannot access account');
       console.error('⚡️ ~ file: useTransactor.tsx ~ error');

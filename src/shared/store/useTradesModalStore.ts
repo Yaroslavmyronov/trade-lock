@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-type Tab = 'Incoming' | 'Sent' | 'History';
+type Tab = 'Incoming' | 'Sent';
 
 interface TradesModalState {
   isOpen: boolean;

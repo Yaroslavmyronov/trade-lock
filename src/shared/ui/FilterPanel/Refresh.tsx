@@ -8,7 +8,7 @@ export const Refresh = ({
   isRefresh: boolean;
 }) => {
   return (
-    <div className="mr-auto select-none">
+    <div className="mr-1 select-none">
       <button
         disabled={isRefresh}
         onClick={refresh}

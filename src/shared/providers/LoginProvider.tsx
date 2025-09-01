@@ -18,10 +18,6 @@ export const LoginProvider = ({ children }: LoginProviderProps) => {
 
   const isWalletConnected = Boolean(address && isConnected && connector);
 
-  console.log('address', address);
-  console.log('isConnected', isConnected);
-  console.log('connector', connector);
-
   const isAuthenticated = authStatus === 'authenticated';
   const isLoading = authStatus === 'loading';
 

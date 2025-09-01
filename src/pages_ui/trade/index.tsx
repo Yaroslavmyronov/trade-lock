@@ -24,10 +24,10 @@ export const TradePage = async () => {
     <LoginProvider>
       <div className="relative flex h-full shrink grow flex-col bg-[#1d1f20]">
         <div className="flex shrink grow border-t-2 border-[#2a2c2e]">
-          <div className="flex h-full w-full max-w-[650px] min-w-[437px] flex-col bg-[#17191a]">
+          <div className="flex h-full w-full max-w-[437px] min-w-[437px] flex-col bg-[#17191a]">
             <Inventory filter="trade" />
           </div>
-          <Market initialNfts={marketNfts} />
+          <Market excludeSelf={true} initialNfts={marketNfts} />
         </div>
       </div>
     </LoginProvider>

@@ -19,8 +19,6 @@ export const TradeModalFooter = () => {
   const nftContractsFrom = selectedUserNfts.map((nft) => nft.contractAddress);
   const listingIdsTo = selectedMarketNfts.map((nft) => BigInt(nft.listingId));
 
-  console.log('recipientAddress', recipientAddress);
-
   const handleTrade = async () => {
     await approveNfts(selectedUserNfts);
     try {
