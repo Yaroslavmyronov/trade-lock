@@ -1,20 +1,28 @@
 import { apiFetch } from '@/shared/api/fetchInstance';
-import { keepPreviousData, queryOptions } from '@tanstack/react-query';
+import { infiniteQueryOptions } from '@tanstack/react-query';
 import { Trade } from '../model';
 
+interface TradeResponse {
+  hasMore: boolean;
+  items: Trade[];
+  nextCursor?: string | null;
+}
+
 export const tradeApi = {
-  getListQueryOptions: (direction: 'incoming' | 'outgoing') => {
-    return queryOptions({
-      queryKey: ['trade', 'incoming', 'outgoing'],
-      queryFn: async ({ pageParam = 1, signal }) => {
-        return apiFetch<Trade[]>(
-          `/market/trades?page=${pageParam}&pageSize=20&direction=${direction}`,
-          {
-            signal,
-          },
+  getListInfiniteQueryOptions: (direction: 'incoming' | 'outgoing') => {
+    return infiniteQueryOptions({
+      queryKey: ['trade', direction],
+      queryFn: async ({ pageParam, signal }) => {
+        return apiFetch<TradeResponse>(
+          `/market/trades?nextCursor=${pageParam}&pageSize=10&direction=${direction}`,
+          { signal },
         );
       },
-      placeholderData: keepPreviousData,
+      initialPageParam: '',
+      getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
+      select: (result) => {
+        return result.pages.flatMap((page) => page.items || []);
+      },
     });
   },
 };
