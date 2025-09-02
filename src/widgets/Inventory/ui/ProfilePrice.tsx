@@ -1,17 +1,17 @@
 import { Arrow2Icon } from '@/shared';
 
 interface ProfilePriceProps {
-  loading: boolean;
   nftAmount: number;
   totalValue: number;
+  status: 'error' | 'success' | 'pending';
 }
 
 export const ProfilePrice = ({
-  loading,
   nftAmount,
   totalValue,
+  status,
 }: ProfilePriceProps) => {
-  if (loading) {
+  if (status === 'pending') {
     return (
       <div className="mb-4">
         <div className="relative right-0 left-0 flex min-h-[44px] w-full min-w-auto flex-row items-center overflow-hidden rounded-[4px] bg-[#424242] px-4">

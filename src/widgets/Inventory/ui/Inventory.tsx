@@ -23,27 +23,21 @@ export const Inventory = ({ filter }: { filter: 'sell' | 'trade' }) => {
   const {
     data: userNftsResponse,
     error,
-    isLoading,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
     isRefetching,
+    status,
     refetch,
   } = useInfiniteQuery({
     ...userNftsApi.getListInfiniteQueryOptions(),
   });
 
   const cursorRef = useIntersection(() => {
-    fetchNextPage();
+    if (hasNextPage) {
+      fetchNextPage();
+    }
   });
-
-  if (error) {
-    return (
-      <div className="flex size-full items-center justify-center">
-        <span>Failed to load NFTs. Please try again.</span>
-      </div>
-    );
-  }
 
   return (
     <div
@@ -61,17 +55,17 @@ export const Inventory = ({ filter }: { filter: 'sell' | 'trade' }) => {
         <ProfilePrice
           nftAmount={userNftsResponse?.nftAmount ?? 0}
           totalValue={userNftsResponse?.totalValue ?? 0}
-          loading={isLoading}
+          status={status}
         />
         <UserNfts
+          status={status}
+          error={error}
           selectedNfts={selectedNfts}
           toggleSelect={toggleSelect}
           removeItem={removeItem}
-          nftsData={userNftsResponse?.response ?? null}
+          nftsData={userNftsResponse?.response ?? []}
           cursorRef={cursorRef}
           isFetchingNextPage={isFetchingNextPage}
-          isLoading={isLoading}
-          hasNextPage={hasNextPage}
         />
         <Counter
           isOpen={isOpen}
