@@ -1,9 +1,4 @@
-import {
-  MarketNft,
-  MarketNftResponse,
-  UserNft,
-  UserNftResponse,
-} from '@/entities/nfts/types';
+import { MarketNft, UserNft, UserNftResponse } from '@/entities/nfts/types';
 import { Metadata } from '@/entities/trade/model/type';
 import { Address } from 'viem';
 
@@ -25,7 +20,7 @@ const mapMarketNftToMetadata = (nft: MarketNft): Metadata => ({
 
 export const createTrade = (
   userNfts: UserNftResponse,
-  marketNfts: MarketNftResponse,
+  marketNfts: MarketNft[],
   address: Address,
 ) => {
   if (!userNfts.length || !marketNfts.length || !address) return;

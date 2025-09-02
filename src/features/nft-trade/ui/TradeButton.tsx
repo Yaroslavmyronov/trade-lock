@@ -1,5 +1,5 @@
 'use client';
-import { MarketNftResponse, UserNftResponse } from '@/entities/nfts/types';
+import { MarketNft, UserNftResponse } from '@/entities/nfts/types';
 import { TradeCreate } from '@/features/trade-create';
 import { Arrow2Icon } from '@/shared';
 import { useTradeModalStore } from '@/shared/store/useTradeModalStore';
@@ -8,7 +8,7 @@ import { createTrade } from '../model/createTrade';
 
 interface TradeButtonProps {
   selectedNftsUser: UserNftResponse;
-  selectedNftsMarket: MarketNftResponse;
+  selectedNftsMarket: MarketNft[];
 }
 
 export const TradeButton = ({

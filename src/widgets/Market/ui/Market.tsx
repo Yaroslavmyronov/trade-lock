@@ -50,9 +50,9 @@ export const Market = ({
   const debouncedSearchText = useDebounce(searchText, 500);
 
   const {
-    data: marketNfts,
-    // error,
-    isLoading,
+    data: marketResponse,
+    error,
+    status,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
@@ -68,13 +68,15 @@ export const Market = ({
       excludeSelf,
     }),
     placeholderData: {
-      pages: [initialNfts],
-      pageParams: [1],
+      pages: [{ hasMore: false, items: initialNfts.items, nextCursor: null }],
+      pageParams: [''],
     },
   });
 
   const cursorRef = useIntersection(() => {
-    fetchNextPage();
+    if (hasNextPage) {
+      fetchNextPage();
+    }
   });
 
   const updateMinPriceFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -146,14 +148,14 @@ export const Market = ({
           </FilterItem>
         </FilterPanel>
         <MarketNfts
+          status={status}
           selectedNfts={selectedNftsMarket}
           toggleSelect={toggleSelect}
-          nftsData={marketNfts ?? []}
+          nftsData={marketResponse?.items ?? []}
           removeItem={removeItem}
           cursorRef={cursorRef}
           isFetchingNextPage={isFetchingNextPage}
-          isLoading={isLoading}
-          hasNextPage={hasNextPage}
+          error={error}
         />
         <MarketCounter
           isOpen={isOpen}

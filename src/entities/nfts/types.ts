@@ -16,7 +16,11 @@ export type MarketNft = {
   sellerAddress: Address;
   tokenId: string;
 };
-export type MarketNftResponse = MarketNft[];
+export type MarketNftResponse = {
+  hasMore: boolean;
+  items: MarketNft[];
+  nextCursor?: string | null;
+};
 
 export type UserNft = BaseNft & {
   contractAddress: Address;

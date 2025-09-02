@@ -24,17 +24,21 @@ export const marketNftsApi = {
         'market',
         { sort, order, searchText, minPrice, maxPrice, excludeSelf },
       ],
-      queryFn: async ({ pageParam = 1, signal }) => {
+      queryFn: async ({ pageParam, signal }) => {
         return apiFetch<MarketNftResponse>(
-          `/market/market-listing?page=${pageParam}&pageSize=20&sortBy=${sort}&orderBy=${order}&search=${searchText}&minPrice=${minPrice}&maxPrice=${maxPrice}&excludeSelf=${excludeSelf}`,
+          `/market/market-listing?nextCursor=${pageParam}&pageSize=20&sortBy=${sort}&orderBy=${order}&search=${searchText}&minPrice=${minPrice}&maxPrice=${maxPrice}&excludeSelf=${excludeSelf}`,
           { signal },
         );
       },
-      initialPageParam: 1,
-      getNextPageParam: (lastPage, allPages) => {
-        return lastPage.length ? allPages.length + 1 : undefined;
+      initialPageParam: '',
+      getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
+      select: (result) => {
+        return {
+          hasMore: result.pages[0].hasMore,
+          items: result.pages.flatMap((page) => page.items || []),
+          nextCursor: result.pages[0].nextCursor,
+        };
       },
-      select: (result) => result.pages.flatMap((page) => page),
     });
   },
 };

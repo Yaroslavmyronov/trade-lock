@@ -1,9 +1,9 @@
-import { MarketNft, MarketNftResponse } from '@/entities/nfts/types';
+import { MarketNft } from '@/entities/nfts/types';
 import { getNftId } from '@/features/nft-sell/model/NFT';
 import { create } from 'zustand';
 
 interface SelectedNftsState {
-  selectedNfts: MarketNftResponse;
+  selectedNfts: MarketNft[];
   toggleSelect: (nft: MarketNft) => void;
   removeItem: (id: string) => void;
   clearAll: () => void;

@@ -1,4 +1,4 @@
-import { MarketNftResponse, UserNftResponse } from '@/entities/nfts/types';
+import { MarketNft, UserNftResponse } from '@/entities/nfts/types';
 import { ModalButton, Preloader } from '@/shared';
 import { useNftApproval } from '@/shared/lib/web3/useNftApproval';
 import { useWrapperWriteContract } from '@/shared/lib/web3/useWrapperWriteContract';
@@ -10,7 +10,7 @@ import { Address } from 'viem';
 
 interface TradeCreateProps {
   selectedNftsUser: UserNftResponse;
-  selectedNftsMarket: MarketNftResponse;
+  selectedNftsMarket: MarketNft[];
 }
 
 export const TradeCreate = ({

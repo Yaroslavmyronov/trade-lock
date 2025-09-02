@@ -1,12 +1,12 @@
 'use client';
-import { MarketNftResponse } from '@/entities/nfts/types';
+import { MarketNft } from '@/entities/nfts/types';
 import { MarketIcon } from '@/shared';
 import { useBuyModalStore } from '@/shared/store/useBuyModalStore';
 
 export const BuyButton = ({
   selectedNftsMarket,
 }: {
-  selectedNftsMarket: MarketNftResponse;
+  selectedNftsMarket: MarketNft[];
 }) => {
   const { open } = useBuyModalStore();
   const sellPrice = selectedNftsMarket.reduce((sum, nft) => sum + nft.price, 0);
