@@ -21,9 +21,8 @@ interface BodyProps {
   totalPages: number;
   handlePageChange: (page: number) => void;
   isPlaceholderData: boolean;
-  isLoading: boolean;
-  isError: boolean;
   error: Error | null;
+  status: 'pending' | 'error' | 'success';
 }
 
 export const Body = ({
@@ -32,9 +31,8 @@ export const Body = ({
   page,
   totalPages,
   isPlaceholderData,
-  isLoading,
-  isError,
   error,
+  status,
 }: BodyProps) => {
   const [copied, setCopied] = useState<Record<string, boolean>>({});
   const formatDate = (date: string) =>
@@ -54,7 +52,7 @@ export const Body = ({
     }
   };
 
-  if (isLoading) {
+  if (status === 'pending') {
     return (
       <div className="flex size-full items-center justify-center text-[#836EF9]">
         <Preloader width={80} height={80} border={5}></Preloader>
@@ -62,7 +60,7 @@ export const Body = ({
     );
   }
 
-  if (isError) {
+  if (status === 'error') {
     return (
       <div className="flex size-full items-center justify-center text-[#836EF9]">
         <p>Error: {error?.message}</p>
@@ -96,7 +94,7 @@ export const Body = ({
               <p>
                 {item.listings !== null
                   ? formatted(item.listings.status)
-                  : formatted(item.trade?.status)}
+                  : formatted(item.trade?.status ?? '')}
               </p>
             </div>
             <div className="table-cell h-16 min-w-[95px] px-4 py-1 align-middle">

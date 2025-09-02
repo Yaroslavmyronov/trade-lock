@@ -12,8 +12,7 @@ export const HistoryModal = () => {
   const [page, setPage] = useState(1);
   const {
     data: historyData,
-    isLoading,
-    isError,
+    status,
     error,
     isPlaceholderData,
   } = useQuery(historyApi.getListQueryOptions(page));
@@ -28,9 +27,8 @@ export const HistoryModal = () => {
         <div className="flex h-[98vh] max-h-[1000px] w-full flex-col rounded-[4px] bg-[#2a2c2e]">
           <Header close={close}></Header>
           <Body
-            isLoading={isLoading}
+            status={status}
             error={error}
-            isError={isError}
             isPlaceholderData={isPlaceholderData}
             handlePageChange={handlePageChange}
             page={page}
