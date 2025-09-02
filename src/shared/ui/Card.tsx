@@ -58,11 +58,11 @@ export const Card = memo(
             >
               {`${price} MON`}
             </div>
-            <div
+            {/* <div
               className={`flex ${selected ? 'h-2 text-[8px]' : 'h-5'} items-center`}
             >
               956
-            </div>
+            </div> */}
           </div>
         </div>
       );

@@ -8,17 +8,25 @@ import { useFilters } from '@/shared/store/useFilters';
 import { usePropose } from '@/shared/store/usePropose';
 
 import { userNftsApi } from '@/entities/nfts/api/userNftsApi';
+import { TradeButton } from '@/features/nft-trade';
 import { useIntersection } from '@/shared/lib/useIntersection';
+import { useMarketSelectedNfts } from '@/shared/store/useMarketSelectedNfts';
 import { useSelectedNfts } from '@/shared/store/useSelectedNfts';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { ProfilePrice } from './ProfilePrice';
 import { UserNfts } from './UserNfts';
 
 export const Inventory = ({ filter }: { filter: 'sell' | 'trade' }) => {
-  const { selectedNfts, clearAll, toggleSelect, removeItem } =
-    useSelectedNfts();
+  const {
+    selectedNfts: selectedNftsUser,
+    clearAll,
+    toggleSelect,
+    removeItem,
+  } = useSelectedNfts();
   const { opened, open, close } = useFilters();
   const { toggle, isOpen } = usePropose();
+
+  const { selectedNfts: selectedNftsMarket } = useMarketSelectedNfts();
 
   const {
     data: userNftsResponse,
@@ -60,7 +68,7 @@ export const Inventory = ({ filter }: { filter: 'sell' | 'trade' }) => {
         <UserNfts
           status={status}
           error={error}
-          selectedNfts={selectedNfts}
+          selectedNfts={selectedNftsUser}
           toggleSelect={toggleSelect}
           removeItem={removeItem}
           nftsData={userNftsResponse?.response ?? []}
@@ -70,21 +78,29 @@ export const Inventory = ({ filter }: { filter: 'sell' | 'trade' }) => {
         <Counter
           isOpen={isOpen}
           toggle={toggle}
-          selectedNfts={selectedNfts}
+          selectedNfts={selectedNftsUser}
           clearAll={clearAll}
         />
         <Propose
           isOpen={isOpen}
           removeItem={removeItem}
           toggleSelect={toggleSelect}
-          selectedNfts={selectedNfts ?? []}
+          selectedNfts={selectedNftsUser ?? []}
         />
         {filter === 'sell' && (
           <div className="flex pb-4">
             <SellButton
               clearAll={clearAll}
-              selectedNfts={selectedNfts}
+              selectedNfts={selectedNftsUser}
             ></SellButton>
+          </div>
+        )}
+        {filter === 'trade' && (
+          <div className="flex pb-4">
+            <TradeButton
+              selectedNftsMarket={selectedNftsMarket}
+              selectedNftsUser={selectedNftsUser}
+            ></TradeButton>
           </div>
         )}
       </div>

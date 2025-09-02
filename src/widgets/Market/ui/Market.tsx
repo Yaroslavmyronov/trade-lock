@@ -4,7 +4,6 @@ import { Propose } from '@/features';
 import { MarketNftResponse } from '@/entities/nfts/types';
 import { FilterPanel } from '@/features/filter-panel';
 import { BuyButton } from '@/features/nft-buy';
-import { TradeButton } from '@/features/nft-trade';
 import { MarketCounter } from '@/shared';
 import { useFilters } from '@/shared/store/useFilters';
 
@@ -14,7 +13,6 @@ import { useDebounce } from '@/shared/lib/useDebounce';
 import { useIntersection } from '@/shared/lib/useIntersection';
 import { useMarketSelectedNfts } from '@/shared/store/useMarketSelectedNfts';
 import { usePropose } from '@/shared/store/usePropose';
-import { useSelectedNfts } from '@/shared/store/useSelectedNfts';
 import {
   defaultSortOption,
   SortOption,
@@ -36,7 +34,7 @@ export const Market = ({
     toggleSelect,
     removeItem,
   } = useMarketSelectedNfts();
-  const { selectedNfts: selectedNftsUser } = useSelectedNfts();
+
   const { opened, open, close } = useFilters();
   const { toggle, isOpen } = usePropose();
 
@@ -171,10 +169,6 @@ export const Market = ({
         />
 
         <div className="flex pb-4">
-          <TradeButton
-            selectedNftsMarket={selectedNftsMarket}
-            selectedNftsUser={selectedNftsUser}
-          ></TradeButton>
           <BuyButton selectedNftsMarket={selectedNftsMarket}></BuyButton>
         </div>
       </div>

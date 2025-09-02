@@ -6,6 +6,7 @@ import {
   Preloader,
   TickCircleIcon,
 } from '@/shared';
+import { getParsedError } from '@/shared/lib/web3/getParsedError';
 import { useWrapperWriteContract } from '@/shared/lib/web3/useWrapperWriteContract';
 import { useBuyModalStore } from '@/shared/store/useBuyModalStore';
 import { useMarketSelectedNfts } from '@/shared/store/useMarketSelectedNfts';
@@ -41,9 +42,9 @@ export const BuyModal = () => {
       });
       queryClient.invalidateQueries({ queryKey: ['market'] });
       setState({ status: 'success' });
-    } catch (e) {
-      setState({ status: 'error', errorMessage: (e as Error).message });
-      console.error('Listing error:', e);
+    } catch (error) {
+      setState({ status: 'error', errorMessage: getParsedError(error) });
+      console.error('Listing error:', error);
     }
   };
 
