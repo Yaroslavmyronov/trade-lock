@@ -1,5 +1,6 @@
 'use client';
 
+import { useNotificationsStore } from '@/shared/store/useNotificationStore';
 import {
   HubConnection,
   HubConnectionBuilder,
@@ -18,11 +19,14 @@ type WSContextType = {
   connection: HubConnection | null;
 };
 
-const WSContext = createContext<WSContextType>({ connection: null });
+const WSContext = createContext<WSContextType>({
+  connection: null,
+});
 
 export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
   const [connection, setConnection] = useState<HubConnection | null>(null);
   const queryClient = useQueryClient();
+  const { setUnreadCount, setNotifications } = useNotificationsStore();
 
   useEffect(() => {
     const conn = new HubConnectionBuilder()
@@ -34,6 +38,9 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
     conn.on('updateMarket', () => {
       queryClient.invalidateQueries({ queryKey: ['market'] });
     });
+    conn.on('unreadcountupdated', (data: number) => setUnreadCount(data));
+
+    conn.on('initNotifications', (data: any[]) => setNotifications(data));
 
     conn
       .start()

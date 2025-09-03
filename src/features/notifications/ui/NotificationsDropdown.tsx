@@ -4,8 +4,7 @@ import { useWS } from '@/app/providers/webSocketProvider';
 import { NotificationItem } from '@/entities/notification';
 import { Popover } from '@/shared';
 import { useNotificationsStore } from '@/shared/store/useNotificationStore';
-import { useTradesModalStore } from '@/shared/store/useTradesModalStore';
-import { useEffect } from 'react';
+import { useHandleNotificationClick } from '../lib';
 import { BellButton } from './BellButton';
 import { ClearUnread } from './ClearUnread';
 import { NotificationsHeader } from './NotificationsHeader';
@@ -13,26 +12,10 @@ import { NotificationsHeader } from './NotificationsHeader';
 export const NotificationsDropdown = () => {
   const { connection } = useWS();
 
-  const { open } = useTradesModalStore();
-  const { setUnreadCount, setNotifications, unreadCount, notifications } =
-    useNotificationsStore();
-  useEffect(() => {
-    if (!connection) return;
-    const handleUnreadCount = (data: number) => setUnreadCount(data);
-    const handleInitNotifications = (data: any[]) => setNotifications(data);
+  const { unreadCount, notifications } = useNotificationsStore();
 
-    connection.on('unreadcountupdated', handleUnreadCount);
-    connection.on('initNotifications', handleInitNotifications);
+  const handleNotificationClick = useHandleNotificationClick(connection);
 
-    return () => {
-      connection.off('unreadcountupdated', handleUnreadCount);
-      connection.off('initNotifications', handleInitNotifications);
-    };
-  }, [connection]);
-
-  const markAsRead = (id: string) => {
-    connection?.invoke('markAsRead', id).catch(console.error);
-  };
   const MarkAllAsRead = () => {
     connection?.invoke('markAllAsRead').catch(console.error);
   };
@@ -46,16 +29,18 @@ export const NotificationsDropdown = () => {
         <div className="flex max-h-[376px] flex-col overflow-y-auto">
           {notifications.length ? (
             <>
-              {notifications.map((n) => (
-                <NotificationItem
-                  key={n.id}
-                  open={() => open()}
-                  onRead={() => markAsRead(n.id)}
-                  title={n.title}
-                  body={n.body}
-                  time={n.createdAt}
-                />
-              ))}
+              {notifications.map((n) => {
+                console.log('Notification object:', n);
+                return (
+                  <NotificationItem
+                    key={n.id}
+                    onClick={() => handleNotificationClick(n.status, n.id)}
+                    title={n.title}
+                    body={n.body}
+                    time={n.createdAt}
+                  />
+                );
+              })}
             </>
           ) : (
             <div className="p-2 text-center text-gray-400">

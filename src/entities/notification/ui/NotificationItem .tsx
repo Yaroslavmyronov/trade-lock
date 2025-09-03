@@ -2,7 +2,7 @@ import { formatDate } from '@/shared/lib/formateDate';
 
 interface NotificationItemProps {
   open?: () => void;
-  onRead?: () => void;
+  onClick?: () => void;
   title: string;
   body: string;
   time: string;
@@ -10,8 +10,7 @@ interface NotificationItemProps {
 }
 
 export const NotificationItem = ({
-  open,
-  onRead,
+  onClick,
   title,
   body,
   time,
@@ -19,10 +18,7 @@ export const NotificationItem = ({
 }: NotificationItemProps) => {
   return (
     <button
-      onClick={() => {
-        onRead?.();
-        open?.();
-      }}
+      onClick={onClick}
       className="cursor-pointer px-[18px] py-3 text-left whitespace-nowrap hover:bg-[rgba(0,0,0,.1)] hover:text-[#836EF9]"
     >
       {imgSrc && <img src={imgSrc} alt="" className="mr-3" />}

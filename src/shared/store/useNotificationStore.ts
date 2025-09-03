@@ -10,7 +10,7 @@ export interface Notification {
   id: string;
   title: string;
   body: string;
-  type: NotificationType;
+  status: NotificationType;
   isRead: boolean;
   createdAt: string;
 }
