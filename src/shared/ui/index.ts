@@ -6,6 +6,7 @@ export { Filters } from './FilterPanel/Filters';
 export { Refresh } from './FilterPanel/Refresh';
 export { Search } from './FilterPanel/Search';
 export { Sort } from './FilterPanel/Sort';
+export { FloatInput } from './FloatInput';
 export { MarketCounter } from './MarketCounter';
 export { ModalButton } from './ModalButton';
 export { Pagination } from './Pagination';

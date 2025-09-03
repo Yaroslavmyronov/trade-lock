@@ -4,7 +4,7 @@ import { Propose } from '@/features';
 import { MarketNftResponse } from '@/entities/nfts/types';
 import { FilterPanel } from '@/features/filter-panel';
 import { BuyButton } from '@/features/nft-buy';
-import { MarketCounter } from '@/shared';
+import { FloatInput, MarketCounter } from '@/shared';
 import { useFilters } from '@/shared/store/useFilters';
 
 import { marketNftsApi } from '@/entities/nfts/api/marketNftsApi';
@@ -125,23 +125,25 @@ export const Market = ({
           setSelectedSort={setSortingOption}
         >
           <FilterItem title="Price">
-            <div className="flex w-full justify-between">
-              <input
-                type="number"
-                min={0}
-                placeholder="Min"
-                className="w-35 rounded-md border border-gray-500 p-1"
-                value={minPriceFilter}
-                onChange={updateMinPriceFilter}
-              />
-              <input
-                type="number"
-                min={0}
-                placeholder="Max"
-                className="w-35 rounded-md border border-gray-500 p-1"
-                value={maxPriceFilter}
-                onChange={updateMaxPriceFilter}
-              />
+            <div className="pt-3">
+              <form className="flex w-[220px] min-w-full items-center justify-between">
+                <div className="mr-1 w-1/2 cursor-pointer">
+                  <FloatInput
+                    id="price-from"
+                    value={minPriceFilter}
+                    onChange={updateMinPriceFilter}
+                    label="From"
+                  ></FloatInput>
+                </div>
+                <div className="w-1/2 cursor-pointer">
+                  <FloatInput
+                    id="price-to"
+                    value={maxPriceFilter}
+                    onChange={updateMaxPriceFilter}
+                    label="To"
+                  ></FloatInput>
+                </div>
+              </form>
             </div>
           </FilterItem>
         </FilterPanel>
