@@ -208,7 +208,7 @@ export const SellModal = ({
                     <div className="flex h-[22px] w-full items-center justify-between text-base">
                       <span className="text-[#fff]">You receive</span>
                       <div className="flex gap-1 text-[#fff]">
-                        <span>{totalPrice}</span>
+                        <span>{totalPrice.toFixed(4)}</span>
                         <span className="text-[rgb(133,127,148)]">MON</span>
                       </div>
                     </div>
