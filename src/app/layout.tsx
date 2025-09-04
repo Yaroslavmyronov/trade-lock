@@ -1,4 +1,5 @@
 import { BuyModal } from '@/features/nft-buy';
+import { DelistModal } from '@/features/nft-delist';
 import { Header } from '@/widgets/header';
 import { HistoryModal } from '@/widgets/history';
 import { MyTrades } from '@/widgets/my-trades';
@@ -32,6 +33,7 @@ export default async function Layout({
           <TradeModal />
           <BuyModal />
           <HistoryModal />
+          <DelistModal />
         </Providers>
       </body>
     </html>

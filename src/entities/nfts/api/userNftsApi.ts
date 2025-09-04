@@ -23,7 +23,6 @@ export const userNftsApi = {
       initialPageParam: '',
       getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
       select: (result) => {
-        console.log('userNftsApi', result);
         const firstPage = result.pages[0];
 
         return {

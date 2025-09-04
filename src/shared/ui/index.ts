@@ -1,5 +1,6 @@
 export { AvatarComponent } from './AvatarComponent';
 export { Card } from './Card';
+export { ConfirmModal } from './ConfirmModal';
 export { Counter } from './Counter';
 export { Filter } from './FilterPanel/Filter';
 export { Filters } from './FilterPanel/Filters';

@@ -1,15 +1,15 @@
-import { UserNft, UserNftResponse } from '@/entities/nfts/types';
+import { MarketNft } from '@/entities/nfts/types';
 import { getNftId } from '@/features/nft-sell/model/NFT';
 import { create } from 'zustand';
 
 interface SelectedNftsState {
-  selectedNfts: UserNftResponse;
-  toggleSelect: (nft: UserNft) => void;
+  selectedNfts: MarketNft[];
+  toggleSelect: (nft: MarketNft) => void;
   removeItem: (id: string) => void;
   clearAll: () => void;
 }
 
-export const useSelectedNfts = create<SelectedNftsState>((set) => ({
+export const useOnSaleSelectedNfts = create<SelectedNftsState>((set) => ({
   selectedNfts: [],
   toggleSelect: (nft) =>
     set((state) => {

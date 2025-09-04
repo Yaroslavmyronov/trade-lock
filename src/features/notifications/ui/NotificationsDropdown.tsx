@@ -30,7 +30,6 @@ export const NotificationsDropdown = () => {
           {notifications.length ? (
             <>
               {notifications.map((n) => {
-                console.log('Notification object:', n);
                 return (
                   <NotificationItem
                     key={n.id}

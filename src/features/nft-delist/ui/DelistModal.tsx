@@ -2,36 +2,32 @@
 import { ConfirmModal } from '@/shared';
 import { getParsedError } from '@/shared/lib/web3/getParsedError';
 import { useWrapperWriteContract } from '@/shared/lib/web3/useWrapperWriteContract';
-import { useBuyModalStore } from '@/shared/store/useBuyModalStore';
-import { useMarketSelectedNfts } from '@/shared/store/useMarketSelectedNfts';
+import { useDelistModalStore } from '@/shared/store/useDelistModalStore';
+import { useOnSaleSelectedNfts } from '@/shared/store/useOnSaleSelectedNfts';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { parseEther } from 'viem';
 
-type BuyModalState = {
+type DelistModalState = {
   status: 'idle' | 'success' | 'error';
   errorMessage?: string;
 };
 
-export const BuyModal = () => {
-  const [{ status, errorMessage }, setState] = useState<BuyModalState>({
+export const DelistModal = () => {
+  const [{ status, errorMessage }, setState] = useState<DelistModalState>({
     status: 'idle',
   });
-  const { isOpen, close } = useBuyModalStore();
-  const { selectedNfts, clearAll } = useMarketSelectedNfts();
+  const { isOpen, close } = useDelistModalStore();
+  const { selectedNfts, clearAll } = useOnSaleSelectedNfts();
   const { writeContractAsync, isMining } =
     useWrapperWriteContract('Marketplace');
-
-  const totalPrice = selectedNfts.reduce((sum, nft) => sum + nft.price, 0);
 
   const queryClient = useQueryClient();
 
   const buyNfts = async () => {
     try {
       await writeContractAsync({
-        functionName: 'buyListing',
-        args: [selectedNfts.map((nft) => BigInt(nft.listingId))],
-        value: parseEther(totalPrice.toString()),
+        functionName: 'removeListing',
+        args: [BigInt(selectedNfts[0].listingId)],
       });
       queryClient.invalidateQueries({ queryKey: ['market'] });
       setState({ status: 'success' });
@@ -41,7 +37,7 @@ export const BuyModal = () => {
     }
   };
 
-  const retryBuy = () => {
+  const retryDelist = () => {
     setState({ status: 'idle', errorMessage: '' });
     buyNfts();
   };
@@ -70,9 +66,9 @@ export const BuyModal = () => {
       status={status}
       errorMessage={errorMessage}
       loading={isMining}
-      retry={retryBuy}
+      retry={retryDelist}
       done={handleDone}
-      title="Buy"
+      title="Delist"
     ></ConfirmModal>
   );
 };

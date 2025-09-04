@@ -27,7 +27,7 @@ const UserNftsComponent = ({
 }: UserNftsProps) => {
   if (status === 'pending') {
     return (
-      <div className="flex size-full items-center justify-center text-[#836EF9]">
+      <div className="flex size-full grow items-center justify-center text-[#836EF9]">
         <Preloader width={80} height={80} border={5}></Preloader>
       </div>
     );
@@ -35,7 +35,7 @@ const UserNftsComponent = ({
 
   if (status === 'error' && error) {
     return (
-      <div className="flex size-full items-center justify-center">
+      <div className="flex size-full grow items-center justify-center">
         <p>Error: {error.message}</p>
       </div>
     );
@@ -43,7 +43,7 @@ const UserNftsComponent = ({
 
   if (nftsData.length === 0) {
     return (
-      <div className="flex size-full items-center justify-center">
+      <div className="flex size-full grow items-center justify-center">
         <span>No trades found</span>
       </div>
     );
@@ -77,13 +77,7 @@ const UserNftsComponent = ({
                   ></Card>
                 );
               })}
-              {/* {isFetchingNextPage && (
-                <div className="absolute bottom-[12%] left-0 flex h-14 w-full items-center justify-center text-[#836EF9]">
-                  <div className="flex size-14 items-center justify-center rounded-full bg-[#17191a]">
-                    <Preloader width={24} height={24} />
-                  </div>
-                </div>
-              )} */}
+
               <div ref={cursorRef}></div>
             </div>
           </div>

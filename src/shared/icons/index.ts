@@ -10,3 +10,4 @@ export { MessageTextIcon } from './MessageTextIcon';
 export { NotificationsIcon } from './NotificationsIcon';
 export { SuccessIcon } from './SuccessIcon';
 export { TickCircleIcon } from './TickCircleIcon';
+export { TrashIcon } from './TrashIcon';

@@ -20,7 +20,7 @@ export const TradeReject = ({ tradeId }: { tradeId: string }) => {
     <button
       disabled={isMining}
       onClick={handleAccept}
-      className="text-primary disabled:text-disabled inline-flex h-[40px] cursor-pointer items-center justify-center rounded bg-[#706f6e] px-3 py-0 text-sm transition hover:bg-[#4f4e4d] active:bg-[#eceae7] disabled:cursor-not-allowed disabled:opacity-40"
+      className="text-primary disabled:text-disabled inline-flex h-[40px] w-full cursor-pointer items-center justify-center rounded bg-[#706f6e] px-3 py-0 text-sm transition hover:bg-[#4f4e4d] active:bg-[#eceae7] disabled:cursor-not-allowed disabled:opacity-40"
     >
       {isMining ? <Preloader /> : 'Reject'}
     </button>

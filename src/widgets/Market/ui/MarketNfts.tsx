@@ -26,14 +26,14 @@ const MarketNftsComponent = ({
 }: MarketNftsProps) => {
   if (status === 'pending') {
     return (
-      <div className="flex size-full items-center justify-center text-[#836EF9]">
+      <div className="flex size-full grow items-center justify-center text-[#836EF9]">
         <Preloader width={80} height={80} border={5}></Preloader>
       </div>
     );
   }
   if (status === 'error' && error) {
     return (
-      <div className="flex size-full items-center justify-center">
+      <div className="flex size-full grow items-center justify-center">
         <p>Error: {error.message}</p>
       </div>
     );
@@ -41,7 +41,7 @@ const MarketNftsComponent = ({
 
   if (nftsData.length === 0) {
     return (
-      <div className="flex size-full items-center justify-center">
+      <div className="flex size-full grow items-center justify-center">
         <span>No trades found</span>
       </div>
     );
