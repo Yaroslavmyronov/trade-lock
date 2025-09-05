@@ -5,7 +5,7 @@ import { UserMenu } from '@/features';
 import { getAddress, isAddress } from 'viem';
 import { normalize } from 'viem/ens';
 import { useAccount, useEnsAvatar, useEnsName } from 'wagmi';
-import { MonadIcon } from './icons/MondIcon';
+import { MonadIcon } from './icons/MonadIcon';
 
 export const Address = () => {
   const { address, connector, isConnected } = useAccount();

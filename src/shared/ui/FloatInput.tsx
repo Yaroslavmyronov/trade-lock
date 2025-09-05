@@ -1,4 +1,4 @@
-import { MonadIcon } from '@/widgets/header/ui/icons/MondIcon';
+import { MonadIcon } from '@/widgets/header/ui/icons/MonadIcon';
 import { useEffect, useRef, useState } from 'react';
 
 interface FloatInputProps {
