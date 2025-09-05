@@ -1,6 +1,6 @@
 'use client';
 
-import { Address } from '@/widgets/header/ui/Address';
+import { Address } from '@/widgets/Header/ui/Address';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 export function CustomConnectButton() {
