@@ -15,9 +15,9 @@ interface FilterPanelProps {
   isRefresh: boolean;
 
   // Sort
-  setSearchText: (text: string) => void;
-  selectedSort: SortOption;
-  setSelectedSort: (option: SortOption) => void;
+  setSearchText?: (text: string) => void;
+  selectedSort?: SortOption;
+  setSelectedSort?: (option: SortOption) => void;
 
   children?: React.ReactNode;
 }
