@@ -1,9 +1,9 @@
 'use client';
-import { Nft } from '@/entities/nfts/types';
+import { MarketNft } from '@/entities/nfts/types';
 import { Arrow2Icon, ArrowIcon, CloseIcon } from '@/shared';
 
 interface MarketCounterProps {
-  selectedNfts: Nft[];
+  selectedNfts: MarketNft[];
   clearAll: () => void;
   toggle: () => void;
   isOpen: boolean;
