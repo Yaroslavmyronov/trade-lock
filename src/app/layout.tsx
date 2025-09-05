@@ -21,7 +21,7 @@ export default async function Layout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className="antialiased">
         <Providers cookie={(await headers()).get('cookie') ?? ''}>
           <div className="flex h-full min-h-screen grow flex-col">
