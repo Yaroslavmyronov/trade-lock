@@ -1,5 +1,5 @@
+import { Metadata } from '@/entities/trade/model/type';
 import { ipfsToHttp } from '@/shared/lib/getIpfsUrl';
-import { Metadata } from './Incoming';
 
 interface TradeOfferItemProps {
   title: string;
