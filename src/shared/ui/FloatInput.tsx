@@ -1,5 +1,5 @@
-import { MonadIcon } from '@/widgets/header/ui/icons/MonadIcon';
 import { useEffect, useRef, useState } from 'react';
+import { MonadIcon } from './MonadIcon';
 
 interface FloatInputProps {
   id: string;

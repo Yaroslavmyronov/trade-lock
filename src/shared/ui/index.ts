@@ -10,6 +10,7 @@ export { Sort } from './FilterPanel/Sort';
 export { FloatInput } from './FloatInput';
 export { MarketCounter } from './MarketCounter';
 export { ModalButton } from './ModalButton';
+export { MonadIcon } from './MonadIcon';
 export { Pagination } from './Pagination';
 export { Popover } from './Popover';
 export { Preloader } from './Preloader';
