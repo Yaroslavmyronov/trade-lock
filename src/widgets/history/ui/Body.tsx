@@ -62,7 +62,7 @@ export const Body = ({
 
   if (status === 'error') {
     return (
-      <div className="flex size-full items-center justify-center text-[#836EF9]">
+      <div className="flex size-full items-center justify-center">
         <p>Error: {error?.message}</p>
       </div>
     );

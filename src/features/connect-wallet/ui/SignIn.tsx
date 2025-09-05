@@ -1,6 +1,7 @@
 'use client';
 import { useEthereumAuth } from '@/features/auth/services/signMessage';
 import { CloseIcon } from '@/shared';
+import Link from 'next/link';
 import { useState } from 'react';
 
 interface ModalProps {
@@ -43,23 +44,23 @@ export const SignIn = ({ open, onClose }: ModalProps) => {
                       >
                         <span className="text-left text-sm leading-normal text-gray-500">
                           I agree to TradeLock&apos;s{' '}
-                          <a
-                            className="text-blue-500 underline hover:text-blue-400 focus:text-blue-400 active:text-blue-600"
-                            href=""
+                          <Link
+                            className="text-[#836EF9] underline hover:text-[#7058E0] focus:text-[#7058E0] active:text-[#5C45C0]"
+                            href="/tos"
                             target="_blank"
                             rel="nofollow noopener"
                           >
                             Terms of Service
-                          </a>{' '}
+                          </Link>{' '}
                           and{' '}
-                          <a
-                            className="text-blue-500 underline hover:text-blue-400 focus:text-blue-400 active:text-blue-600"
-                            href=""
+                          <Link
+                            className="text-[#836EF9] underline hover:text-[#7058E0] focus:text-[#7058E0] active:text-[#5C45C0]"
+                            href="/privacy"
                             target="_blank"
                             rel="nofollow noopener"
                           >
                             Privacy Policy
-                          </a>
+                          </Link>
                         </span>
                       </label>
                     </div>
