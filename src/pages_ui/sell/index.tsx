@@ -1,5 +1,5 @@
 import { LoginProvider } from '@/shared/providers/LoginProvider';
-import { Inventory } from '@/widgets/inventory';
+import { Inventory } from '@/widgets/Inventory';
 
 export const SellPage = () => {
   return (

@@ -1,6 +1,6 @@
 import { getMarketNfts } from '@/shared/api/market-nfts';
 import { defaultSortOption } from '@/shared/ui/FilterPanel/SortOptions';
-import { Market } from '@/widgets/market';
+import { Market } from '@/widgets/Market';
 
 export const MarketPage = async () => {
   let marketNfts;

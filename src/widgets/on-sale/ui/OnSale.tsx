@@ -8,7 +8,7 @@ import { useIntersection } from '@/shared/lib/useIntersection';
 import { useFilters } from '@/shared/store/useFilters';
 import { useOnSaleSelectedNfts } from '@/shared/store/useOnSaleSelectedNfts';
 import { usePropose } from '@/shared/store/usePropose';
-import { MarketNfts } from '@/widgets/market/ui/MarketNfts';
+import { MarketNfts } from '@/widgets/Market/ui/MarketNfts';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useAccount } from 'wagmi';
 

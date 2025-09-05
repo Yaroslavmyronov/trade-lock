@@ -1,6 +1,6 @@
 import { BuyModal } from '@/features/nft-buy';
 import { DelistModal } from '@/features/nft-delist';
-import { Header } from '@/widgets/header';
+import { Header } from '@/widgets/Header';
 import { HistoryModal } from '@/widgets/history';
 import { MyTrades } from '@/widgets/my-trades';
 import { TradeModal } from '@/widgets/trade-modal';
