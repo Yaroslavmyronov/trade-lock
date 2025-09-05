@@ -14,6 +14,7 @@ function readSecret(secretName: string, fallbackEnv: string): string
 }
 
 const nextConfig: NextConfig = {
+  output: 'standalone',
   env: {
     NEXT_PUBLIC_API_URL: readSecret("market_api_url", "API_URL"),
     NEXT_PUBLIC_WS_URL: readSecret("market_ws_url", "WS_URL"),
