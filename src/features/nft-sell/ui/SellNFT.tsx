@@ -1,4 +1,5 @@
 import { UserNft } from '@/entities/nfts/types';
+import { ipfsToHttp } from '@/shared/lib/getIpfsUrl';
 import { getNftId } from '../model/NFT';
 import { nftPriceChange, nftPrices } from '../types';
 interface SellNFTProps {
@@ -20,7 +21,7 @@ export const SellNFT = ({ nft, prices, handlePriceChange }: SellNFTProps) => {
                   className="size-full overflow-hidden object-contain"
                   src={
                     nft.imageOriginal
-                      ? nft.imageOriginal
+                      ? ipfsToHttp(nft.imageOriginal)
                       : '/images/no-media-available.jpg'
                   }
                   alt={nft.name}
@@ -30,9 +31,9 @@ export const SellNFT = ({ nft, prices, handlePriceChange }: SellNFTProps) => {
           </div>
           <div className="overflow-hidden">
             <p className="truncate font-semibold">{nft.name}</p>
-            <div className="text-[12px] leading-4">
+            {/* <div className="text-[12px] leading-4">
               <p className="text-[rgb(133,127,148)]">Unlisted</p>
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="shrink-0">

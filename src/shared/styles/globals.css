@@ -45,6 +45,10 @@ body {
   height: 100%;
 }
 
+html {
+  color-scheme: dark !important;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
