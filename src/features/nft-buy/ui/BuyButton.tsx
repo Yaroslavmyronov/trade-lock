@@ -2,6 +2,8 @@
 import { MarketNft } from '@/entities/nfts/types';
 import { MarketIcon } from '@/shared';
 import { useBuyModalStore } from '@/shared/store/useBuyModalStore';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { useAccount } from 'wagmi';
 
 export const BuyButton = ({
   selectedNftsMarket,
@@ -9,12 +11,22 @@ export const BuyButton = ({
   selectedNftsMarket: MarketNft[];
 }) => {
   const { open } = useBuyModalStore();
+  const { address, isConnected, connector } = useAccount();
+  const isWalletConnected = Boolean(address && isConnected && connector);
+  const { openConnectModal } = useConnectModal();
   const sellPrice = selectedNftsMarket.reduce((sum, nft) => sum + nft.price, 0);
+  const handleClick = () => {
+    if (!isWalletConnected) {
+      openConnectModal?.();
+      return;
+    }
 
+    open();
+  };
   return (
     <div className="mx-1.5">
       <button
-        onClick={open}
+        onClick={handleClick}
         disabled={!sellPrice}
         className="flex min-h-[48px] min-w-[160px] cursor-pointer items-center justify-start rounded-[2px] bg-[#836EF9] px-3 disabled:cursor-not-allowed disabled:opacity-40"
       >
