@@ -1,0 +1,10 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: "https://trade-lock.duckdns.org/api"
+        NEXT_PUBLIC_WS_URL: "https://trade-lock.duckdns.org/notificationHub"
+        NEXT_PUBLIC_MARKETPLACE_ADDRESS: "0x210dEDf0EEE16587f861d20d75A2894C6585604b"
+    image: monad-nft-market-frontend:latest
