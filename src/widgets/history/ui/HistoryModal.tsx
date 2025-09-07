@@ -15,7 +15,10 @@ export const HistoryModal = () => {
     status,
     error,
     isPlaceholderData,
-  } = useQuery(historyApi.getListQueryOptions(page));
+  } = useQuery({
+    ...historyApi.getListQueryOptions(page),
+    enabled: isOpen,
+  });
 
   const handlePageChange = (page: number) => {
     setPage(page);
