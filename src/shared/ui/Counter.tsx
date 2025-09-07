@@ -1,6 +1,6 @@
 'use client';
 import { MarketNft, UserNft } from '@/entities/nfts/types';
-import { Arrow2Icon, ArrowIcon, CloseIcon } from '@/shared';
+import { Arrow2Icon, ArrowIcon, CloseIcon, MonadIcon } from '@/shared';
 
 interface MarketCounterProps {
   selectedNfts: MarketNft[] | UserNft[];
@@ -15,6 +15,7 @@ export const Counter = ({
   toggle,
   isOpen,
 }: MarketCounterProps) => {
+  const totalPrice = selectedNfts.reduce((sum, num) => sum + num.price, 0);
   return (
     <div className="flex items-center py-2.5 text-[#836EF9]">
       <div
@@ -52,8 +53,9 @@ export const Counter = ({
         <div className="mx-[5px] flex items-end text-[12px]">{`(${selectedNfts.length})`}</div>
         <div className="inline-flex items-center text-[24px]">
           <Arrow2Icon width={10} height={10}></Arrow2Icon>
-          <div className="flex items-center">
-            <span>$0.00</span>
+          <div className="ml-1 flex items-center">
+            <MonadIcon />
+            <span className="ml-1">{totalPrice.toFixed(4)}</span>
           </div>
         </div>
       </div>
