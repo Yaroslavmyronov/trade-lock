@@ -3,7 +3,7 @@ import { Propose } from '@/features';
 
 import { FilterPanel } from '@/features/filter-panel';
 import { SellButton } from '@/features/nft-sell';
-import { Counter } from '@/shared';
+import { Counter, FloatInput } from '@/shared';
 import { useFilters } from '@/shared/store/useFilters';
 import { usePropose } from '@/shared/store/usePropose';
 
@@ -15,6 +15,13 @@ import { useSelectedNfts } from '@/shared/store/useSelectedNfts';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { ProfilePrice } from './ProfilePrice';
 import { UserNfts } from './UserNfts';
+import { useState } from 'react';
+import { useDebounce } from '@/shared/lib/useDebounce';
+import {
+  defaultSortOption,
+  SortOption,
+} from '@/shared/ui/FilterPanel/SortOptions';
+import FilterItem from '@/features/filter-panel/ui/FilterItem';
 
 export const Inventory = ({ filter }: { filter: 'sell' | 'trade' }) => {
   const {
@@ -28,6 +35,13 @@ export const Inventory = ({ filter }: { filter: 'sell' | 'trade' }) => {
 
   const { selectedNfts: selectedNftsMarket } = useMarketSelectedNfts();
 
+  const [sortingOption, setSortingOption] =
+    useState<SortOption>(defaultSortOption);
+  const [minPriceFilter, setMinPriceFilter] = useState<number | ''>('');
+  const [maxPriceFilter, setMaxPriceFilter] = useState<number | ''>('');
+  const [searchText, setSearchText] = useState<string>('');
+  const debouncedSearchText = useDebounce(searchText, 500);
+
   const {
     data: userNftsResponse,
     error,
@@ -38,7 +52,13 @@ export const Inventory = ({ filter }: { filter: 'sell' | 'trade' }) => {
     status,
     refetch,
   } = useInfiniteQuery({
-    ...userNftsApi.getListInfiniteQueryOptions(),
+    ...userNftsApi.getListInfiniteQueryOptions({
+      sort: sortingOption.sort,
+      order: sortingOption.order,
+      searchText: debouncedSearchText,
+      minPrice: minPriceFilter,
+      maxPrice: maxPriceFilter,
+    }),
   });
 
   const cursorRef = useIntersection(() => {
@@ -46,6 +66,34 @@ export const Inventory = ({ filter }: { filter: 'sell' | 'trade' }) => {
       fetchNextPage();
     }
   });
+
+  const updateMinPriceFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    if (Number(value) < 0) {
+      return;
+    }
+
+    if (maxPriceFilter && maxPriceFilter < Number(value)) {
+      return;
+    }
+
+    setMinPriceFilter(value ? Number(value) : '');
+  };
+
+  const updateMaxPriceFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    if (Number(value) < 0) {
+      return;
+    }
+
+    if (minPriceFilter && value !== '' && minPriceFilter > Number(value)) {
+      return;
+    }
+
+    setMaxPriceFilter(value ? Number(value) : '');
+  };
 
   return (
     <div
@@ -59,7 +107,33 @@ export const Inventory = ({ filter }: { filter: 'sell' | 'trade' }) => {
           close={close}
           opened={opened}
           open={open}
-        />
+          setSearchText={setSearchText}
+          selectedSort={sortingOption}
+          setSelectedSort={setSortingOption}
+        >
+          <FilterItem title="Price">
+            <div className="pt-3">
+              <form className="flex w-[220px] min-w-full items-center justify-between">
+                <div className="mr-1 w-1/2 cursor-pointer">
+                  <FloatInput
+                    id="price-from"
+                    value={minPriceFilter}
+                    onChange={updateMinPriceFilter}
+                    label="From"
+                  ></FloatInput>
+                </div>
+                <div className="w-1/2 cursor-pointer">
+                  <FloatInput
+                    id="price-to"
+                    value={maxPriceFilter}
+                    onChange={updateMaxPriceFilter}
+                    label="To"
+                  ></FloatInput>
+                </div>
+              </form>
+            </div>
+          </FilterItem>
+        </FilterPanel>
         <ProfilePrice
           nftAmount={userNftsResponse?.nftAmount ?? 0}
           totalValue={userNftsResponse?.totalValue ?? 0}

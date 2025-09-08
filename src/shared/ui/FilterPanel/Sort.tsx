@@ -57,7 +57,7 @@ export const Sort = ({
             containerRef.current,
           )}
 
-        <div className="relative w-[123px]">
+        <div className="relative w-[200px]">
           <div
             onClick={() => {
               setIsOpen(!isOpen);
